@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>804</width>
     <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>ZOE microscopy</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="BuConnect">
@@ -44,19 +44,151 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
+   <widget class="QSlider" name="VisibleEsp">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>230</y>
+      <width>411</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="tabletTracking">
+     <bool>false</bool>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
+    <property name="toolTipDuration">
+     <number>-1</number>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QSlider::groove:horizontal {
+    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+        stop: 0 #FF0000, stop: 0.16667 #FF7F00, stop: 0.33333 #FFFF00,
+        stop: 0.5 #00FF00, stop: 0.66667 #0000FF, stop: 0.83333 #4B0082,
+        stop: 1 #8F00FF);
+}
+
+QSlider::groove:vertical {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+        stop: 0 #FF0000, stop: 0.16667 #FF7F00, stop: 0.33333 #FFFF00,
+        stop: 0.5 #00FF00, stop: 0.66667 #0000FF, stop: 0.83333 #4B0082,
+        stop: 1 #8F00FF);
+}
+
+QSlider::handle:horizontal,
+QSlider::handle:vertical {
+    background: white;
+    border: 1px solid black;
+    width: 10px;
+    height: 20px;
+    margin: -10px 0;
+    border-radius: 5px;
+}
+</string>
+    </property>
+    <property name="minimum">
+     <number>380</number>
+    </property>
+    <property name="maximum">
+     <number>780</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::NoTicks</enum>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="wavelength">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>230</y>
+      <width>81</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>380</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ErrorNumber">
+    <property name="geometry">
+     <rect>
+      <x>570</x>
+      <y>280</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="logo">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>20</y>
+      <width>81</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-image: url(:/cct/microscopio.png);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="titulo">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>30</y>
+      <width>171</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; font-weight:600;&quot;&gt;ZOE&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>804</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuZOE">
+    <property name="title">
+     <string>ZOE</string>
+    </property>
+    <addaction name="actionInstrucciones"/>
+   </widget>
+   <addaction name="menuZOE"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionInstrucciones">
+   <property name="text">
+    <string>Instrucciones</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="logo.qrc"/>
+ </resources>
  <connections/>
 </ui>
