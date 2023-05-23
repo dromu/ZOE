@@ -47,8 +47,8 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QSlider" name="VisibleEsp">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>230</y>
+      <x>170</x>
+      <y>220</y>
       <width>411</width>
       <height>41</height>
      </rect>
@@ -110,27 +110,17 @@ QSlider::handle:vertical {
    <widget class="QLineEdit" name="wavelength">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>230</y>
-      <width>81</width>
+      <x>590</x>
+      <y>220</y>
+      <width>51</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
      <string>380</string>
     </property>
-   </widget>
-   <widget class="QLabel" name="ErrorNumber">
-    <property name="geometry">
-     <rect>
-      <x>570</x>
-      <y>280</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="logo">
@@ -160,6 +150,45 @@ QSlider::handle:vertical {
     </property>
     <property name="text">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; font-weight:600;&quot;&gt;ZOE&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="RB_manual">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>230</y>
+      <width>82</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Manual</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="RB_manual_2">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>310</y>
+      <width>82</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Automático</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="RB_manual_3">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>370</y>
+      <width>82</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Luz blanca</string>
     </property>
    </widget>
   </widget>

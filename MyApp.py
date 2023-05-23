@@ -28,8 +28,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         # Cambiar el valor del slider en texto
         self.wavelength.returnPressed.connect(self.line_edit_return_pressed)
 
-        
-
     def slider_value_changed(self, value):
         self.wavelength.setText(str(value))
 
@@ -60,10 +58,3 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.TextConnect.setText("Conexión establecida.")
             else:
                 self.TextConnect.setText("No se pudo establecer la conexión.")
-
-
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    window = MyApp()
-    window.show()
-    sys.exit(app.exec_())
