@@ -11,24 +11,31 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
-        
         self.BuConnect.setStyleSheet("QPushButton { background-color: red;  }")
         self.BuConnect.clicked.connect(self.conexion)
+
+        self.TextConnect.setText("No conectado")
         
         # Se crea un objeto connector
         self.connector = WifiConnector()
 
     def conexion(self):
-       
         if self.connector.is_connected:     #Revisa el atributo en el constructor
-            self.connector.disconnect()
-            self.BuConnect.setText('Conectar')
-            self.BuConnect.setStyleSheet("QPushButton { background-color: red; }")
-        
+            if not self.connector.disconnect():
+                self.BuConnect.setText('Conectar')
+                self.BuConnect.setStyleSheet("QPushButton { background-color: red; }")
+                self.TextConnect.setText("Desconexión exitosa")
+            else:
+                self.TextConnect.setText("No se pudo desconectar.")
+
         else:
             if self.connector.connect():
                 self.BuConnect.setText('Conectado')
                 self.BuConnect.setStyleSheet("QPushButton { background-color: green; }")
+                self.TextConnect.setText("Conexión establecida.")
+            else:
+                self.TextConnect.setText("No se pudo establecer la conexión.")
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

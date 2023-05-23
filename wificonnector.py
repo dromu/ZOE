@@ -34,7 +34,6 @@ class WifiConnector:
         return self.is_connected
    
         
-
     def disconnect(self):
         self.iface.disconnect()  # Desconecta de la red WiFi actual
 
@@ -46,3 +45,7 @@ class WifiConnector:
             self.is_connected = True
 
         return self.is_connected
+    
+    def ver_connected(self, ssid):
+        current_ssid = self.iface.ssid()  # Obtiene el SSID de la red WiFi actual
+        return current_ssid == ssid
