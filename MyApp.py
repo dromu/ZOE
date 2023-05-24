@@ -25,31 +25,50 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         # Slider de espectro visible
         self.VisibleEsp.valueChanged.connect(self.slider_value_changed)
 
+        # Deshabilitamos el slider y el label que muestra lambda
+        self.wavelength.setEnabled(False)
+        self.VisibleEsp.setEnabled(False)
+
         # Cambiar el valor del slider en texto
         self.wavelength.returnPressed.connect(self.line_edit_return_pressed)
 
+        # Seleccion de modo luz blanca por defecto
         self.RB_white.setChecked(True)
-        self.RB_manual.toggled.connect(self.processRadioButton)
-        self.RB_auto.toggled.connect(self.processRadioButton)
-        self.RB_white.toggled.connect(self.processRadioButton)
 
-    def processRadioButton(self):
-        radio_button = self.sender()
 
-        # Verifica si el radio button está seleccionado
+        self.RB_manual.toggled.connect(lambda: self.processRadioButton(self.RB_manual, self.VisibleEsp, self.wavelength))
+        self.RB_auto.toggled.connect(lambda: self.processRadioButton(self.RB_auto, self.VisibleEsp,self.wavelength))
+        self.RB_white.toggled.connect(lambda: self.processRadioButton(self.RB_white, self.VisibleEsp,self.wavelength))
+
+        self.value = 380
+    
+    def processRadioButton(self, radio_button, slider, wavelength):
         if radio_button.isChecked():
-            text = radio_button.text()
-            print('Seleccionaste:', text)
 
-        # if self.RB_manual.isChecked():
-        #     print("Hola mundo 1")   
-        # elif self.RB_auto.isChecked():
-        #     print("Hola mundo 2")   
-        # elif self.RB_white.isChecked():
-        #     print("Hola mundo 3")   
+            print(radio_button.text())
+            
+            if radio_button.text() == 'Manual':
+                slider.setEnabled(True)           
+                
+            if radio_button.text() == 'Automático':
+                self.value = 500
+               
+            if radio_button.text() == 'Luz blanca':
+                self.wavelength.setEnabled(False)
+                self.VisibleEsp.setEnabled(False)
+                
+            slider.setValue(self.value)
+           
 
     def slider_value_changed(self, value):
-        self.wavelength.setText(str(value))
+        if self.RB_manual.isChecked():
+            self.wavelength.setText(str(value))
+            self.value = int(value) # ACtualizamos el valor para que la barra quede en el mismo punto del manual
+            print(str(value))
+        else:
+            self.wavelength.setEnabled(False)
+            self.VisibleEsp.setEnabled(False)
+
 
     def line_edit_return_pressed(self):
         value = self.wavelength.text()
