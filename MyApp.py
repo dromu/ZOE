@@ -28,6 +28,26 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         # Cambiar el valor del slider en texto
         self.wavelength.returnPressed.connect(self.line_edit_return_pressed)
 
+        self.RB_white.setChecked(True)
+        self.RB_manual.toggled.connect(self.processRadioButton)
+        self.RB_auto.toggled.connect(self.processRadioButton)
+        self.RB_white.toggled.connect(self.processRadioButton)
+
+    def processRadioButton(self):
+        radio_button = self.sender()
+
+        # Verifica si el radio button está seleccionado
+        if radio_button.isChecked():
+            text = radio_button.text()
+            print('Seleccionaste:', text)
+
+        # if self.RB_manual.isChecked():
+        #     print("Hola mundo 1")   
+        # elif self.RB_auto.isChecked():
+        #     print("Hola mundo 2")   
+        # elif self.RB_white.isChecked():
+        #     print("Hola mundo 3")   
+
     def slider_value_changed(self, value):
         self.wavelength.setText(str(value))
 

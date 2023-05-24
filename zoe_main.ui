@@ -165,7 +165,7 @@ QSlider::handle:vertical {
      <string>Manual</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="RB_manual_2">
+   <widget class="QRadioButton" name="RB_auto">
     <property name="geometry">
      <rect>
       <x>40</x>
@@ -178,7 +178,7 @@ QSlider::handle:vertical {
      <string>Automático</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="RB_manual_3">
+   <widget class="QRadioButton" name="RB_white">
     <property name="geometry">
      <rect>
       <x>40</x>
