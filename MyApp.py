@@ -48,10 +48,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print(radio_button.text())
             
             if radio_button.text() == 'Manual':
-                slider.setEnabled(True)           
+                slider.setEnabled(True)    
+                wavelength.setEnabled(True)       
                 
             if radio_button.text() == 'Automático':
                 self.value = 500
+                self.wavelength.setEnabled(False)
+                self.VisibleEsp.setEnabled(False)
                
             if radio_button.text() == 'Luz blanca':
                 self.wavelength.setEnabled(False)
@@ -65,6 +68,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.wavelength.setText(str(value))
             self.value = int(value) # ACtualizamos el valor para que la barra quede en el mismo punto del manual
             print(str(value))
+            self.wavelength.setEnabled(True)
+            
         else:
             self.wavelength.setEnabled(False)
             self.VisibleEsp.setEnabled(False)
