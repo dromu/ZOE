@@ -48,33 +48,42 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print(radio_button.text())
             
             if radio_button.text() == 'Manual':
+                # Se habilitan todas las modificaciones al espectro
                 slider.setEnabled(True)    
                 wavelength.setEnabled(True)       
                 
             if radio_button.text() == 'Automático':
                 self.value = 500
+
+                # ACtualizamos el valor directamente, con el obtenido del cambio de espacio 
+                self.wavelength.setText(str(self.value))
+
+                # Se limitan las acciones para que no se pueda mover la longitud
                 self.wavelength.setEnabled(False)
                 self.VisibleEsp.setEnabled(False)
                
             if radio_button.text() == 'Luz blanca':
+                # Se limitan y paran todas las acciones 
                 self.wavelength.setEnabled(False)
                 self.VisibleEsp.setEnabled(False)
                 
             slider.setValue(self.value)
            
-
+    # Recibe los valores de cambio del slider
     def slider_value_changed(self, value):
+        # Checkea el boton manual
         if self.RB_manual.isChecked():
             self.wavelength.setText(str(value))
             self.value = int(value) # ACtualizamos el valor para que la barra quede en el mismo punto del manual
             print(str(value))
-            self.wavelength.setEnabled(True)
+            
             
         else:
+            # Se deshabilita cualquier accion diferente
             self.wavelength.setEnabled(False)
             self.VisibleEsp.setEnabled(False)
 
-
+    # Hace referencia al recuadro para cambio de longitud
     def line_edit_return_pressed(self):
         value = self.wavelength.text()
         if value.isdigit():
@@ -86,6 +95,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
                 self.wavelength.setText("Invalid value!")
 
+    # Proceso de conexion del pc-esp32
     def conexion(self):
         if self.connector.is_connected:     #Revisa el atributo en el constructor
             if not self.connector.disconnect(): #Revisa los retornos de los metodos 
