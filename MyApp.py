@@ -25,6 +25,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         #Obejto envio
         self.send_data = TCP_comunication()
+        
 
         # Slider de espectro visible
         self.VisibleEsp.valueChanged.connect(self.slider_value_changed)
@@ -81,7 +82,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.wavelength.setText(str(value))
             self.value = int(value) # ACtualizamos el valor para que la barra quede en el mismo punto del manual
             print(str(value))
-            self.send_data.send(str(self.value[:-3]) )  
+            self.send_data.send(str(value) )  
             
             
         else:
@@ -116,5 +117,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.BuConnect.setText('Conectado')
                 self.BuConnect.setStyleSheet("QPushButton { background-color: green; }")
                 self.TextConnect.setText("Conexión establecida.")
+                # Realiza la conexion 
+                self.send_data.connect()
             else:
                 self.TextConnect.setText("No se pudo establecer la conexión.")
