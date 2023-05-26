@@ -54,12 +54,15 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             
             if radio_button.text() == 'Manual':
                 # Se habilitan todas las modificaciones al espectro
+                 
                 slider.setEnabled(True)    
                 wavelength.setEnabled(True)    
                 
                 
             if radio_button.text() == 'Automático':
                 self.value = 500
+                self.send_data.send("A"+str(self.value))  
+                # self.send_data.send(str(self.value) )  
 
                 # ACtualizamos el valor directamente, con el obtenido del cambio de espacio 
                 self.wavelength.setText(str(self.value))
@@ -70,6 +73,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                
             if radio_button.text() == 'Luz blanca':
                 # Se limitan y paran todas las acciones 
+                self.send_data.send("W"+str(self.value)) 
                 self.wavelength.setEnabled(False)
                 self.VisibleEsp.setEnabled(False)
                 
@@ -82,7 +86,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.wavelength.setText(str(value))
             self.value = int(value) # ACtualizamos el valor para que la barra quede en el mismo punto del manual
             print(str(value))
-            self.send_data.send(str(value) )  
+            self.send_data.send("M" + str(value) )  
             
             
         else:
