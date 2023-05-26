@@ -9,8 +9,8 @@ class WifiConnector:
         self.iface = self.wifi.interfaces()[0]  # Obtiene la primera interfaz WiFi
         
     def connect(self):
-        ssid = "MiRedWiFi"
-        password = "mi_contrasena"
+        ssid = "ZOE"
+        password = "0123456789"
         self.iface.disconnect()  # Desconecta de cualquier red WiFi actual
         profile = pywifi.Profile()  # Crea un nuevo perfil de red WiFi
         profile.ssid = ssid  # Establece el SSID de la red WiFi
