@@ -26,13 +26,16 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #Obejto envio
         self.send_data = TCP_comunication()
         
-
         # Slider de espectro visible
         self.VisibleEsp.valueChanged.connect(self.slider_value_changed)
 
-        # Deshabilitamos el slider y el label que muestra lambda
+        # Deshabilitamos los elementos del main, estos se iran actualizando
         self.wavelength.setEnabled(False)
         self.VisibleEsp.setEnabled(False)
+        self.RB_manual.setEnabled(False)
+        self.RB_auto.setEnabled(False)
+        self.RB_white.setEnabled(False)
+
 
         # Cambiar el valor del slider en texto
         self.wavelength.returnPressed.connect(self.line_edit_return_pressed)
@@ -53,8 +56,7 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             print(radio_button.text())
             
             if radio_button.text() == 'Manual':
-                # Se habilitan todas las modificaciones al espectro
-                 
+                # Se habilitan todas las modificaciones al espectro 
                 slider.setEnabled(True)    
                 wavelength.setEnabled(True)    
                 
@@ -87,8 +89,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.value = int(value) # ACtualizamos el valor para que la barra quede en el mismo punto del manual
             print(str(value))
             self.send_data.send("M" + str(value) )  
-            
-            
         else:
             # Se deshabilita cualquier accion diferente
             self.wavelength.setEnabled(False)
@@ -109,10 +109,19 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     # Proceso de conexion del pc-esp32
     def conexion(self):
         if self.connector.is_connected:     #Revisa el atributo en el constructor
+
+            
             if not self.connector.disconnect(): #Revisa los retornos de los metodos 
                 self.BuConnect.setText('Conectar')
                 self.BuConnect.setStyleSheet("QPushButton { background-color: red; }")
                 self.TextConnect.setText("Desconexión exitosa")
+
+                self.RB_manual.setEnabled(False)
+                self.RB_auto.setEnabled(False)
+                self.RB_white.setEnabled(False)
+                self.wavelength.setEnabled(False)
+                self.VisibleEsp.setEnabled(False)
+
             else:
                 self.TextConnect.setText("No se pudo desconectar.")
 
@@ -121,7 +130,13 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.BuConnect.setText('Conectado')
                 self.BuConnect.setStyleSheet("QPushButton { background-color: green; }")
                 self.TextConnect.setText("Conexión establecida.")
+
+                self.RB_manual.setEnabled(True)
+                self.RB_auto.setEnabled(True)
+                self.RB_white.setEnabled(True)
+                
                 # Realiza la conexion 
                 self.send_data.connect()
             else:
                 self.TextConnect.setText("No se pudo establecer la conexión.")
+                

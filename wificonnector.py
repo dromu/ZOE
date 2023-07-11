@@ -24,11 +24,9 @@ class WifiConnector:
         time.sleep(2)
 
         if self.iface.status() == const.IFACE_CONNECTED:  # Verifica si se ha establecido la conexión
-            print("Conexión establecida.")
             self.is_connected = True
             
         else:
-            print("No se pudo establecer la conexión.")
             self.is_connected = False
         
         return self.is_connected
