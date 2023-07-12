@@ -2,6 +2,11 @@ import sys
 from PyQt5 import uic, QtWidgets
 from wificonnector import WifiConnector
 from TCP_comunication2 import TCP_comunication
+from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtGui import QImage, QPixmap
+from CameraThread import CameraThread
+
+
 
 
 qtCreatorFile = "zoe_main.ui"  # Nombre del archivo aquí.
@@ -9,16 +14,26 @@ Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
+
+        self.camera_thread = CameraThread()
+        self.camera_thread.frame_data.connect(self.display_frame)
+        
+
+
+        # Constructor
+
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
 
+        ## Elementos en el main 
         # Boton de inicio de conexion
         self.BuConnect.setStyleSheet("QPushButton { background-color: red;  }")
         self.BuConnect.clicked.connect(self.conexion)
-        
         #Texto inicial de conexion 
         self.TextConnect.setText("No conectado")
+        # Slider de espectro visible
+        self.VisibleEsp.valueChanged.connect(self.slider_value_changed)
         
         # Se crea un objeto connector
         self.connector = WifiConnector()
@@ -26,9 +41,6 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         #Obejto envio
         self.send_data = TCP_comunication()
         
-        # Slider de espectro visible
-        self.VisibleEsp.valueChanged.connect(self.slider_value_changed)
-
         # Deshabilitamos los elementos del main, estos se iran actualizando
         self.wavelength.setEnabled(False)
         self.VisibleEsp.setEnabled(False)
@@ -36,13 +48,11 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.RB_auto.setEnabled(False)
         self.RB_white.setEnabled(False)
 
-
         # Cambiar el valor del slider en texto
         self.wavelength.returnPressed.connect(self.line_edit_return_pressed)
 
         # Seleccion de modo luz blanca por defecto
         self.RB_white.setChecked(True)
-
 
         self.RB_manual.toggled.connect(lambda: self.processRadioButton(self.RB_manual, self.VisibleEsp, self.wavelength))
         self.RB_auto.toggled.connect(lambda: self.processRadioButton(self.RB_auto, self.VisibleEsp,self.wavelength))
@@ -50,6 +60,12 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.value = 380
     
+
+    def display_frame(self, frame):
+        pixmap = QPixmap.fromImage(frame)
+        self.cameraCV.setPixmap(pixmap)
+
+
     def processRadioButton(self, radio_button, slider, wavelength):
         if radio_button.isChecked():
 
@@ -130,7 +146,8 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.BuConnect.setText('Conectado')
                 self.BuConnect.setStyleSheet("QPushButton { background-color: green; }")
                 self.TextConnect.setText("Conexión establecida.")
-
+                
+                self.camera_thread.start()
                 self.RB_manual.setEnabled(True)
                 self.RB_auto.setEnabled(True)
                 self.RB_white.setEnabled(True)

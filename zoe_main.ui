@@ -209,6 +209,23 @@ QSlider::add-page:horizontal {
      <string>Luz blanca</string>
     </property>
    </widget>
+   <widget class="QLabel" name="cameraCV">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>611</width>
+      <height>491</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+background-color: rgb(255, 255, 255);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -225,7 +242,13 @@ QSlider::add-page:horizontal {
     </property>
     <addaction name="actionInstrucciones"/>
    </widget>
+   <widget class="QMenu" name="menuC_mara">
+    <property name="title">
+     <string>Cámara</string>
+    </property>
+   </widget>
    <addaction name="menuZOE"/>
+   <addaction name="menuC_mara"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionInstrucciones">
