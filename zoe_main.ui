@@ -242,18 +242,17 @@ background-color: rgb(255, 255, 255);</string>
     </property>
     <addaction name="actionInstrucciones"/>
    </widget>
-   <widget class="QMenu" name="menuC_mara">
-    <property name="title">
-     <string>Cámara</string>
-    </property>
-   </widget>
    <addaction name="menuZOE"/>
-   <addaction name="menuC_mara"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionInstrucciones">
    <property name="text">
     <string>Instrucciones</string>
+   </property>
+  </action>
+  <action name="actiondos">
+   <property name="text">
+    <string>dos</string>
    </property>
   </action>
  </widget>

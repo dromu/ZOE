@@ -5,26 +5,30 @@ from TCP_comunication2 import TCP_comunication
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
 from CameraThread import CameraThread
+from PyQt5.QtMultimedia import QCameraInfo
 
-
-
+from PyQt5.QtWidgets import *
+from PyQt5.QtMultimedia import *
+from PyQt5.QtMultimediaWidgets import *
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QMenu
 
 qtCreatorFile = "zoe_main.ui"  # Nombre del archivo aquí.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
-
-        self.camera_thread = CameraThread()
-        self.camera_thread.frame_data.connect(self.display_frame)
-        
-
-
-        # Constructor
-
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
+
+        self.camera_menu = QMenu("Cámara", self)
+        self.populate_camera_menu()
+
+        menubar = self.menuBar()
+        menubar.addMenu(self.camera_menu)
+    
+        self.camera_thread = CameraThread()
+        self.camera_thread.frame_data.connect(self.display_frame)
 
         ## Elementos en el main 
         # Boton de inicio de conexion
@@ -59,7 +63,22 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.RB_white.toggled.connect(lambda: self.processRadioButton(self.RB_white, self.VisibleEsp,self.wavelength))
 
         self.value = 380
-    
+
+    def populate_camera_menu(self):
+        available_cameras = QCameraInfo.availableCameras()
+
+        self.camera_menu.clear()
+
+        for camera_info in available_cameras:
+            camera_name = camera_info.description()
+            action = QAction(camera_name, self)
+            action.triggered.connect(lambda checked, camera_info=camera_info: self.on_camera_selected(camera_info))
+            self.camera_menu.addAction(action)
+
+    def on_camera_selected(self, camera_info):
+        print(f"Cámara seleccionada: {camera_info.description()}")
+      
+            
 
     def display_frame(self, frame):
         pixmap = QPixmap.fromImage(frame)
