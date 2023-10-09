@@ -1,10 +1,9 @@
-import sys
 from PyQt5 import uic, QtWidgets
-from wificonnector import WifiConnector
-from TCP_comunication2 import TCP_comunication
+from comunication.wificonnector import WifiConnector
+from comunication.TCP_comunication import TCP_comunication
 from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
-from CameraThread import CameraThread
+from img_tools.CameraThread import CameraThread
 from PyQt5.QtMultimedia import QCameraInfo
 
 from PyQt5.QtWidgets import *
@@ -12,11 +11,16 @@ from PyQt5.QtMultimedia import *
 from PyQt5.QtMultimediaWidgets import *
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QMenu
 
-qtCreatorFile = "zoe_main.ui"  # Nombre del archivo aquí.
+qtCreatorFile = "gui\zoe_main.ui"  # Nombre del archivo aquí.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
+
 
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
+        """
+        Esta es la función de inicialización de una clase de Python que configura la ventana principal y
+        sus elementos, conecta señales y ranuras e inicializa algunas variables.
+        """
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
@@ -65,6 +69,9 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.value = 380
 
     def populate_camera_menu(self):
+        """
+        La función "populate_camera_menu" completa un menú con las opciones de cámara disponibles.
+        """
         available_cameras = QCameraInfo.availableCameras()
 
         self.camera_menu.clear()
@@ -76,11 +83,26 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.camera_menu.addAction(action)
 
     def on_camera_selected(self, camera_info):
+        """
+        La función "on_camera_selected" imprime la descripción de la cámara seleccionada.
+        
+        Args:
+          camera_info: El parámetro `camera_info` es un objeto que contiene información sobre la cámara
+        seleccionada. 
+        """
         print(f"Cámara seleccionada: {camera_info.description()}")
       
             
 
     def display_frame(self, frame):
+        """
+        La función muestra un marco en un widget QLabel en una aplicación PyQt.
+        
+        Args:
+          frame: El parámetro "marco" es un marco de imagen que se pasa a la función. Se espera que esté
+        en un formato que pueda convertirse a un objeto QPixmap utilizando el método
+        QPixmap.fromImage().
+        """
         pixmap = QPixmap.fromImage(frame)
         self.cameraCV.setPixmap(pixmap)
 

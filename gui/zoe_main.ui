@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1280</width>
-    <height>720</height>
+    <width>1920</width>
+    <height>1080</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <widget class="QPushButton" name="BuConnect">
     <property name="geometry">
      <rect>
-      <x>1150</x>
+      <x>1130</x>
       <y>610</y>
-      <width>71</width>
+      <width>91</width>
       <height>31</height>
      </rect>
     </property>
@@ -141,27 +141,11 @@ QSlider::add-page:horizontal {
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="logo">
-    <property name="geometry">
-     <rect>
-      <x>910</x>
-      <y>0</y>
-      <width>81</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-image: url(:/cct/microscopio.png);</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="titulo">
     <property name="geometry">
      <rect>
-      <x>980</x>
-      <y>10</y>
+      <x>960</x>
+      <y>20</y>
       <width>171</width>
       <height>111</height>
      </rect>
@@ -226,14 +210,33 @@ background-color: rgb(255, 255, 255);</string>
      <string/>
     </property>
    </widget>
+   <widget class="QLabel" name="img_microscopy">
+    <property name="geometry">
+     <rect>
+      <x>870</x>
+      <y>10</y>
+      <width>71</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>microscopio.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1280</width>
-     <height>21</height>
+     <width>1920</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuZOE">
@@ -256,8 +259,6 @@ background-color: rgb(255, 255, 255);</string>
    </property>
   </action>
  </widget>
- <resources>
-  <include location="logo.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

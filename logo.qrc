@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="cct">
-    <file>microscopio.png</file>
-    <file>espectro1.jpg</file>
-  </qresource>
-</RCC>
