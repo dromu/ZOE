@@ -4,11 +4,21 @@ import time
 
 class WifiConnector:
     def __init__(self):
+        """
+        El código anterior define una clase con métodos para conectarse a una red WiFi, desconectarse de
+        una red WiFi y verificar si el dispositivo está actualmente conectado a una red WiFi específica.
+        """
         self.is_connected = False
         self.wifi = pywifi.PyWiFi()  # Inicializa la biblioteca pywifi
         self.iface = self.wifi.interfaces()[0]  # Obtiene la primera interfaz WiFi
         
     def connect(self):
+        """
+        La función se conecta a una red WiFi utilizando el SSID y la contraseña proporcionados.
+        
+        Returns:
+        Retorna un valor booleano que indica si la conexión a la red WiFi fue exitosa o no. Si se establece la conexión, devuelve Verdadero. De lo contrario, devuelve Falso.
+        """
         ssid = "ZOE"
         password = "0123456789"
         self.iface.disconnect()  # Desconecta de cualquier red WiFi actual
@@ -33,6 +43,13 @@ class WifiConnector:
    
         
     def disconnect(self):
+        """
+        La función se desconecta de la red WiFi actual y devuelve un booleano que indica si la desconexión
+        fue exitosa o no.
+        
+        Returns:
+          El método devuelve el valor de la variable "self.is_connected".
+        """
         self.iface.disconnect()  # Desconecta de la red WiFi actual
 
         if self.iface.status() == pywifi.const.IFACE_DISCONNECTED:  # Verifica si se ha desconectado correctamente
@@ -45,5 +62,16 @@ class WifiConnector:
         return self.is_connected
     
     def ver_connected(self, ssid):
+        """
+        La función "ver_connected" comprueba si el SSID de la red WiFi actual coincide con el SSID
+        proporcionado.
+        
+        Args:
+          ssid: El parámetro `ssid` es una cadena que representa el SSID (Identificador de conjunto de
+        servicios) de una red WiFi.
+        
+        Returns:
+          un valor booleano que indica si el SSID actual de la red WiFi es igual al SSID proporcionado.
+        """
         current_ssid = self.iface.ssid()  # Obtiene el SSID de la red WiFi actual
         return current_ssid == ssid

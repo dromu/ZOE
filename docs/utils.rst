@@ -1,9 +1,6 @@
 utils package
 =============
 
-Submodules
-----------
-
 utils.MyApp module
 ------------------
 

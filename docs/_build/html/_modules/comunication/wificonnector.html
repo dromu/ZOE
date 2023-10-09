@@ -78,6 +78,10 @@
 <a class="viewcode-back" href="../../comunication.html#comunication.wificonnector.WifiConnector">[documentos]</a>
 <span class="k">class</span> <span class="nc">WifiConnector</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        El código anterior define una clase con métodos para conectarse a una red WiFi, desconectarse de</span>
+<span class="sd">        una red WiFi y verificar si el dispositivo está actualmente conectado a una red WiFi específica.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_connected</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wifi</span> <span class="o">=</span> <span class="n">pywifi</span><span class="o">.</span><span class="n">PyWiFi</span><span class="p">()</span>  <span class="c1"># Inicializa la biblioteca pywifi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wifi</span><span class="o">.</span><span class="n">interfaces</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Obtiene la primera interfaz WiFi</span>
@@ -85,6 +89,12 @@
 <div class="viewcode-block" id="WifiConnector.connect">
 <a class="viewcode-back" href="../../comunication.html#comunication.wificonnector.WifiConnector.connect">[documentos]</a>
     <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        La función se conecta a una red WiFi utilizando el SSID y la contraseña proporcionados.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">        Retorna un valor booleano que indica si la conexión a la red WiFi fue exitosa o no. Si se establece la conexión, devuelve Verdadero. De lo contrario, devuelve Falso.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ssid</span> <span class="o">=</span> <span class="s2">&quot;ZOE&quot;</span>
         <span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;0123456789&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>  <span class="c1"># Desconecta de cualquier red WiFi actual</span>
@@ -112,6 +122,13 @@
 <div class="viewcode-block" id="WifiConnector.disconnect">
 <a class="viewcode-back" href="../../comunication.html#comunication.wificonnector.WifiConnector.disconnect">[documentos]</a>
     <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        La función se desconecta de la red WiFi actual y devuelve un booleano que indica si la desconexión</span>
+<span class="sd">        fue exitosa o no.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">          El método devuelve el valor de la variable &quot;self.is_connected&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>  <span class="c1"># Desconecta de la red WiFi actual</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="o">==</span> <span class="n">pywifi</span><span class="o">.</span><span class="n">const</span><span class="o">.</span><span class="n">IFACE_DISCONNECTED</span><span class="p">:</span>  <span class="c1"># Verifica si se ha desconectado correctamente</span>
@@ -127,6 +144,17 @@
 <div class="viewcode-block" id="WifiConnector.ver_connected">
 <a class="viewcode-back" href="../../comunication.html#comunication.wificonnector.WifiConnector.ver_connected">[documentos]</a>
     <span class="k">def</span> <span class="nf">ver_connected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ssid</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        La función &quot;ver_connected&quot; comprueba si el SSID de la red WiFi actual coincide con el SSID</span>
+<span class="sd">        proporcionado.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">          ssid: El parámetro `ssid` es una cadena que representa el SSID (Identificador de conjunto de</span>
+<span class="sd">        servicios) de una red WiFi.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">          un valor booleano que indica si el SSID actual de la red WiFi es igual al SSID proporcionado.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_ssid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">ssid</span><span class="p">()</span>  <span class="c1"># Obtiene el SSID de la red WiFi actual</span>
         <span class="k">return</span> <span class="n">current_ssid</span> <span class="o">==</span> <span class="n">ssid</span></div>
 </div>

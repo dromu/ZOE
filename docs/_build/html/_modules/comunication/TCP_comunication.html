@@ -72,10 +72,16 @@
   <h1>Código fuente para comunication.TCP_comunication</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">socket</span>
 
+<span class="c1"># La clase `TCP_comunication` es una clase de Python que maneja la comunicación TCP conectándose a una</span>
+<span class="c1"># dirección y puerto específicos, enviando datos y cerrando la conexión.</span>
+
 <div class="viewcode-block" id="TCP_comunication">
 <a class="viewcode-back" href="../../comunication.html#comunication.TCP_comunication.TCP_comunication">[documentos]</a>
 <span class="k">class</span> <span class="nc">TCP_comunication</span><span class="p">:</span> 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        La función inicializa los valores de la dirección IP, el puerto y las variables del cliente.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addres</span> <span class="o">=</span> <span class="s2">&quot;192.168.4.1&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span>   <span class="o">=</span> <span class="mi">8080</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cliente</span> <span class="o">=</span> <span class="kc">None</span>
@@ -84,6 +90,9 @@
 <div class="viewcode-block" id="TCP_comunication.connect">
 <a class="viewcode-back" href="../../comunication.html#comunication.TCP_comunication.TCP_comunication.connect">[documentos]</a>
     <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        La función se conecta a un servidor mediante un socket TCP.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cliente</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cliente</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">addres</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">))</span> </div>
 
@@ -92,25 +101,28 @@
 <div class="viewcode-block" id="TCP_comunication.send">
 <a class="viewcode-back" href="../../comunication.html#comunication.TCP_comunication.TCP_comunication.send">[documentos]</a>
     <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datos</span><span class="p">):</span>
-       <span class="bp">self</span><span class="o">.</span><span class="n">cliente</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">datos</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        La función envía los datos codificados al cliente.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">          datos: El parámetro &quot;datos&quot; es una cadena que representa los datos que desea enviar. Se</span>
+<span class="sd">        codificará utilizando la codificación UTF-8 antes de enviarlo a través del socket del cliente.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cliente</span><span class="o">.</span><span class="n">sendall</span><span class="p">(</span><span class="n">datos</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span></div>
 
-
-       <span class="c1"># Esperar la respuesta del servidor</span>
-       <span class="c1">#self.respuesta = self.cliente.recv(1024)</span>
-       <span class="c1">#print(f&quot;Respuesta del servidor: {self.respuesta.decode(&#39;utf-8&#39;)}&quot;)</span>
 
 <div class="viewcode-block" id="TCP_comunication.close">
 <a class="viewcode-back" href="../../comunication.html#comunication.TCP_comunication.TCP_comunication.close">[documentos]</a>
     <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        La función de cierre cierra la conexión del cliente si existe.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cliente</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cliente</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">cliente</span> <span class="o">=</span> <span class="kc">None</span></div>
 </div>
 
 
-<span class="c1"># if __name__ == &quot;__main__&quot;:</span>
-<span class="c1">#     dato = TCP_comunication()</span>
-<span class="c1">#     dato.send(&quot;holi&quot;)</span>
 </pre></div>
 
            </div>

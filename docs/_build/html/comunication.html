@@ -105,17 +105,25 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="comunication.TCP_comunication.TCP_comunication.close">
 <span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/comunication/TCP_comunication.html#TCP_comunication.close"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#comunication.TCP_comunication.TCP_comunication.close" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>La función de cierre cierra la conexión del cliente si existe.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="comunication.TCP_comunication.TCP_comunication.connect">
 <span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/comunication/TCP_comunication.html#TCP_comunication.connect"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#comunication.TCP_comunication.TCP_comunication.connect" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>La función se conecta a un servidor mediante un socket TCP.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="comunication.TCP_comunication.TCP_comunication.send">
 <span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/comunication/TCP_comunication.html#TCP_comunication.send"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#comunication.TCP_comunication.TCP_comunication.send" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>La función envía los datos codificados al cliente.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>datos: El parámetro «datos» es una cadena que representa los datos que desea enviar. Se</p>
+</dd>
+</dl>
+<p>codificará utilizando la codificación UTF-8 antes de enviarlo a través del socket del cliente.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -129,17 +137,37 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="comunication.wificonnector.WifiConnector.connect">
 <span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/comunication/wificonnector.html#WifiConnector.connect"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#comunication.wificonnector.WifiConnector.connect" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>La función se conecta a una red WiFi utilizando el SSID y la contraseña proporcionados.</p>
+<p>Returns:
+Retorna un valor booleano que indica si la conexión a la red WiFi fue exitosa o no. Si se establece la conexión, devuelve Verdadero. De lo contrario, devuelve Falso.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="comunication.wificonnector.WifiConnector.disconnect">
 <span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/comunication/wificonnector.html#WifiConnector.disconnect"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#comunication.wificonnector.WifiConnector.disconnect" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>La función se desconecta de la red WiFi actual y devuelve un booleano que indica si la desconexión
+fue exitosa o no.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>El método devuelve el valor de la variable «self.is_connected».</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="comunication.wificonnector.WifiConnector.ver_connected">
 <span class="sig-name descname"><span class="pre">ver_connected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ssid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/comunication/wificonnector.html#WifiConnector.ver_connected"><span class="viewcode-link"><span class="pre">[fuente]</span></span></a><a class="headerlink" href="#comunication.wificonnector.WifiConnector.ver_connected" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>La función «ver_connected» comprueba si el SSID de la red WiFi actual coincide con el SSID
+proporcionado.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>ssid: El parámetro <cite>ssid</cite> es una cadena que representa el SSID (Identificador de conjunto de</p>
+</dd>
+</dl>
+<p>servicios) de una red WiFi.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>un valor booleano que indica si el SSID actual de la red WiFi es igual al SSID proporcionado.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

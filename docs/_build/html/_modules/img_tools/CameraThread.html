@@ -74,6 +74,8 @@
 <span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">pyqtSignal</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QImage</span><span class="p">,</span> <span class="n">QPixmap</span>
 
+<span class="c1"># La clase `CameraThread` captura fotogramas de una cámara y emite una señal con los datos del</span>
+<span class="c1"># fotograma como `QImage`.</span>
 <div class="viewcode-block" id="CameraThread">
 <a class="viewcode-back" href="../../img_tools.html#img_tools.CameraThread.CameraThread">[documentos]</a>
 <span class="k">class</span> <span class="nc">CameraThread</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
@@ -82,6 +84,11 @@
 <div class="viewcode-block" id="CameraThread.run">
 <a class="viewcode-back" href="../../img_tools.html#img_tools.CameraThread.CameraThread.run">[documentos]</a>
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        La función captura video desde una cámara web y convierte cada cuadro en una imagen RGB.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># El fragmento de código que proporcionó captura fotogramas desde una cámara web usando OpenCV</span>
+        <span class="c1"># (`cv2.VideoCapture(0)`).</span>
         <span class="n">capture</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">ret</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">capture</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
