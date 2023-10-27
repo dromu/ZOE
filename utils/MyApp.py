@@ -10,6 +10,10 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtMultimedia import *
 from PyQt5.QtMultimediaWidgets import *
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QMenu
+from PyQt5.QtCore import QSize
+from PyQt5.QtCore import Qt
+import numpy as np
+import cv2
 
 qtCreatorFile = "gui\zoe_main.ui"  # Nombre del archivo aquí.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
@@ -22,16 +26,22 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         La función `populate_camera_menu` borra el menú de la cámara y lo completa con las cámaras
         disponibles.
         """
+
         QtWidgets.QMainWindow.__init__(self)
         Ui_MainWindow.__init__(self)
         self.setupUi(self)
 
+        # Se crea un menu para mostrar las distintas camaras
         self.camera_menu = QMenu("Cámara", self)
         self.populate_camera_menu()
-
         menubar = self.menuBar()
         menubar.addMenu(self.camera_menu)
+
     
+        # El código crea una instancia de la clase `CameraThread` y la asigna a la variable
+        # `self.camera_thread`. Luego conecta la señal `frame_data` del `camera_thread` al método
+        # `display_frame`. Esto permite llamar al método `display_frame` siempre que haya un nuevo
+        # cuadro disponible en el hilo de la cámara.
         self.camera_thread = CameraThread()
         self.camera_thread.frame_data.connect(self.display_frame)
 
@@ -67,7 +77,32 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         self.RB_auto.toggled.connect(lambda: self.processRadioButton(self.RB_auto, self.VisibleEsp,self.wavelength))
         self.RB_white.toggled.connect(lambda: self.processRadioButton(self.RB_white, self.VisibleEsp,self.wavelength))
 
+
+        self.pushButton_10.clicked.connect(self.zoom_plus)
+
         self.value = 380
+        # self.camera_thread.start()
+
+
+    def zoom_plus(self, frame):
+        # Generar coordenadas aleatorias dentro de las dimensiones de la imagen
+        x = np.random.randint(0, 640)
+        y = np.random.randint(0, 480)
+
+        # Color del punto en formato BGR (azul, verde, rojo)
+        color_punto = (0, 255, 0)  # verde
+
+        imagen_np = np.array(frame)
+
+        print(imagen_np.shape)
+        
+
+        # Dibujar el punto en la imagen
+        cv2.circle(imagen_np, (x, y), 5, color_punto, -1)  # -1 para rellenar el círculo
+    
+        imagen_qt = QImage(imagen_np.data, imagen_np.shape[1], imagen_np.shape[0], imagen_np.shape[1] * 3, QImage.Format_RGB888)
+
+        self.camera_thread.image_qt.connect(self.display_frame)
 
     def populate_camera_menu(self):
         """
@@ -105,9 +140,21 @@ class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
         espera que esté en un formato que pueda convertirse en un objeto `QPixmap` usando el método
         `fromImage` de la clase `QPixmap`.
         """
-        pixmap = QPixmap.fromImage(frame)
-        self.cameraCV.setPixmap(pixmap)
 
+        # Se redimensiona el tamaño de la imagen de entrada 
+        tamaño = QSize(1100,800)
+        imagen_redimensionada = frame.scaled(
+            tamaño, 
+            Qt.KeepAspectRatio, 
+            Qt.SmoothTransformation
+        )
+
+       # El código está creando un objeto QPixmap llamado `pixmap` a partir de la imagen
+       # redimensionada `imagen_redimensionada`. El método `fromImage` de la clase QPixmap se utiliza
+       # para convertir el objeto QImage en un objeto QPixmap.
+        pixmap = QPixmap.fromImage(imagen_redimensionada)
+        self.cameraCV.setPixmap(pixmap)
+        
 
     def processRadioButton(self, radio_button, slider, wavelength):
         if radio_button.isChecked():

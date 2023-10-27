@@ -198,8 +198,8 @@ QSlider::add-page:horizontal {
      <rect>
       <x>40</x>
       <y>40</y>
-      <width>1191</width>
-      <height>801</height>
+      <width>1100</width>
+      <height>800</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -464,7 +464,7 @@ background-color: rgb(255, 255, 255);</string>
      <string>-</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_12">
+   <widget class="QPushButton" name="mas_zoom">
     <property name="geometry">
      <rect>
       <x>590</x>
