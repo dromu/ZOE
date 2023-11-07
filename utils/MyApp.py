@@ -1,249 +1,207 @@
 import sys
 from PyQt5 import uic, QtWidgets
-from comunication.wificonnector import WifiConnector
-from comunication.TCP_comunication import TCP_comunication
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget,QColorDialog
+from img_tools.CameraView import ProcesadorCamara
 from PyQt5.QtGui import QImage, QPixmap
-from img_tools.CameraThread import CameraThread
-from PyQt5.QtMultimedia import QCameraInfo
-from PyQt5.QtWidgets import *
-from PyQt5.QtMultimedia import *
-from PyQt5.QtMultimediaWidgets import *
-from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QMenu
-from PyQt5.QtCore import QSize
-from PyQt5.QtCore import Qt
-import numpy as np
-import cv2
+import cv2 
+
+from PyQt5 import QtGui
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMenuBar, QMenu,QAction,QFileDialog
+from PyQt5.QtGui import QIcon, QImage, QPainter, QPen, QPolygon, QColor
+from PyQt5.QtCore import Qt, QPoint, QRect
+
+import sys
+from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWidget
+from PyQt5.QtGui import QPixmap, QPainter, QColor
+from PyQt5.QtCore import Qt, QPoint
 
 qtCreatorFile = "gui\zoe_main.ui"  # Nombre del archivo aquí.
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
 
-# La clase `MyApp` es una aplicación PyQt que muestra una transmisión de la cámara y permite al
-# usuario controlar la configuración de la cámara y establecer una conexión con un dispositivo ESP32.
 class MyApp(QtWidgets.QMainWindow, Ui_MainWindow):
-    def __init__(self):
-        """
-        La función `populate_camera_menu` borra el menú de la cámara y lo completa con las cámaras
-        disponibles.
-        """
 
-        QtWidgets.QMainWindow.__init__(self)
-        Ui_MainWindow.__init__(self)
-        self.setupUi(self)
+    #Constuctor 
+    def __init__(self, *args, **kwargs):
+        
+        # Se heredan todos los parametros del file .UI
+        QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
+        self.setupUi(self)      #Configuracion de la interfaz grafica 
+        
+        ## Tablero escritura 
+        # Crear un QPixmap para el tablero
+        ancho = 1300
+        largo = 850
+        self.pixmap_tablero = QPixmap(ancho, largo)
+        self.pixmap_tablero.fill(QColor(0, 255, 0,0))  # Se vuelve transparente para la escritura sobre camara
+        
+        # Se despliega sobre el Qlabel "tablero"
+        self.tablero.setPixmap(self.pixmap_tablero)
 
-        # Se crea un menu para mostrar las distintas camaras
-        self.camera_menu = QMenu("Cámara", self)
-        self.populate_camera_menu()
-        menubar = self.menuBar()
-        menubar.addMenu(self.camera_menu)
+        # Variables para seguir el trazo del ratón
+        self.last_point = QPoint()
+        self.dibujando = False
+        self.draw = False   # hAbilitar los trazon 
 
+        # Conectar eventos de clic y movimiento del ratón a las funciones correspondientes
+        self.tablero.mousePressEvent = self.mousePressEvent
+        self.tablero.mouseMoveEvent = self.mouseMoveEvent
+
+        self.brushSize = 1
+        #Funcion que hace que se habilite las escrituras 
+        self.pbDot.clicked.connect(self.habEscritura)
+        self.pbTrash.clicked.connect(self.clear)
+
+        self.pen_color = Qt.black
+        self.pen_size = 2
+
+        # Crear una instancia de ProcesadorCamara
+        self.procesador_camara = ProcesadorCamara()
+        self.procesador_camara.iniciar_camara()
+
+        # Conectar la señal de actualización de ProcesadorCamara a la función de actualización de la interfaz
+        self.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)
+
+        self.estilo_original = self.pbDot.styleSheet()
+        
+        self.brushColor = Qt.black
+        self.blueAction.triggered.connect(self.brushBlue)
+        self.redAction.triggered.connect(self.brushRed)
+        self.greenAction.triggered.connect(self.brushGreen)
+        self.blackAction.triggered.connect(self.brushBlack)
+        self.yellowAction.triggered.connect(self.brushYellow)
+        self.whiteAction.triggered.connect(self.brushWhite)
+
+        self.onepxAction.triggered.connect(self.onepx)
+        self.threepxAction.triggered.connect(self.threepx)
+        self.fivepxAction.triggered.connect(self.fivepx)
+        self.sevenpxAction.triggered.connect(self.sevenpx)
+        self.ninepxAction.triggered.connect(self.ninepx)
+
+
+
+        # Guardar 
+        self.pbSave.clicked.connect(self.save)
+
+    def habEscritura(self):
+        self.draw = not self.draw
+        
+        print("draw: ", self.draw)
+
+        color_actual = self.pbDot.palette().button().color().name()
+
+        # nuevo_color = "red" if color_actual != "red" else "blue"
+
+        if color_actual == "white": 
+            nuevo_color = "blue"
+
+        else:
+            nuevo_color = "white"
+
+        print(nuevo_color)
+        nuevo_estilo = self.estilo_original + f"background-color: {nuevo_color};"
+
+        # print(nuevo_estilo)
+        # Aplicar el nuevo estilo al botón
+        self.pbDot.setStyleSheet(nuevo_estilo)
+
+
+    def mousePressEvent(self, event):
+        # Obtener las coordenadas del clic
+        if  self.draw: 
+            self.last_point = event.pos()
+            self.dibujando = True
+            self.update()
+
+    def mouseMoveEvent(self, event):
+        # Obtener las coordenadas del movimiento del ratón
+        current_point = event.pos()
+
+        if self.dibujando & self.draw: 
+            # Crear un QPainter y configurarlo para dibujar en el QPixmap del tablero
+            painter = QPainter(self.pixmap_tablero)
+            # painter.setPen(QPen(self.pen_color, self.pen_size, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+            painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine,Qt.RoundCap, Qt.RoundJoin))
+            painter.drawLine(self.last_point, current_point)
+            painter.end()
+
+            # Actualizar la imagen en el tablero
+            self.tablero.setPixmap(self.pixmap_tablero)
+
+            # Forzar la actualización de la interfaz
+            self.repaint()
+
+            # Actualizar la última posición
+            self.last_point = current_point
+            self.update()
+
+    def mouseReleaseEvent(self, event):
+        # Al soltar el botón del ratón, dejar de dibujar
+        self.dibujando = False
+        self.update()
     
-        # El código crea una instancia de la clase `CameraThread` y la asigna a la variable
-        # `self.camera_thread`. Luego conecta la señal `frame_data` del `camera_thread` al método
-        # `display_frame`. Esto permite llamar al método `display_frame` siempre que haya un nuevo
-        # cuadro disponible en el hilo de la cámara.
-        self.camera_thread = CameraThread()
-        self.camera_thread.frame_data.connect(self.display_frame)
+    ## Metodo para llamar inicializar camara
+    def actualizar_interfaz(self, frame):
+        # Convertir el frame de OpenCV a un formato compatible con QImage
+        height, width, channel = frame.shape
+        bytes_per_line = 3 * width
+        q_image = QImage(frame.data, width, height, bytes_per_line, QImage.Format_RGB888)
 
-        ## Elementos en el main 
-        # Boton de inicio de conexion
-        self.BuConnect.setStyleSheet("QPushButton { background-color: red;  }")
-        self.BuConnect.clicked.connect(self.conexion)
-        #Texto inicial de conexion 
-        self.TextConnect.setText("No conectado")
-        # Slider de espectro visible
-        self.VisibleEsp.valueChanged.connect(self.slider_value_changed)
+        # Mostrar la imagen de la cámara en un QLabel
+        self.pixmap = QPixmap.fromImage(q_image)
         
-        # Se crea un objeto connector
-        self.connector = WifiConnector()
+        # Se escribe en el tablero que se encuentra en el fondo. 
+        self.tablero_2.setPixmap(self.pixmap)
 
-        #Obejto envio
-        self.send_data = TCP_comunication()
+    def clear(self):
+        self.pixmap_tablero.fill(QColor(0, 255, 0,0))
+        self.update()
         
-        # Deshabilitamos los elementos del main, estos se iran actualizando
-        self.wavelength.setEnabled(False)
-        self.VisibleEsp.setEnabled(False)
-        self.RB_manual.setEnabled(False)
-        self.RB_auto.setEnabled(False)
-        self.RB_white.setEnabled(False)
-
-        # Cambiar el valor del slider en texto
-        self.wavelength.returnPressed.connect(self.line_edit_return_pressed)
-
-        # Seleccion de modo luz blanca por defecto
-        self.RB_white.setChecked(True)
-
-        self.RB_manual.toggled.connect(lambda: self.processRadioButton(self.RB_manual, self.VisibleEsp, self.wavelength))
-        self.RB_auto.toggled.connect(lambda: self.processRadioButton(self.RB_auto, self.VisibleEsp,self.wavelength))
-        self.RB_white.toggled.connect(lambda: self.processRadioButton(self.RB_white, self.VisibleEsp,self.wavelength))
+        print("limpiando tablero")
 
 
-        self.pushButton_10.clicked.connect(self.zoom_plus)
-
-        self.value = 380
-        # self.camera_thread.start()
-
-
-    def zoom_plus(self, frame):
-        # Generar coordenadas aleatorias dentro de las dimensiones de la imagen
-        x = np.random.randint(0, 640)
-        y = np.random.randint(0, 480)
-
-        # Color del punto en formato BGR (azul, verde, rojo)
-        color_punto = (0, 255, 0)  # verde
-
-        imagen_np = np.array(frame)
-
-        print(imagen_np.shape)
+    def save(self):
+        filePath, _ = QFileDialog.getSaveFileName(self,"Guardar imagen","", "PNG(*.png);;JPEG(*.jpg *.jpeg);; All Files(*.)")
+        if filePath == "":
+            return
         
+        combined_image = QImage(self.pixmap_tablero.size(), QImage.Format_ARGB32)
 
-        # Dibujar el punto en la imagen
-        cv2.circle(imagen_np, (x, y), 5, color_punto, -1)  # -1 para rellenar el círculo
+        combined_image.fill(Qt.transparent)
+
+        # Pintar las dos imágenes en la imagen combinada
+        painter = QPainter(combined_image)
+        painter.drawPixmap(0, 0, self.pixmap)
+        painter.drawPixmap(0, 0, self.pixmap_tablero)
+        
+        painter.end()
+       
+        
+        combined_image.save(filePath)
+
+    #Pinceles y tamaños 
     
-        imagen_qt = QImage(imagen_np.data, imagen_np.shape[1], imagen_np.shape[0], imagen_np.shape[1] * 3, QImage.Format_RGB888)
+    #Tamaños de pincel
+    def onepx(self):
+        self.brushSize = 1
+    def threepx(self):
+        self.brushSize = 3
+    def fivepx(self):
+        self.brushSize = 5
+    def sevenpx(self):
+        self.brushSize = 7
+    def ninepx(self):
+        self.brushSize = 9
 
-        self.camera_thread.image_qt.connect(self.display_frame)
-
-    def populate_camera_menu(self):
-        """
-        La función completa un menú con cámaras disponibles y conecta cada cámara a una función de
-        devolución de llamada.
-        """
-        available_cameras = QCameraInfo.availableCameras()
-
-        self.camera_menu.clear()
-
-        for camera_info in available_cameras:
-            camera_name = camera_info.description()
-            action = QAction(camera_name, self)
-            action.triggered.connect(lambda checked, camera_info=camera_info: self.on_camera_selected(camera_info))
-            self.camera_menu.addAction(action)
-
-    def on_camera_selected(self, camera_info):
-        """
-        La función "on_camera_selected" imprime la descripción de la cámara seleccionada.
-        
-        Args:
-          camera_info: El parámetro "camera_info" es un objeto que contiene información sobre la cámara
-        seleccionada. Probablemente tenga propiedades como "nombre", "resolución", "fabricante", etc.
-        """
-        print(f"Cámara seleccionada: {camera_info.description()}")
-      
-            
-
-    def display_frame(self, frame):
-        """
-        La función muestra un marco en un widget QLabel en una aplicación PyQt.
-        
-        Args:
-          frame: El parámetro `frame` es un marco de imagen que se pasa al método `display_frame`. Se
-        espera que esté en un formato que pueda convertirse en un objeto `QPixmap` usando el método
-        `fromImage` de la clase `QPixmap`.
-        """
-
-        # Se redimensiona el tamaño de la imagen de entrada 
-        tamaño = QSize(1100,800)
-        imagen_redimensionada = frame.scaled(
-            tamaño, 
-            Qt.KeepAspectRatio, 
-            Qt.SmoothTransformation
-        )
-
-       # El código está creando un objeto QPixmap llamado `pixmap` a partir de la imagen
-       # redimensionada `imagen_redimensionada`. El método `fromImage` de la clase QPixmap se utiliza
-       # para convertir el objeto QImage en un objeto QPixmap.
-        pixmap = QPixmap.fromImage(imagen_redimensionada)
-        self.cameraCV.setPixmap(pixmap)
-        
-
-    def processRadioButton(self, radio_button, slider, wavelength):
-        if radio_button.isChecked():
-
-            print(radio_button.text())
-            
-            if radio_button.text() == 'Manual':
-                # Se habilitan todas las modificaciones al espectro 
-                slider.setEnabled(True)    
-                wavelength.setEnabled(True)    
-                
-                
-            if radio_button.text() == 'Automático':
-                self.value = 500
-                self.send_data.send("A"+str(self.value))  
-                # self.send_data.send(str(self.value) )  
-
-                # ACtualizamos el valor directamente, con el obtenido del cambio de espacio 
-                self.wavelength.setText(str(self.value))
-
-                # Se limitan las acciones para que no se pueda mover la longitud
-                self.wavelength.setEnabled(False)
-                self.VisibleEsp.setEnabled(False)
-               
-            if radio_button.text() == 'Luz blanca':
-                # Se limitan y paran todas las acciones 
-                self.send_data.send("W"+str(self.value)) 
-                self.wavelength.setEnabled(False)
-                self.VisibleEsp.setEnabled(False)
-                
-            slider.setValue(self.value)
-           
-    # Recibe los valores de cambio del slider
-    def slider_value_changed(self, value):
-        # Checkea el boton manual
-        if self.RB_manual.isChecked():
-            self.wavelength.setText(str(value))
-            self.value = int(value) # ACtualizamos el valor para que la barra quede en el mismo punto del manual
-            print(str(value))
-            self.send_data.send("M" + str(value) )  
-        else:
-            # Se deshabilita cualquier accion diferente
-            self.wavelength.setEnabled(False)
-            self.VisibleEsp.setEnabled(False)
-
-    # Hace referencia al recuadro para cambio de longitud
-    def line_edit_return_pressed(self):
-        value = self.wavelength.text()
-        if value.isdigit():
-            value = int(self.wavelength.text())
-            if 380 <= value <= 780:
-                self.VisibleEsp.setValue(value)
-            else:
-                self.wavelength.setText("Invalid value!")
-        else:
-                self.wavelength.setText("Invalid value!")
-
-    # Proceso de conexion del pc-esp32
-    def conexion(self):
-        if self.connector.is_connected:     #Revisa el atributo en el constructor
-
-            
-            if not self.connector.disconnect(): #Revisa los retornos de los metodos 
-                self.BuConnect.setText('Conectar')
-                self.BuConnect.setStyleSheet("QPushButton { background-color: red; }")
-                self.TextConnect.setText("Desconexión exitosa")
-
-                self.RB_manual.setEnabled(False)
-                self.RB_auto.setEnabled(False)
-                self.RB_white.setEnabled(False)
-                self.wavelength.setEnabled(False)
-                self.VisibleEsp.setEnabled(False)
-
-            else:
-                self.TextConnect.setText("No se pudo desconectar.")
-
-        else:
-            if self.connector.connect():
-                self.BuConnect.setText('Conectado')
-                self.BuConnect.setStyleSheet("QPushButton { background-color: green; }")
-                self.TextConnect.setText("Conexión establecida.")
-                
-                self.camera_thread.start()
-                self.RB_manual.setEnabled(True)
-                self.RB_auto.setEnabled(True)
-                self.RB_white.setEnabled(True)
-                
-                # Realiza la conexion 
-                self.send_data.connect()
-            else:
-                self.TextConnect.setText("No se pudo establecer la conexión.")
-                
+    #Colores 
+    def brushBlack(self):
+        self.brushColor = Qt.black
+    def brushRed(self):
+        self.brushColor = Qt.red
+    def brushBlue(self):
+        self.brushColor = Qt.blue
+    def brushGreen(self):
+        self.brushColor = Qt.green
+    def brushYellow(self):
+        self.brushColor = Qt.yellow
+    def brushWhite(self):
+        self.brushColor = Qt.white
