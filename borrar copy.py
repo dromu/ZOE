@@ -99,49 +99,67 @@ class Window(QMainWindow):
         self.flag = False
 
     def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            self.drawing        = True
-            self.lastPoint      = event.pos()
 
+        #Cuando da click activa el evento cuando se presiona un click
+        if event.button() == Qt.LeftButton:         #Click izquierdo
+            self.drawing        = True              #Habilita el dibujo
+            self.lastPoint      = event.pos()       #Toma la ultima posicion 
+
+            #Inicia la pintura sobre el lienzo
             painter = QPainter(self.image)
+
+            #Configura el tipo de pincel
             painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine,Qt.RoundCap, Qt.RoundJoin)) 
-      
+       
             print('Point 1')
+            # Graba la posicion inicial
             self.begin = event.pos()
+
+            # Actualiza el punto final pero como solo existe una posicion toma el mismo 
             self.destination = self.begin
             self.update()
 
-    def mouseMoveEvent(self, event):
-        if (event.buttons() & Qt.LeftButton) & self.drawing:
+    #Eventos cuando se mueve el mouse 
+    def mouseMoveEvent(self, event): 
+        if (event.buttons() & Qt.LeftButton):
             painter = QPainter(self.image)
-            painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine,Qt.RoundCap, Qt.RoundJoin))
-            painter.drawLine(self.lastPoint, event.pos())
-            self.lastPoint = event.pos()    
-
             print('Point 2')	
+            #Graba la posicion donde se mueve el mouse
             self.destination = event.pos()
+            print(self.destination)
 
+            # painter.drawLine(self.begin, self.destination)
+
+            #Actualiza todo el espacio 
             self.update()
 
     def mouseReleaseEvent(self, event):
-        if event.button == Qt.LeftButton:
-            self.drawing = False
-
-        if (event.button() & Qt.LeftButton) & self.flag:
-            rect = QRect(self.begin, self.destination)
+        if (event.button() & Qt.LeftButton):
+            
+            #SE crea un objeto rectangular que recibe la posicion inicial y final 
+            rect    = QRect(self.begin, self.destination)
+            
+            #Objeto para empezar a pintar 
             painter = QPainter(self.image)
+
+            # Pinta el rectangulo 
             painter.drawRect(rect.normalized())
 
-            self.begin, self.destination = QPoint(), QPoint()
-            self.update()
+            # painter.drawLine(self.begin, event.pos())
+
+
 
     def paintEvent(self,event):
         canvasPainter   =  QPainter(self)
         canvasPainter.drawImage(self.rect(), self.image, self.image.rect())
         
-        # if not self.begin.isNull() and not self.destination.isNull():
-        #     rect = QRect(self.begin, self.destination)
-        #     canvasPainter.drawRect(rect.normalized())
+        if not self.begin.isNull() and not self.destination.isNull():
+            rect = QRect(self.begin, self.destination)
+            canvasPainter.drawRect(rect.normalized())
+
+        
+
+            
             
             
 
