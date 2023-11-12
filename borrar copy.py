@@ -29,7 +29,7 @@ class Window(QMainWindow):
 
         # PArametros por defecto para iniciar la pintura
         self.drawing    = False         # Desactivado para no iniciar a dibujar 
-        self.brushSize  = 3
+        self.brushSize  = 5
         self.brushColor = Qt.black
 
         self.lastPoint  = QPoint()
@@ -102,18 +102,19 @@ class Window(QMainWindow):
 
         #Cuando da click activa el evento cuando se presiona un click
         if event.button() == Qt.LeftButton:         #Click izquierdo
-            self.drawing        = True              #Habilita el dibujo
-            self.lastPoint      = event.pos()       #Toma la ultima posicion 
+            # self.drawing        = True              #Habilita el dibujo
+            # self.lastPoint      = event.pos()       #Toma la ultima posicion 
 
             #Inicia la pintura sobre el lienzo
             painter = QPainter(self.image)
 
             #Configura el tipo de pincel
             painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine,Qt.RoundCap, Qt.RoundJoin)) 
-       
-            print('Point 1')
+            
+
             # Graba la posicion inicial
             self.begin = event.pos()
+            print("self.begin: ",self.begin)
 
             # Actualiza el punto final pero como solo existe una posicion toma el mismo 
             self.destination = self.begin
@@ -125,10 +126,11 @@ class Window(QMainWindow):
             painter = QPainter(self.image)
             print('Point 2')	
             #Graba la posicion donde se mueve el mouse
+            self.puntoAnte = self.destination
             self.destination = event.pos()
-            print(self.destination)
+            print("self.destination: ", self.destination)
 
-            # painter.drawLine(self.begin, self.destination)
+            painter.drawLine(self.puntoAnte, self.destination)
 
             #Actualiza todo el espacio 
             self.update()
@@ -147,15 +149,23 @@ class Window(QMainWindow):
 
             # painter.drawLine(self.begin, event.pos())
 
+            print("mouseReleaseEvent")
+            
+
 
 
     def paintEvent(self,event):
         canvasPainter   =  QPainter(self)
         canvasPainter.drawImage(self.rect(), self.image, self.image.rect())
         
+
         if not self.begin.isNull() and not self.destination.isNull():
             rect = QRect(self.begin, self.destination)
             canvasPainter.drawRect(rect.normalized())
+            print("paintEvent")
+   
+          
+
 
         
 

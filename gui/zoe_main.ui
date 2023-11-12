@@ -219,7 +219,7 @@ QSlider::add-page:horizontal {
      <rect>
       <x>10</x>
       <y>860</y>
-      <width>395</width>
+      <width>947</width>
       <height>80</height>
      </rect>
     </property>
@@ -256,12 +256,89 @@ QSlider::add-page:horizontal {
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="pbElip">
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>◯</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbText">
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>𝓐</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbHide">
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/eye_invisible.ico</normaloff>
+         <normalon>../images/icons/eye_show.ico</normalon>../images/icons/eye_invisible.ico</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbDel">
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>🧹</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbBack">
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>⬅️</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbForw">
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>➡️</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="pbTrash">
        <property name="styleSheet">
         <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
         <string>🗑️</string>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -305,9 +382,9 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
    <zorder>RB_auto</zorder>
    <zorder>RB_white</zorder>
    <zorder>img_microscopy</zorder>
-   <zorder>tablero</zorder>
    <zorder>horizontalLayoutWidget</zorder>
    <zorder>horizontalLayoutWidget_2</zorder>
+   <zorder>tablero</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menuBar">
@@ -316,7 +393,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
      <x>0</x>
      <y>0</y>
      <width>1924</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">

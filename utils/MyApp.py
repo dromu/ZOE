@@ -17,19 +17,30 @@ class MyApp(QtWidgets.QMainWindow):
         #Crea un objeto y llamada un metodo de la otra clase
         self.ui.tablero = DrawingBoard(self.ui.tablero)
         self.ui.pbDot.clicked.connect(self.ui.tablero.habEscritura)
+        self.ui.pbRect.clicked.connect(self.ui.tablero.habRect)
+        self.ui.pbHide.clicked.connect(self.ui.tablero.hideWind)
         self.ui.pbTrash.clicked.connect(self.ui.tablero.clear)
+        self.ui.pbElip.clicked.connect(self.ui.tablero.habElipse)
+        self.ui.pbText.clicked.connect(self.ui.tablero.habText)
+        self.ui.pbDel.clicked.connect(self.ui.tablero.habDel)
 
         self.ui.procesador_camara = ProcesadorCamara()
         self.ui.procesador_camara.iniciar_camara()
         self.ui.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)
 
         # self.ui.brushColor = Qt.black
-        self.ui.blueAction.triggered.connect(lambda: self.ui.tablero.pincelColor("blue"))
-        self.ui.redAction.triggered.connect(lambda: self.ui.tablero.pincelColor("red"))
-        self.ui.greenAction.triggered.connect(lambda: self.ui.tablero.pincelColor("green"))
-        self.ui.blackAction.triggered.connect(lambda: self.ui.tablero.pincelColor("black"))
-        self.ui.yellowAction.triggered.connect(lambda: self.ui.tablero.pincelColor("yellow"))
-        self.ui.whiteAction.triggered.connect(lambda: self.ui.tablero.pincelColor("white"))
+        color_actions = {
+            self.ui.blueAction: "blue",
+            self.ui.redAction: "red",
+            self.ui.greenAction: "green",
+            self.ui.blackAction: "black",
+            self.ui.yellowAction: "yellow",
+            self.ui.whiteAction: "white",
+        }
+
+        for action, color in color_actions.items():
+            action.triggered.connect(lambda _, c=color: self.ui.tablero.pincelColor(c))
+
 
         self.ui.onepxAction.triggered.connect(lambda: self.ui.tablero.pincelSize(1))
         self.ui.threepxAction.triggered.connect(lambda: self.ui.tablero.pincelSize(3))
