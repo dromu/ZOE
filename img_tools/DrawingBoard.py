@@ -4,11 +4,12 @@ from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QColor,QFont,QFontMetri
 from PyQt5.QtCore import Qt, QPoint
 from img_tools.CameraView import ProcesadorCamara
 from PyQt5.QtWidgets import QFileDialog, QLineEdit
+from PyQt5.QtWidgets import QGraphicsPixmapItem, QGraphicsScene, QGraphicsLineItem
 
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenuBar, QMenu,QAction,QFileDialog
 from PyQt5.QtGui import QIcon, QImage, QPainter, QPen, QPolygon
-from PyQt5.QtCore import Qt, QPoint, QRect
+from PyQt5.QtCore import Qt, QPoint, QRect, QPointF
 import sys
 
 class DrawingBoard(QtWidgets.QLabel):
@@ -30,6 +31,7 @@ class DrawingBoard(QtWidgets.QLabel):
         self.drawElip = False
         self.drawText = False
         self.draft = False
+        self.drawArrow = False
 
         self.borrador = QColor(0, 0, 0, 255)
         
@@ -57,8 +59,6 @@ class DrawingBoard(QtWidgets.QLabel):
     def habDel(self):
         self.draft= not self.draft
         self.begin, self.destination = QPoint(), QPoint()	
-
-
 
     def habText(self):
         self.drawText = not self.drawText
@@ -106,14 +106,7 @@ class DrawingBoard(QtWidgets.QLabel):
                 painter.end()
                 self.setPixmap(self.pixmap_tablero)
                 self.repaint()
-                
-                
-
-
-                
-
-          
-           
+            
 
     def mouseReleaseEvent(self, event): #Eventos que se realizan cuando se suelta el mouse
         painter = QPainter(self.pixmap_tablero)
@@ -159,10 +152,6 @@ class DrawingBoard(QtWidgets.QLabel):
             elif self.drawElip:
                 painter.drawEllipse(QRect(self.begin, self.destination).normalized())
             
-            # elif self.drawText:
-            #     painter.drawText(QRect(self.begin, self.destination).normalized(), Qt.AlignCenter, "Texto en el rectángulo")
-               
-
     def clear(self):
         self.pixmap_tablero.fill(QColor(0, 255, 0, 0))
     

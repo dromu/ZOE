@@ -14,103 +14,6 @@
    <string>ZOE microscopy</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QSlider" name="VisibleEsp">
-    <property name="geometry">
-     <rect>
-      <x>1330</x>
-      <y>180</y>
-      <width>441</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="cursor">
-     <cursorShape>ArrowCursor</cursorShape>
-    </property>
-    <property name="mouseTracking">
-     <bool>true</bool>
-    </property>
-    <property name="tabletTracking">
-     <bool>false</bool>
-    </property>
-    <property name="focusPolicy">
-     <enum>Qt::StrongFocus</enum>
-    </property>
-    <property name="toolTipDuration">
-     <number>-1</number>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QSlider {
-    background-color: transparent;
-}
-
-QSlider::groove:horizontal {
-    height: 30px;
-    background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 0.5,
-                                stop: 0 #fc00c6, stop: 0.15 #4B0082,
-                                stop: 0.30 #00ecfc, stop: 0.45 #00FF00,
-                                stop: 0.52 #FFFF00, stop: 0.77 #FF0000,
-                                stop: 1 #FF0000);
-	
-}
-
-QSlider::handle:horizontal {
-    width: 5px;
-    margin-top: -4px;
-    margin-bottom: -4px;
-    border-radius: 3px;
-    background: transparent;
-	border: 4px solid #0d0d0c
-}
-
-QSlider::handle:horizontal:hover {
-    background: #BBBBBB;
-}
-
-QSlider::sub-page:horizontal {
-    background: transparent;
-}
-
-QSlider::add-page:horizontal {
-    background: transparent;
-}
-
-</string>
-    </property>
-    <property name="minimum">
-     <number>380</number>
-    </property>
-    <property name="maximum">
-     <number>780</number>
-    </property>
-    <property name="pageStep">
-     <number>10</number>
-    </property>
-    <property name="tracking">
-     <bool>true</bool>
-    </property>
-    <property name="orientation">
-     <enum>Qt::Horizontal</enum>
-    </property>
-    <property name="tickPosition">
-     <enum>QSlider::TicksAbove</enum>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="wavelength">
-    <property name="geometry">
-     <rect>
-      <x>1780</x>
-      <y>190</y>
-      <width>41</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>380</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="titulo">
     <property name="geometry">
      <rect>
@@ -122,45 +25,6 @@ QSlider::add-page:horizontal {
     </property>
     <property name="text">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; font-weight:600;&quot;&gt;ZOE&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="RB_manual">
-    <property name="geometry">
-     <rect>
-      <x>1330</x>
-      <y>150</y>
-      <width>82</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Manual</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="RB_auto">
-    <property name="geometry">
-     <rect>
-      <x>1330</x>
-      <y>230</y>
-      <width>82</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Automático</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="RB_white">
-    <property name="geometry">
-     <rect>
-      <x>1330</x>
-      <y>260</y>
-      <width>82</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Luz blanca</string>
     </property>
    </widget>
    <widget class="QLabel" name="img_microscopy">
@@ -219,7 +83,7 @@ QSlider::add-page:horizontal {
      <rect>
       <x>10</x>
       <y>860</y>
-      <width>947</width>
+      <width>1047</width>
       <height>80</height>
      </rect>
     </property>
@@ -262,6 +126,16 @@ QSlider::add-page:horizontal {
        </property>
        <property name="text">
         <string>◯</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbArrow">
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>🏹</string>
        </property>
       </widget>
      </item>
@@ -355,14 +229,14 @@ QSlider::add-page:horizontal {
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="TextConnect">
+      <widget class="QLabel" name="txtConnect">
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;conexión&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="BuConnect">
+      <widget class="QPushButton" name="pbConnect">
        <property name="styleSheet">
         <string notr="true">
 font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
@@ -374,17 +248,143 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
      </item>
     </layout>
    </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>1340</x>
+      <y>360</y>
+      <width>561</width>
+      <height>202</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QRadioButton" name="RB_manual">
+       <property name="styleSheet">
+        <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Manual</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="wavelength">
+       <property name="styleSheet">
+        <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>380</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="VisibleEsp">
+       <property name="cursor">
+        <cursorShape>ArrowCursor</cursorShape>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="tabletTracking">
+        <bool>false</bool>
+       </property>
+       <property name="focusPolicy">
+        <enum>Qt::StrongFocus</enum>
+       </property>
+       <property name="toolTipDuration">
+        <number>-1</number>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QSlider {
+    background-color: transparent;
+}
+
+QSlider::groove:horizontal {
+    height: 30px;
+    background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 0.5,
+                                stop: 0 #fc00c6, stop: 0.15 #4B0082,
+                                stop: 0.30 #00ecfc, stop: 0.45 #00FF00,
+                                stop: 0.52 #FFFF00, stop: 0.77 #FF0000,
+                                stop: 1 #FF0000);
+	
+}
+
+QSlider::handle:horizontal {
+    width: 5px;
+    margin-top: -4px;
+    margin-bottom: -4px;
+    border-radius: 3px;
+    background: transparent;
+	border: 4px solid #0d0d0c
+}
+
+QSlider::handle:horizontal:hover {
+    background: #BBBBBB;
+}
+
+QSlider::sub-page:horizontal {
+    background: transparent;
+}
+
+QSlider::add-page:horizontal {
+    background: transparent;
+}
+
+</string>
+       </property>
+       <property name="minimum">
+        <number>380</number>
+       </property>
+       <property name="maximum">
+        <number>780</number>
+       </property>
+       <property name="pageStep">
+        <number>10</number>
+       </property>
+       <property name="tracking">
+        <bool>true</bool>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="tickPosition">
+        <enum>QSlider::TicksAbove</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="RB_auto">
+       <property name="styleSheet">
+        <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Automático</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="RB_white">
+       <property name="styleSheet">
+        <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Luz blanca</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
    <zorder>cameraSpace</zorder>
-   <zorder>VisibleEsp</zorder>
-   <zorder>wavelength</zorder>
    <zorder>titulo</zorder>
-   <zorder>RB_manual</zorder>
-   <zorder>RB_auto</zorder>
-   <zorder>RB_white</zorder>
    <zorder>img_microscopy</zorder>
    <zorder>horizontalLayoutWidget</zorder>
    <zorder>horizontalLayoutWidget_2</zorder>
    <zorder>tablero</zorder>
+   <zorder>verticalLayoutWidget</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menuBar">
