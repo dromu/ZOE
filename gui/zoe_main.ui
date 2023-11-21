@@ -378,6 +378,28 @@ QSlider::add-page:horizontal {
      </item>
     </layout>
    </widget>
+   <widget class="QPushButton" name="pbROI">
+    <property name="geometry">
+     <rect>
+      <x>1310</x>
+      <y>620</y>
+      <width>51</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+    </property>
+    <property name="text">
+     <string>🌈</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+   </widget>
    <zorder>cameraSpace</zorder>
    <zorder>titulo</zorder>
    <zorder>img_microscopy</zorder>
@@ -385,6 +407,7 @@ QSlider::add-page:horizontal {
    <zorder>horizontalLayoutWidget_2</zorder>
    <zorder>tablero</zorder>
    <zorder>verticalLayoutWidget</zorder>
+   <zorder>pbROI</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menuBar">

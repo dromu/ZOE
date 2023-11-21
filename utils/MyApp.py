@@ -10,6 +10,8 @@ from comunication.TCP_comunication import TCP_comunication
 from comunication.wificonnector import WifiConnector
 
 
+
+
 class MyApp(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -18,7 +20,14 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+
+        #Color complementario 
+        # self.ui.colorComp = complementaryColor(self.ui.tablero)
+        
+
         #Crea un objeto y llamada un metodo de la otra clase
+
+        #Botones de dibujo
         self.ui.tablero = DrawingBoard(self.ui.tablero)
         self.ui.pbDot.clicked.connect(self.ui.tablero.habEscritura)
         self.ui.pbRect.clicked.connect(self.ui.tablero.habRect)
@@ -27,20 +36,28 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbElip.clicked.connect(self.ui.tablero.habElipse)
         self.ui.pbText.clicked.connect(self.ui.tablero.habText)
         self.ui.pbDel.clicked.connect(self.ui.tablero.habDel)
+        self.ui.pbROI.clicked.connect(self.ui.tablero.habColor)
         # self.ui.pbArrow.clicked.connect(self.ui.tablero.habArrow)
 
-        self.ui.procesador_camara = ProcesadorCamara()
-        self.ui.procesador_camara.iniciar_camara()
-        self.ui.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)
+        self.ui.pbDot.clicked.connect(self.habEscritura)
+        self.ui.pbROI.clicked.connect(self.habColor)
+
+        self.flagEscritura = False
+        self.flagColor = False
         
-        # Se crea un objeto connector
+    
+
+        self.visCamera = False
+        self.img_pixmap = QPixmap("images\microscopio.png")
+        self.ui.cameraSpace.setPixmap(self.img_pixmap)
+        
+
+        # Objetos para envio de informacion 
         self.connector = WifiConnector()
-
-        #Obejto envio
         self.send_data = TCP_comunication()
+        self.ui.procesador_camara = ProcesadorCamara()
 
-
-        # self.ui.brushColor = Qt.black
+        # Conexion de las herramientas de la barra de tareas 
         color_actions = {
             self.ui.blueAction: "blue",
             self.ui.redAction: "red",
@@ -49,16 +66,16 @@ class MyApp(QtWidgets.QMainWindow):
             self.ui.yellowAction: "yellow",
             self.ui.whiteAction: "white",
         }
-
         for action, color in color_actions.items():
             action.triggered.connect(lambda _, c=color: self.ui.tablero.pincelColor(c))
 
+        # Conexion del tamaño del pincel
+        sizes = ["one", "three", "five", "seven", "nine"]
+        for size in sizes:
+            action = getattr(self.ui, f"{size}pxAction")
+            action.triggered.connect(lambda s=size: self.ui.tablero.pincelSize(s))
 
-        self.ui.onepxAction.triggered.connect(lambda: self.ui.tablero.pincelSize(1))
-        self.ui.threepxAction.triggered.connect(lambda: self.ui.tablero.pincelSize(3))
-        self.ui.fivepxAction.triggered.connect(lambda: self.ui.tablero.pincelSize(5))
-        self.ui.sevenpxAction.triggered.connect(lambda: self.ui.tablero.pincelSize(7))
-        self.ui.ninepxAction.triggered.connect(lambda: self.ui.tablero.pincelSize(9))
+        #Boton de guardar pantallas 
         self.ui.pbSave.clicked.connect(self.save)
 
         
@@ -76,7 +93,7 @@ class MyApp(QtWidgets.QMainWindow):
         #Obejto envio
         self.send_data = TCP_comunication()
         
-        # Deshabilitamos los elementos del main, estos se iran actualizando
+        # Deshabilitamos los elementos del main, estos se irán actualizando
         self.ui.wavelength.setEnabled(False)
         self.ui.VisibleEsp.setEnabled(False)
         self.ui.RB_manual.setEnabled(False)
@@ -89,18 +106,42 @@ class MyApp(QtWidgets.QMainWindow):
         # Seleccion de modo luz blanca por defecto
         self.ui.RB_white.setChecked(True)
 
-        self.ui.RB_manual.toggled.connect(lambda: self.processRadioButton(self.ui.RB_manual, self.ui.VisibleEsp, self.ui.wavelength))
-        self.ui.RB_auto.toggled.connect(lambda: self.processRadioButton(self.ui.RB_auto, self.ui.VisibleEsp,self.ui.wavelength))
-        self.ui.RB_white.toggled.connect(lambda: self.processRadioButton(self.ui.RB_white, self.ui.VisibleEsp,self.ui.wavelength))
+        # Conectar todos los botones de radio a la función processRadioButton
+        buttons = [self.ui.RB_manual, self.ui.RB_auto, self.ui.RB_white]
+        for button in buttons:
+            button.toggled.connect(lambda state, b=button: self.processRadioButton(b, self.ui.VisibleEsp, self.ui.wavelength))
 
         self.ui.value = 380
 
+
+    def habEscritura(self):
+        self.flagEscritura = not self.flagEscritura
+
+        color = "red" if self.flagEscritura else "white"
+        self.ui.pbDot.setStyleSheet(f"QPushButton {{ background-color: {color}; }}")
+
+    
+    def habColor(self):
+        #entra con el segundo click
+        self.flagColor = not self.flagColor
+
+        if self.flagColor == False:
+            self.ui.procesador_camara.colorComplementary()
+        
+        
+
+
     def actualizar_interfaz(self, frame):
-        height, width, channel = frame.shape
-        bytes_per_line = 3 * width
-        q_image = QImage(frame.data, width, height, bytes_per_line, QImage.Format_RGB888)
-        self.ui.pixmap = QPixmap.fromImage(q_image)
-        self.ui.cameraSpace.setPixmap(self.ui.pixmap)
+        if self.visCamera:
+            height, width, channel = frame.shape
+            bytes_per_line = 3 * width
+            q_image = QImage(frame.data, width, height, bytes_per_line, QImage.Format_RGB888)
+            self.ui.pixmap = QPixmap.fromImage(q_image)
+            self.ui.cameraSpace.setPixmap(self.ui.pixmap)
+        
+        else: 
+            #Coloca una imagen sino no actualiza
+            self.ui.cameraSpace.setPixmap(self.img_pixmap)
 
     def save(self):
         combined_image = QImage(self.ui.tablero.size(), QImage.Format_ARGB32)
@@ -182,11 +223,15 @@ class MyApp(QtWidgets.QMainWindow):
                 self.ui.pbConnect.setStyleSheet("QPushButton { background-color: red; }")
                 self.ui.txtConnect.setText("Desconexión exitosa")
 
+                
+
                 self.ui.RB_manual.setEnabled(False)
                 self.ui.RB_auto.setEnabled(False)
                 self.ui.RB_white.setEnabled(False)
                 self.ui.wavelength.setEnabled(False)
                 self.ui.VisibleEsp.setEnabled(False)
+
+                self.visCamera = False
 
             else:
                 self.ui.txtConnect.setText("No se pudo desconectar.")
@@ -196,8 +241,14 @@ class MyApp(QtWidgets.QMainWindow):
                 self.ui.pbConnect.setText('Conectado')
                 self.ui.pbConnect.setStyleSheet("QPushButton { background-color: green; }")
                 self.ui.txtConnect.setText("Conexión establecida.")
+
+                # Procesamiento de Camara
                 
+                self.ui.procesador_camara.iniciar_camara()
+                self.ui.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)
                 
+                self.visCamera = True
+
                 self.ui.RB_manual.setEnabled(True)
                 self.ui.RB_auto.setEnabled(True)
                 self.ui.RB_white.setEnabled(True)

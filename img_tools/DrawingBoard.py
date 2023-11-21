@@ -18,7 +18,6 @@ class DrawingBoard(QtWidgets.QLabel):
         self.last_point = QPoint()
         self.dibujando = False
         self.draw = False
-        
         self.pixmap_tablero = QPixmap(1300, 850)
         self.pixmap_tablero.fill(QColor(0, 255, 0, 0))
         self.setPixmap(self.pixmap_tablero)
@@ -32,6 +31,7 @@ class DrawingBoard(QtWidgets.QLabel):
         self.drawText = False
         self.draft = False
         self.drawArrow = False
+        self.colorComp = False
 
         self.borrador = QColor(0, 0, 0, 255)
         
@@ -43,17 +43,26 @@ class DrawingBoard(QtWidgets.QLabel):
 
         self.begin, self.destination = QPoint(), QPoint()	
 
+    def habColor(self):
+        self.colorComp = not self.colorComp
+        
+        #Se habilita para dibujar un recuadro 
+        self.habRect()
+        
+
+
     def habEscritura(self):
         self.draw = not self.draw
         self.begin, self.destination = QPoint(), QPoint()	
-        print("habEscritura")
-    
+            
     def habRect(self):
         self.drawRect = not self.drawRect 
         self.begin, self.destination = QPoint(), QPoint()	
     
     def habElipse(self):
         self.drawElip = not self.drawElip
+
+        print(self.drawElip)
         self.begin, self.destination = QPoint(), QPoint()	
 
     def habDel(self):
@@ -85,6 +94,12 @@ class DrawingBoard(QtWidgets.QLabel):
             self.begin = event.pos()
             self.destination = self.begin
 
+            if self.colorComp:
+                self.clear()
+                self.update()
+
+            
+
     def mouseMoveEvent(self, event):
         if event.buttons() & Qt.LeftButton:
             self.last_point = self.destination
@@ -92,7 +107,6 @@ class DrawingBoard(QtWidgets.QLabel):
 
             painter = QPainter(self.pixmap_tablero)
             
-
             if self.draw:
                 painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
                 painter.drawLine(self.last_point, self.destination)
@@ -115,10 +129,27 @@ class DrawingBoard(QtWidgets.QLabel):
         if event.button() == Qt.LeftButton:
                     
             if self.drawRect:
+                
+                # limpia la pantalla para evitar trazos artifciales, con ello calcula el color complementario
+                if self.colorComp:
+                    self.clear()
+                    painter.setPen(QPen(Qt.black, 2, Qt.DashLine, Qt.RoundCap, Qt.RoundJoin))
+                    self.update()
+
+                    #Guardamos archivo de coordenadas
+                    nombre_archivo = "img_tools/position.dat"
+                    coordenadas = [[self.begin.x(),self.begin.y()], 
+                                   [self.destination.x(), self.destination.y()]]
+
+                    with open(nombre_archivo, 'w') as archivo:
+                        archivo.write(str(coordenadas))
+
+
+
                 painter.drawRect(QRect(self.begin, self.destination).normalized())
                 self.begin, self.destination = QPoint(), QPoint()	#SE actualizan las posiciones para que no hayan otros dibujos
 
-            if self.drawElip:
+            elif self.drawElip:
                 painter.drawEllipse(QRect(self.begin, self.destination).normalized())
                 self.begin, self.destination = QPoint(), QPoint()	#SE
 

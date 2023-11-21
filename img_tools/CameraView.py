@@ -20,6 +20,8 @@ class ProcesadorCamara(QObject):
         self.timer.timeout.connect(self.actualizar_frame)
         self.timer.start(33)  # Actualizar cada 33 ms (aproximadamente 30 fps)
         
+        self.frame = []
+
     def iniciar_camara(self):
         if not self.cap.isOpened():
             print("Error: No se pudo abrir la cámara.")
@@ -27,18 +29,33 @@ class ProcesadorCamara(QObject):
             print("Cámara iniciada.")
 
     def actualizar_frame(self):
-        ret, frame = self.cap.read()
+        ret, self.frame = self.cap.read()
 
         #Acomodado a la resolucion de la Genius 
         ancho   = 1350
         alto    = 850
 
-        frame = cv2.resize(frame, (ancho, alto))
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        self.frame = cv2.resize(self.frame, (ancho, alto))
+        self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
 
         if ret:
             # Realizar cualquier procesamiento adicional aquí si es necesario
             # Emitir la señal con el frame actualizado
             
-            self.senal_actualizacion.emit(frame)
+            self.senal_actualizacion.emit(self.frame)
+    
+    def colorComplementary(self):
+
+        # lectura archivo de coordenadas
+        with open("img_tools\position.dat", 'r') as archivo:
+            contenido = archivo.read()
+        # Procesar o imprimir el contenido según sea necesario
+        print(contenido)
+
+        #Aqui se calcula el color complementario y devuelve la longitud de onda
+
+        
+
+       
+
             
