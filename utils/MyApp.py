@@ -126,10 +126,15 @@ class MyApp(QtWidgets.QMainWindow):
         self.flagColor = not self.flagColor
 
         if self.flagColor == False:
-            self.ui.procesador_camara.colorComplementary()
-        
-        
+            self.ui.RB_auto.setChecked(True)
+            # Al presionar dos veces se comprueba el color complementario 
+            R_,G_,B_ = self.ui.procesador_camara.colorComplementary()
 
+            dato  = str(R_)+str(G_)+str(B_)
+
+            print(R_, G_, B_ )
+        
+        
 
     def actualizar_interfaz(self, frame):
         if self.visCamera:
@@ -169,8 +174,9 @@ class MyApp(QtWidgets.QMainWindow):
                 
                 
             if radio_button.text() == 'Automático':
-                self.ui.value = 500
-                self.send_data.send("A"+str(self.ui.value))  
+                ##self.ui.value = 500
+                self.send_data.send("A"+str(self.ui.value)+   "000000" )  
+
                 # self.ui.send_data.send(str(self.ui.value) )  
 
                 # ACtualizamos el valor directamente, con el obtenido del cambio de espacio 
@@ -182,7 +188,7 @@ class MyApp(QtWidgets.QMainWindow):
                
             if radio_button.text() == 'Luz blanca':
                 # Se limitan y paran todas las acciones 
-                self.send_data.send("W"+str(self.ui.value)) 
+                self.send_data.send("W"+str(self.ui.value)+  "000000" ) 
                 self.ui.wavelength.setEnabled(False)
                 self.ui.VisibleEsp.setEnabled(False)
                 
@@ -195,7 +201,7 @@ class MyApp(QtWidgets.QMainWindow):
             self.ui.wavelength.setText(str(value))
             self.ui.value = int(value) # ACtualizamos el valor para que la barra quede en el mismo punto del manual
             print(str(value))
-            self.send_data.send("M" + str(value) )  
+            self.send_data.send("M" + str(value) +  "000000" )  
         else:
             # Se deshabilita cualquier accion diferente
             self.ui.wavelength.setEnabled(False)
@@ -222,8 +228,6 @@ class MyApp(QtWidgets.QMainWindow):
                 self.ui.pbConnect.setText('Conectar')
                 self.ui.pbConnect.setStyleSheet("QPushButton { background-color: red; }")
                 self.ui.txtConnect.setText("Desconexión exitosa")
-
-                
 
                 self.ui.RB_manual.setEnabled(False)
                 self.ui.RB_auto.setEnabled(False)

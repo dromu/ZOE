@@ -17,10 +17,10 @@
    <widget class="QLabel" name="titulo">
     <property name="geometry">
      <rect>
-      <x>1520</x>
-      <y>30</y>
-      <width>171</width>
-      <height>111</height>
+      <x>1560</x>
+      <y>70</y>
+      <width>271</width>
+      <height>181</height>
      </rect>
     </property>
     <property name="text">
@@ -50,13 +50,13 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
-      <width>1300</width>
-      <height>850</height>
+      <y>50</y>
+      <width>1344</width>
+      <height>756</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(255, 0, 0, 10);</string>
+     <string notr="true">background-color: rgba(255, 0, 0, 0);</string>
     </property>
     <property name="text">
      <string/>
@@ -66,13 +66,13 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
-      <width>1300</width>
-      <height>850</height>
+      <y>50</y>
+      <width>1344</width>
+      <height>756</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgba(85, 170, 0, 10);</string>
+     <string notr="true">background-color: rgba(85, 170, 0, 0);</string>
     </property>
     <property name="text">
      <string/>
@@ -81,8 +81,8 @@
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>860</y>
+      <x>40</x>
+      <y>870</y>
       <width>1047</width>
       <height>80</height>
      </rect>
@@ -231,7 +231,7 @@
      <item>
       <widget class="QLabel" name="txtConnect">
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;conexión&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;conexión&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -239,7 +239,7 @@
       <widget class="QPushButton" name="pbConnect">
        <property name="styleSheet">
         <string notr="true">
-font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
+font: 75 15pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
         <string>Conectar</string>
@@ -251,9 +251,9 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>1340</x>
-      <y>360</y>
-      <width>561</width>
+      <x>1410</x>
+      <y>250</y>
+      <width>491</width>
       <height>202</height>
      </rect>
     </property>
@@ -381,8 +381,8 @@ QSlider::add-page:horizontal {
    <widget class="QPushButton" name="pbROI">
     <property name="geometry">
      <rect>
-      <x>1310</x>
-      <y>620</y>
+      <x>1400</x>
+      <y>470</y>
       <width>51</width>
       <height>51</height>
      </rect>
@@ -400,6 +400,112 @@ QSlider::add-page:horizontal {
      </size>
     </property>
    </widget>
+   <widget class="QWidget" name="gridLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>1460</x>
+      <y>610</y>
+      <width>409</width>
+      <height>201</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;EJE Z&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QPushButton" name="pushButton_4">
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QPushButton" name="pushButton_5">
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;EJE Y&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="pushButton">
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="pushButton_6">
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;EJE X&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>1460</x>
+      <y>550</y>
+      <width>391</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Control de movimientos&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
    <zorder>cameraSpace</zorder>
    <zorder>titulo</zorder>
    <zorder>img_microscopy</zorder>
@@ -408,6 +514,8 @@ QSlider::add-page:horizontal {
    <zorder>tablero</zorder>
    <zorder>verticalLayoutWidget</zorder>
    <zorder>pbROI</zorder>
+   <zorder>gridLayoutWidget</zorder>
+   <zorder>label_4</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menuBar">
