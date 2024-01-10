@@ -184,7 +184,9 @@ class DrawingBoard(QtWidgets.QLabel):
                 painter.drawEllipse(QRect(self.begin, self.destination).normalized())
             
     def clear(self):
-        self.pixmap_tablero.fill(QColor(0, 255, 0, 0))
+
+        #Transparencia total 
+        self.pixmap_tablero.fill(QColor(0, 0, 0, 0))
     
         self.setPixmap(self.pixmap_tablero)
         self.repaint()

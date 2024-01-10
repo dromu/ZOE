@@ -3,7 +3,7 @@ from PyQt5 import uic, QtWidgets
 from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QColor
 from PyQt5.QtCore import Qt, QPoint
 from img_tools.CameraView import ProcesadorCamara
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtWidgets import QFileDialog, QActionGroup
 
 from img_tools.DrawingBoard import DrawingBoard
 from comunication.TCP_comunication import TCP_comunication
@@ -38,10 +38,11 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbROI.clicked.connect(self.ui.tablero.habColor)         # Generacion de color complementario
         # self.ui.pbArrow.clicked.connect(self.ui.tablero.habArrow)
 
-
+        
         # Union a metodos locales de la clase para cambio de color 
         self.ui.pbDot.clicked.connect(self.habEscritura)
         self.ui.pbROI.clicked.connect(self.habColor)
+
 
         # Valores iniciales de las variables
         self.flagEscritura = False
@@ -56,6 +57,8 @@ class MyApp(QtWidgets.QMainWindow):
         self.connector = WifiConnector()
         self.send_data = TCP_comunication()
         self.ui.procesador_camara = ProcesadorCamara()
+        
+ 
 
         # Conexion de las herramientas de la barra de tareas 
         color_actions = {
@@ -66,15 +69,28 @@ class MyApp(QtWidgets.QMainWindow):
             self.ui.yellowAction: "yellow",
             self.ui.whiteAction: "white",
         }
+        
 
         for action, color in color_actions.items():
             action.triggered.connect(lambda _, c=color: self.ui.tablero.pincelColor(c))
 
         # Conexion del tamaño del pincel
+        # sizes = ["one", "three", "five", "seven", "nine"]
+        # for size in sizes:
+        #     action = getattr(self.ui, f"{size}pxAction")
+        #     action.triggered.connect(lambda s=size: self.ui.tablero.pincelSize(s))
+
+                # Suponiendo que sizes es una lista de tamaños de pincel
         sizes = ["one", "three", "five", "seven", "nine"]
+
+        # Conecta las acciones de tamaño del pincel al método común dentro de un grupo de acciones
+        grupo_tamanos_pincel = QActionGroup(self)
         for size in sizes:
             action = getattr(self.ui, f"{size}pxAction")
-            action.triggered.connect(lambda s=size: self.ui.tablero.pincelSize(s))
+            action.setCheckable(True)
+            grupo_tamanos_pincel.addAction(action)
+            action.triggered.connect(lambda checked, s=size: self.ui.tablero.pincelSize(s))
+
 
         #Boton de guardar pantallas 
         self.ui.pbSave.clicked.connect(self.save)
@@ -114,34 +130,34 @@ class MyApp(QtWidgets.QMainWindow):
 
         self.ui.value = 380
         
-        self.actButton = False
+        
 
-        self.manejoButton()
+        self.manejoButton(False)
+
+        
     
-    def manejoButton(self): 
+    def manejoButton(self, condicion): 
         buttonName = ("pbDot","pbRect","pbHide","pbTrash", "pbElip", "pbText", "pbDel", "pbROI", "pbSave", "pbArrow", "pbBack", "pbForw")
 
-        self.actButton = not self.actButton
-
-
-        if self.actButton:
+        if condicion:
             for key in buttonName:
                 button = getattr(self.ui, key, None)
                 if button:
-                    button.setEnabled(False)
+                    button.setEnabled(condicion)
 
         else:
             for key in buttonName:
                 button = getattr(self.ui, key, None)
                 if button:
-                    button.setEnabled(True)
+                    button.setEnabled(condicion)
     
-    
+    def deactivateButton(self):
+        self.ui.tablero.habEscritura()
+        self.habEscritura()
+        
 
     def habEscritura(self):
         self.flagEscritura = not self.flagEscritura
-
-        self.ui.pbConnect.setStyleSheet("QPushButton { background-color: red; }")
 
         color = "red" if self.flagEscritura else "white"
         self.ui.pbDot.setStyleSheet(f"QPushButton {{ background-color: {color}; }}")
@@ -172,7 +188,10 @@ class MyApp(QtWidgets.QMainWindow):
         
         else: 
             #Coloca una imagen sino no actualiza
+
             self.ui.cameraSpace.setPixmap(self.img_pixmap)
+
+
 
     def save(self):
         combined_image = QImage(self.ui.tablero.size(), QImage.Format_ARGB32)
@@ -263,10 +282,15 @@ class MyApp(QtWidgets.QMainWindow):
 
                 self.visCamera = False
 
-                self.actButton = False
-                self.manejoButton()
+               # Desactivamos botones 
+                self.manejoButton(False)
 
-                self.ui.pbTrash.clicked.connect(self.ui.tablero.clear)  
+                # Limpiar la pantalla  para vovler a la imagen inicial
+                self.ui.tablero.clear()
+
+                # Desactivacion de todos los botones 
+                self.deactivateButton()
+
 
             else:
                 self.ui.txtConnect.setText("No se pudo desconectar.")
@@ -278,8 +302,8 @@ class MyApp(QtWidgets.QMainWindow):
                 self.ui.txtConnect.setText("Conexión establecida.")
 
                 # Encendemos los botonoes 
-                self.actButton = True
-                self.manejoButton()
+               
+                self.manejoButton(True)
 
                 # Procesamiento de Camara
                 
