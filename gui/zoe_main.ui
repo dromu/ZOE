@@ -14,19 +14,6 @@
    <string>ZOE microscopy</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="titulo">
-    <property name="geometry">
-     <rect>
-      <x>1560</x>
-      <y>70</y>
-      <width>271</width>
-      <height>181</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:48pt; font-weight:600;&quot;&gt;ZOE&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="img_microscopy">
     <property name="geometry">
      <rect>
@@ -507,7 +494,6 @@ QSlider::add-page:horizontal {
     </property>
    </widget>
    <zorder>cameraSpace</zorder>
-   <zorder>titulo</zorder>
    <zorder>img_microscopy</zorder>
    <zorder>horizontalLayoutWidget</zorder>
    <zorder>horizontalLayoutWidget_2</zorder>

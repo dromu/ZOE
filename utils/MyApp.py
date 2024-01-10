@@ -11,7 +11,6 @@ from comunication.wificonnector import WifiConnector
 
 
 
-
 class MyApp(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -25,32 +24,33 @@ class MyApp(QtWidgets.QMainWindow):
         # self.ui.colorComp = complementaryColor(self.ui.tablero)
         
 
-        #Crea un objeto y llamada un metodo de la otra clase
+        #Crea un objeto y llamada un metodo de la clase DrawingBoard
 
         #Botones de dibujo
-        self.ui.tablero = DrawingBoard(self.ui.tablero)
-        self.ui.pbDot.clicked.connect(self.ui.tablero.habEscritura)
-        self.ui.pbRect.clicked.connect(self.ui.tablero.habRect)
-        self.ui.pbHide.clicked.connect(self.ui.tablero.hideWind)
-        self.ui.pbTrash.clicked.connect(self.ui.tablero.clear)
-        self.ui.pbElip.clicked.connect(self.ui.tablero.habElipse)
-        self.ui.pbText.clicked.connect(self.ui.tablero.habText)
-        self.ui.pbDel.clicked.connect(self.ui.tablero.habDel)
-        self.ui.pbROI.clicked.connect(self.ui.tablero.habColor)
+        self.ui.tablero = DrawingBoard(self.ui.tablero)                 # Objeto
+        self.ui.pbDot.clicked.connect(self.ui.tablero.habEscritura)     # Dibujo libre
+        self.ui.pbRect.clicked.connect(self.ui.tablero.habRect)         # Rectangulos 
+        self.ui.pbHide.clicked.connect(self.ui.tablero.hideWind)        # Ocultar cambios
+        self.ui.pbTrash.clicked.connect(self.ui.tablero.clear)          # Limpiar pantalla
+        self.ui.pbElip.clicked.connect(self.ui.tablero.habElipse)       # Boton de generar elipses
+        self.ui.pbText.clicked.connect(self.ui.tablero.habText)         # Texto
+        self.ui.pbDel.clicked.connect(self.ui.tablero.habDel)           # Eliminacion de escrito
+        self.ui.pbROI.clicked.connect(self.ui.tablero.habColor)         # Generacion de color complementario
         # self.ui.pbArrow.clicked.connect(self.ui.tablero.habArrow)
 
+
+        # Union a metodos locales de la clase para cambio de color 
         self.ui.pbDot.clicked.connect(self.habEscritura)
         self.ui.pbROI.clicked.connect(self.habColor)
 
+        # Valores iniciales de las variables
         self.flagEscritura = False
         self.flagColor = False
-        
-    
-
         self.visCamera = False
+
+        # Imagen de inicio de en lugar de visualizacion de muestras 
         self.img_pixmap = QPixmap("images\microscopio.png")
         self.ui.cameraSpace.setPixmap(self.img_pixmap)
-        
 
         # Objetos para envio de informacion 
         self.connector = WifiConnector()
@@ -66,6 +66,7 @@ class MyApp(QtWidgets.QMainWindow):
             self.ui.yellowAction: "yellow",
             self.ui.whiteAction: "white",
         }
+
         for action, color in color_actions.items():
             action.triggered.connect(lambda _, c=color: self.ui.tablero.pincelColor(c))
 
@@ -112,10 +113,35 @@ class MyApp(QtWidgets.QMainWindow):
             button.toggled.connect(lambda state, b=button: self.processRadioButton(b, self.ui.VisibleEsp, self.ui.wavelength))
 
         self.ui.value = 380
+        
+        self.actButton = False
 
+        self.manejoButton()
+    
+    def manejoButton(self): 
+        buttonName = ("pbDot","pbRect","pbHide","pbTrash", "pbElip", "pbText", "pbDel", "pbROI", "pbSave", "pbArrow", "pbBack", "pbForw")
+
+        self.actButton = not self.actButton
+
+
+        if self.actButton:
+            for key in buttonName:
+                button = getattr(self.ui, key, None)
+                if button:
+                    button.setEnabled(False)
+
+        else:
+            for key in buttonName:
+                button = getattr(self.ui, key, None)
+                if button:
+                    button.setEnabled(True)
+    
+    
 
     def habEscritura(self):
         self.flagEscritura = not self.flagEscritura
+
+        self.ui.pbConnect.setStyleSheet("QPushButton { background-color: red; }")
 
         color = "red" if self.flagEscritura else "white"
         self.ui.pbDot.setStyleSheet(f"QPushButton {{ background-color: {color}; }}")
@@ -237,6 +263,11 @@ class MyApp(QtWidgets.QMainWindow):
 
                 self.visCamera = False
 
+                self.actButton = False
+                self.manejoButton()
+
+                self.ui.pbTrash.clicked.connect(self.ui.tablero.clear)  
+
             else:
                 self.ui.txtConnect.setText("No se pudo desconectar.")
 
@@ -245,6 +276,10 @@ class MyApp(QtWidgets.QMainWindow):
                 self.ui.pbConnect.setText('Conectado')
                 self.ui.pbConnect.setStyleSheet("QPushButton { background-color: green; }")
                 self.ui.txtConnect.setText("Conexión establecida.")
+
+                # Encendemos los botonoes 
+                self.actButton = True
+                self.manejoButton()
 
                 # Procesamiento de Camara
                 
