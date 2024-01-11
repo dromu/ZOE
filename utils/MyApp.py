@@ -82,17 +82,9 @@ class MyApp(QtWidgets.QMainWindow):
             self.ui.ninepxAction: 9
         }
 
-
         for actionSize, tamsize in size_actions.items():
-            actionSize.triggered.connect(lambda dim=tamsize: self.ui.tablero.pincelSize0(dim))
-
-        # for size in sizes:
-            
-        #     actionColor = getattr(self.ui, f"{size}pxAction")
-        #     # actionColor.setCheckable(True)
-        #     # grupo_tamanos_pincel.addAction(actionColor)
-        #     actionColor.triggered.connect(lambda s=size: self.ui.tablero.pincelSize(s) )
-
+            actionSize.triggered.connect(lambda _,dim=tamsize: self.ui.tablero.pincelSize(dim))
+       
 
         #Boton de guardar pantallas 
         self.ui.pbSave.clicked.connect(self.save)

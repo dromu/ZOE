@@ -197,11 +197,10 @@ class DrawingBoard(QtWidgets.QLabel):
         print(color)
         self.brushColor = colores.get(color, Qt.black)  #Color negro como predeterminado
 
-    def pincelSize0(self,size):
+    def pincelSize(self,size):
         print(size)
-        tamaño = {"one":1, "three":3, "five":5, "seven":7, "nine":9}
         
-        self.brushSize = tamaño.get(size, 3)
+        self.brushSize = size
     
     
 
