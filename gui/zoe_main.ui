@@ -683,7 +683,7 @@ QSlider::add-page:horizontal {
   </action>
   <action name="onepxAction">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="checked">
     <bool>false</bool>
@@ -694,7 +694,7 @@ QSlider::add-page:horizontal {
   </action>
   <action name="threepxAction">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="checked">
     <bool>false</bool>
@@ -705,7 +705,7 @@ QSlider::add-page:horizontal {
   </action>
   <action name="fivepxAction">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>5 Px</string>
@@ -713,7 +713,7 @@ QSlider::add-page:horizontal {
   </action>
   <action name="sevenpxAction">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>7 Px</string>
@@ -721,7 +721,7 @@ QSlider::add-page:horizontal {
   </action>
   <action name="ninepxAction">
    <property name="checkable">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>9 Px</string>

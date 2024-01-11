@@ -74,22 +74,24 @@ class MyApp(QtWidgets.QMainWindow):
         for action, color in color_actions.items():
             action.triggered.connect(lambda _, c=color: self.ui.tablero.pincelColor(c))
 
-        # Conexion del tamaño del pincel
-        # sizes = ["one", "three", "five", "seven", "nine"]
+        size_actions = {
+            self.ui.onepxAction: 1,
+            self.ui.threepxAction:3,
+            self.ui.fivepxAction: 5,
+            self.ui.sevenpxAction: 7,
+            self.ui.ninepxAction: 9
+        }
+
+
+        for actionSize, tamsize in size_actions.items():
+            actionSize.triggered.connect(lambda dim=tamsize: self.ui.tablero.pincelSize0(dim))
+
         # for size in sizes:
-        #     action = getattr(self.ui, f"{size}pxAction")
-        #     action.triggered.connect(lambda s=size: self.ui.tablero.pincelSize(s))
-
-                # Suponiendo que sizes es una lista de tamaños de pincel
-        sizes = ["one", "three", "five", "seven", "nine"]
-
-        # Conecta las acciones de tamaño del pincel al método común dentro de un grupo de acciones
-        grupo_tamanos_pincel = QActionGroup(self)
-        for size in sizes:
-            action = getattr(self.ui, f"{size}pxAction")
-            action.setCheckable(True)
-            grupo_tamanos_pincel.addAction(action)
-            action.triggered.connect(lambda checked, s=size: self.ui.tablero.pincelSize(s))
+            
+        #     actionColor = getattr(self.ui, f"{size}pxAction")
+        #     # actionColor.setCheckable(True)
+        #     # grupo_tamanos_pincel.addAction(actionColor)
+        #     actionColor.triggered.connect(lambda s=size: self.ui.tablero.pincelSize(s) )
 
 
         #Boton de guardar pantallas 
