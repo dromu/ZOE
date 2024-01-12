@@ -36,7 +36,9 @@ class DrawingBoard(QtWidgets.QLabel):
         self.borrador = QColor(0, 0, 0, 255)
 
         self.strokes = []  # Lista para almacenar los trazos realizados
-        
+        self.Coord   = []
+        self.color   = []
+        self.tamaño  = []
         
         #Lineas para el texto
         self.text_input = QLineEdit(self)
@@ -44,6 +46,11 @@ class DrawingBoard(QtWidgets.QLabel):
         self.text_input.hide()
 
         self.begin, self.destination = QPoint(), QPoint()	
+        
+        self.conCtrlZ = 0
+        self.posDecision = 0
+        self.trazo = 0
+
 
     def habColor(self):
         self.colorComp = not self.colorComp
@@ -109,6 +116,7 @@ class DrawingBoard(QtWidgets.QLabel):
 
             painter = QPainter(self.pixmap_tablero)
             
+            #LApiz
             if self.draw:
                 painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
                 painter.drawLine(self.last_point, self.destination)
@@ -116,12 +124,20 @@ class DrawingBoard(QtWidgets.QLabel):
                 self.setPixmap(self.pixmap_tablero)
                 self.repaint()
 
+            #Borrador
             elif self.draft:
                 painter.setPen(QPen(self.borrador, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
                 painter.drawLine(self.last_point, self.destination)
                 painter.end()
                 self.setPixmap(self.pixmap_tablero)
                 self.repaint()
+
+            #Vector de coordenadas, color, grosor
+            self.Coord.append(self.last_point)
+            self.color   = self.brushColor
+            self.tamaño  = self.brushSize
+
+            
             
 
     def mouseReleaseEvent(self, event): #Eventos que se realizan cuando se suelta el mouse
@@ -147,7 +163,6 @@ class DrawingBoard(QtWidgets.QLabel):
                         archivo.write(str(coordenadas))
 
 
-
                 painter.drawRect(QRect(self.begin, self.destination).normalized())
                 self.begin, self.destination = QPoint(), QPoint()	#SE actualizan las posiciones para que no hayan otros dibujos
 
@@ -171,6 +186,11 @@ class DrawingBoard(QtWidgets.QLabel):
                 painter.setFont(font)
                 painter.setPen(self.brushColor)
                 painter.drawText(QPoint(x_centered, y_centered), user_text)
+
+            # Aqui las lineas para generar el ctrl+Z y ctrl+Y
+            
+            self.strokes.append([self.Coord, self.color, self.tamaño])
+            self.Coord = []
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -200,6 +220,43 @@ class DrawingBoard(QtWidgets.QLabel):
 
     def pincelSize(self,size):
         self.brushSize = size
+
+    def undo(self):
+        print("entro")
+
+        self.pixmap_tablero.fill(QColor(0, 0, 0, 0))  # Limpia el tablero
+        painter = QPainter(self.pixmap_tablero)
+
+        self.posDecision -= 1
+
+        self.trazo =  len(self.strokes) - self.posDecision
+
+        if self.trazo < 0 :
+            self.trazo = 0
+
+        if self.trazo > len(self.strokes) :
+            self.trazo = len(self.strokes)
+
+        print(self.trazo)
+
+        for i in range(0,len(self.strokes)):
+            print("Entro al for")
+            points  = self.strokes[i][0]
+            color   = self.strokes[i][1]
+            tam     = self.strokes[i][2]
+            painter.setPen(QPen(color, tam, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+
+        
+            painter.drawLine(points[i], points[i+1])
+
+
+
+        
+        
+
+
+
+        
     
     
 

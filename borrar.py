@@ -2,55 +2,15 @@ import sys
 from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout
 from PyQt5.QtGui import QPixmap, QPainter, QPen
 from PyQt5.QtCore import Qt, QPoint
+import PyQt5
 
-class DrawingWidget(QWidget):
-    def __init__(self):
-        super().__init__()
+dato = [[[PyQt5.QtCore.QPoint(233, 709), PyQt5.QtCore.QPoint(233, 708), PyQt5.QtCore.QPoint(234, 708), PyQt5.QtCore.QPoint(234, 707)], 2, 3], [[PyQt5.QtCore.QPoint(102, 82), PyQt5.QtCore.QPoint(102, 84), PyQt5.QtCore.QPoint(102, 85), PyQt5.QtCore.QPoint(104, 87), PyQt5.QtCore.QPoint(104, 88), PyQt5.QtCore.QPoint(106, 91), PyQt5.QtCore.QPoint(106, 92), PyQt5.QtCore.QPoint(107, 94), PyQt5.QtCore.QPoint(109, 96), PyQt5.QtCore.QPoint(110, 99), PyQt5.QtCore.QPoint(111, 101)], 7, 9]]
 
-        self.pixmap = QPixmap(400, 300)
-        self.pixmap.fill(Qt.white)
-        self.last_point = QPoint()
-        self.end_point = QPoint()  # Initialize end_point here
 
-        self.init_ui()
+# print(len(dato))
 
-    def init_ui(self):
-        self.label = QLabel(self)
-        self.label.setPixmap(self.pixmap)
+a = 1
 
-    def paintEvent(self, event):
-        painter = QPainter(self.pixmap)
-        painter.setRenderHint(QPainter.Antialiasing, True)
-        painter.setPen(QPen(Qt.black, 2, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+a-=1
 
-        painter.drawLine(self.last_point, self.end_point)
-
-        self.label.setPixmap(self.pixmap)
-
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            self.last_point = event.pos()
-            self.end_point = event.pos()
-
-    def mouseMoveEvent(self, event):
-        if event.buttons() and Qt.LeftButton:
-            self.end_point = event.pos()
-            self.update()
-
-    def mouseReleaseEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            self.end_point = event.pos()
-            self.update()
-
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    window = QWidget()
-    drawing_widget = DrawingWidget()
-
-    layout = QVBoxLayout(window)
-    layout.addWidget(drawing_widget)
-
-    window.setGeometry(100, 100, 400, 300)
-    window.show()
-
-    sys.exit(app.exec_())
+print(a)
