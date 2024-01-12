@@ -34,6 +34,8 @@ class DrawingBoard(QtWidgets.QLabel):
         self.colorComp = False
 
         self.borrador = QColor(0, 0, 0, 255)
+
+        self.strokes = []  # Lista para almacenar los trazos realizados
         
         
         #Lineas para el texto
@@ -194,12 +196,9 @@ class DrawingBoard(QtWidgets.QLabel):
 
     def pincelColor(self, color):
         colores = {"blue": Qt.blue, "red": Qt.red, "green": Qt.green, "black": Qt.black, "yellow": Qt.yellow, "white": Qt.white}
-        print(color)
         self.brushColor = colores.get(color, Qt.black)  #Color negro como predeterminado
 
     def pincelSize(self,size):
-        print(size)
-        
         self.brushSize = size
     
     

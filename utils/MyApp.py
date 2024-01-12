@@ -22,7 +22,8 @@ class MyApp(QtWidgets.QMainWindow):
 
         #Color complementario 
         # self.ui.colorComp = complementaryColor(self.ui.tablero)
-        
+
+
 
         #Crea un objeto y llamada un metodo de la clase DrawingBoard
 
@@ -81,11 +82,17 @@ class MyApp(QtWidgets.QMainWindow):
             self.ui.sevenpxAction: 7,
             self.ui.ninepxAction: 9
         }
+        
+        grupo_tamanos_pincel = QActionGroup(self)
+        
 
         for actionSize, tamsize in size_actions.items():
+            actionSize.setCheckable(True)
+            grupo_tamanos_pincel.addAction(actionSize)
             actionSize.triggered.connect(lambda _,dim=tamsize: self.ui.tablero.pincelSize(dim))
        
 
+   
         #Boton de guardar pantallas 
         self.ui.pbSave.clicked.connect(self.save)
 

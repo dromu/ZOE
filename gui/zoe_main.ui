@@ -168,7 +168,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pbBack">
+      <widget class="QPushButton" name="pbUndo">
        <property name="styleSheet">
         <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
@@ -531,7 +531,7 @@ QSlider::add-page:horizontal {
     <addaction name="blackAction"/>
     <addaction name="whiteAction"/>
    </widget>
-   <widget class="QMenu" name="menuTama_o">
+   <widget class="QMenu" name="menuTamano">
     <property name="title">
      <string>Tamaño</string>
     </property>
@@ -548,7 +548,7 @@ QSlider::add-page:horizontal {
    </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuColor"/>
-   <addaction name="menuTama_o"/>
+   <addaction name="menuTamano"/>
    <addaction name="menuCamara"/>
   </widget>
   <action name="actionSave">
