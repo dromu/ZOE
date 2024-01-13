@@ -5,7 +5,7 @@ from PyQt5.QtCore import Qt, QPoint
 from img_tools.CameraView import ProcesadorCamara
 from PyQt5.QtWidgets import QFileDialog, QLineEdit
 from PyQt5.QtWidgets import QGraphicsPixmapItem, QGraphicsScene, QGraphicsLineItem
-
+from PyQt5.QtGui import QCursor
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMenuBar, QMenu,QAction,QFileDialog
 from PyQt5.QtGui import QIcon, QImage, QPainter, QPen, QPolygon
@@ -18,8 +18,8 @@ class DrawingBoard(QtWidgets.QLabel):
         self.last_point = QPoint()
         self.dibujando = False
         self.draw = False
-        self.pixmap_tablero = QPixmap(1300, 850)
-        self.pixmap_tablero.fill(QColor(0, 255, 0, 0))
+        self.pixmap_tablero = QPixmap(1344, 756)
+        self.pixmap_tablero.fill(QColor(0, 0, 0, 0))
         self.setPixmap(self.pixmap_tablero)
         self.brushColor = Qt.black
         self.brushSize = 3
@@ -33,7 +33,7 @@ class DrawingBoard(QtWidgets.QLabel):
         self.drawArrow = False
         self.colorComp = False
 
-        self.borrador = QColor(0, 0, 0, 255)
+        
 
         self.strokes = []  # Lista para almacenar los trazos realizados
         self.Coord   = []
@@ -63,20 +63,44 @@ class DrawingBoard(QtWidgets.QLabel):
     def habEscritura(self):
         self.draw = not self.draw
         self.begin, self.destination = QPoint(), QPoint()	
+
+        if self.draw:
+            # Si deseas cargar un cursor personalizado, puedes hacerlo de la siguiente manera:
+            cursor_path = 'images\icons\dibujo\lapiz2.ico'
+            self.setCursor(QCursor(QPixmap(cursor_path)))
+        else: 
+            self.setCursor(QCursor(Qt.ArrowCursor))
+            
             
     def habRect(self):
         self.drawRect = not self.drawRect 
         self.begin, self.destination = QPoint(), QPoint()	
+
+        if self.drawRect:
+            self.setCursor(QCursor(Qt.CrossCursor))
+        else: 
+            self.setCursor(QCursor(Qt.ArrowCursor))
+        
     
     def habElipse(self):
         self.drawElip = not self.drawElip
-
-        print(self.drawElip)
         self.begin, self.destination = QPoint(), QPoint()	
+
+        if self.drawElip:
+            self.setCursor(QCursor(Qt.CrossCursor))
+        else: 
+            self.setCursor(QCursor(Qt.ArrowCursor))
 
     def habDel(self):
         self.draft= not self.draft
         self.begin, self.destination = QPoint(), QPoint()	
+        
+        if self.draft:
+            cursor_path = 'images\icons\dibujo\eraser4.ico'
+            self.setCursor(QCursor(QPixmap(cursor_path)))
+        else: 
+            self.setCursor(QCursor(Qt.ArrowCursor))
+    
 
     def habText(self):
         self.drawText = not self.drawText
@@ -118,6 +142,7 @@ class DrawingBoard(QtWidgets.QLabel):
             
             #LApiz
             if self.draw:
+                
                 painter.setPen(QPen(self.brushColor, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
                 painter.drawLine(self.last_point, self.destination)
                 painter.end()
@@ -126,7 +151,9 @@ class DrawingBoard(QtWidgets.QLabel):
 
             #Borrador
             elif self.draft:
-                painter.setPen(QPen(self.borrador, self.brushSize, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+                self.borrador = QColor(0, 0, 0, 0)
+                painter.setCompositionMode(QPainter.CompositionMode_Clear)
+                painter.setPen(QPen(self.borrador, 15, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
                 painter.drawLine(self.last_point, self.destination)
                 painter.end()
                 self.setPixmap(self.pixmap_tablero)
@@ -189,8 +216,7 @@ class DrawingBoard(QtWidgets.QLabel):
 
             # Aqui las lineas para generar el ctrl+Z y ctrl+Y
             
-            self.strokes.append([self.Coord, self.color, self.tamaño])
-            self.Coord = []
+        
 
     def paintEvent(self, event):
         painter = QPainter(self)
@@ -221,33 +247,7 @@ class DrawingBoard(QtWidgets.QLabel):
     def pincelSize(self,size):
         self.brushSize = size
 
-    def undo(self):
-        print("entro")
-
-        self.pixmap_tablero.fill(QColor(0, 0, 0, 0))  # Limpia el tablero
-        painter = QPainter(self.pixmap_tablero)
-
-        self.posDecision -= 1
-
-        self.trazo =  len(self.strokes) - self.posDecision
-
-        if self.trazo < 0 :
-            self.trazo = 0
-
-        if self.trazo > len(self.strokes) :
-            self.trazo = len(self.strokes)
-
-        print(self.trazo)
-
-        for i in range(0,len(self.strokes)):
-            print("Entro al for")
-            points  = self.strokes[i][0]
-            color   = self.strokes[i][1]
-            tam     = self.strokes[i][2]
-            painter.setPen(QPen(color, tam, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
-
-        
-            painter.drawLine(points[i], points[i+1])
+    
 
 
 

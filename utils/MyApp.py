@@ -38,7 +38,6 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbDel.clicked.connect(self.ui.tablero.habDel)           # Eliminacion de escrito
         self.ui.pbROI.clicked.connect(self.ui.tablero.habColor)         # Generacion de color complementario
 
-        self.ui.pbDot.clicked.connect(self.ui.tablero.undo)
         # self.ui.pbArrow.clicked.connect(self.ui.tablero.habArrow)
 
         
