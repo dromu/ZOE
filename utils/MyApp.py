@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QFileDialog, QActionGroup
 from img_tools.DrawingBoard import DrawingBoard
 from comunication.TCP_comunication import TCP_comunication
 from comunication.wificonnector import WifiConnector
-
+from PyQt5.QtGui import QCursor
 
 
 class MyApp(QtWidgets.QMainWindow):
@@ -269,7 +269,7 @@ class MyApp(QtWidgets.QMainWindow):
     # Proceso de conexion del pc-esp32
     def conexion(self):
         if self.connector.is_connected:     #Revisa el atributo en el constructor
-
+            
             
             if not self.connector.disconnect(): #Revisa los retornos de los metodos 
                 self.ui.pbConnect.setText('Conectar')

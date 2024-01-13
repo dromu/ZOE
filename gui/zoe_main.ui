@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1924</width>
-    <height>1089</height>
+    <height>1088</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -675,10 +675,10 @@ QSlider::add-page:horizontal {
   </action>
   <action name="threepxAction">
    <property name="checkable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="checked">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="text">
     <string>3 Px</string>

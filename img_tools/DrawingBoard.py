@@ -11,6 +11,10 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QMenuBar, QMenu,QAction,Q
 from PyQt5.QtGui import QIcon, QImage, QPainter, QPen, QPolygon
 from PyQt5.QtCore import Qt, QPoint, QRect, QPointF
 import sys
+from PyQt5.QtWidgets import QWidget, QInputDialog, QVBoxLayout
+from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QApplication, QDialog, QFormLayout, QLineEdit, QVBoxLayout, QPushButton
+from utils.dialogText import CustomInputDialog
 
 class DrawingBoard(QtWidgets.QLabel):
     def __init__(self, parent=None):
@@ -32,7 +36,7 @@ class DrawingBoard(QtWidgets.QLabel):
         self.draft = False
         self.drawArrow = False
         self.colorComp = False
-
+        self.txt = ""
         
 
         self.strokes = []  # Lista para almacenar los trazos realizados
@@ -96,7 +100,7 @@ class DrawingBoard(QtWidgets.QLabel):
         self.begin, self.destination = QPoint(), QPoint()	
         
         if self.draft:
-            cursor_path = 'images\icons\dibujo\eraser4.ico'
+            cursor_path = 'images\icons\dibujo\eraser5.ico'
             self.setCursor(QCursor(QPixmap(cursor_path)))
         else: 
             self.setCursor(QCursor(Qt.ArrowCursor))
@@ -104,11 +108,15 @@ class DrawingBoard(QtWidgets.QLabel):
 
     def habText(self):
         self.drawText = not self.drawText
-        
         if self.drawText:
-            self.text_input.show()
-        else:
-            self.text_input.hide()
+            
+            custom_input_dialog = CustomInputDialog()
+            result = custom_input_dialog.exec_()
+
+            if result == QDialog.Accepted:
+                self.texto =  custom_input_dialog.findChild(QLineEdit).text()
+
+            
 
         self.begin, self.destination = QPoint(), QPoint()	
 
@@ -153,7 +161,7 @@ class DrawingBoard(QtWidgets.QLabel):
             elif self.draft:
                 self.borrador = QColor(0, 0, 0, 0)
                 painter.setCompositionMode(QPainter.CompositionMode_Clear)
-                painter.setPen(QPen(self.borrador, 15, Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
+                painter.setPen(QPen(self.borrador, 47 ,Qt.SolidLine, Qt.RoundCap, Qt.RoundJoin))
                 painter.drawLine(self.last_point, self.destination)
                 painter.end()
                 self.setPixmap(self.pixmap_tablero)
@@ -198,11 +206,12 @@ class DrawingBoard(QtWidgets.QLabel):
                 self.begin, self.destination = QPoint(), QPoint()	#SE
 
             elif self.drawText:
-                user_text = self.text_input.text()
+                # user_text = self.text_input.text()
                 font = QFont("Arial",self.brushSize+10)
 
                   # Obtener el rectángulo del texto para calcular el ancho
-                text_rect = QFontMetrics(font).boundingRect(user_text)
+                text_rect = QFontMetrics(font).boundingRect(self.texto)
+                
 
                 # Calcular las coordenadas para centrar el texto alrededor del punto de inicio
                 x_centered = int(self.begin.x() - text_rect.width() / 2)
@@ -212,7 +221,7 @@ class DrawingBoard(QtWidgets.QLabel):
                 
                 painter.setFont(font)
                 painter.setPen(self.brushColor)
-                painter.drawText(QPoint(x_centered, y_centered), user_text)
+                painter.drawText(QPoint(x_centered, y_centered), self.texto)
 
             # Aqui las lineas para generar el ctrl+Z y ctrl+Y
             
