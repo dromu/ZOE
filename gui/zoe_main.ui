@@ -186,36 +186,6 @@ border: 2px solid black;</string>
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>1490</x>
-      <y>870</y>
-      <width>371</width>
-      <height>80</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="txtConnect">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:18pt; font-weight:600;&quot;&gt;conexión&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pbConnect">
-       <property name="styleSheet">
-        <string notr="true">
-font: 75 15pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Conectar</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
@@ -474,15 +444,49 @@ QSlider::add-page:horizontal {
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Control de movimientos&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>1640</x>
+      <y>860</y>
+      <width>231</width>
+      <height>94</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="pbConnect">
+       <property name="styleSheet">
+        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(240, 0, 0);
+padding: 8px;
+border-radius:20px;
+color: rgb(244, 244, 244);
+border-color: rgb(0, 0, 0);</string>
+       </property>
+       <property name="text">
+        <string>Conectar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="txtConnect">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;conexión&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
    <zorder>cameraSpace</zorder>
    <zorder>img_microscopy</zorder>
    <zorder>horizontalLayoutWidget</zorder>
-   <zorder>horizontalLayoutWidget_2</zorder>
    <zorder>tablero</zorder>
    <zorder>verticalLayoutWidget</zorder>
    <zorder>pbROI</zorder>
    <zorder>gridLayoutWidget</zorder>
    <zorder>label_4</zorder>
+   <zorder>verticalLayoutWidget_2</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menuBar">

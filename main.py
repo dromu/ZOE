@@ -10,7 +10,7 @@ sys.path.append("utils")
 def run_zoe():
     """
     La función `run_zoe` crea una instancia de la clase `MyApp`, maximiza la ventana e inicia el bucle
-    de eventos de la aplicación.
+    de eventos de la aplicación.  
     """
     app = QtWidgets.QApplication(sys.argv)
     window = MyApp()

@@ -40,7 +40,16 @@ class MyApp(QtWidgets.QMainWindow):
 
         # self.ui.pbArrow.clicked.connect(self.ui.tablero.habArrow)
 
-        
+        self.buttons = ["pbDot", "pbRect", "pbElip", "pbText","pbROI"]
+        self.botones = []
+       
+        for i, button in enumerate(self.buttons): 
+            base        =  self.ui
+            buttonDato  =  getattr(base, button)
+            buttonDato.clicked.connect(lambda _, idx=i: self.cambiarColor(idx))
+            self.botones.append(buttonDato)
+
+
         # Union a metodos locales de la clase para cambio de color 
         self.ui.pbDot.clicked.connect(self.habEscritura)
         self.ui.pbROI.clicked.connect(self.habColor)
@@ -50,6 +59,8 @@ class MyApp(QtWidgets.QMainWindow):
         self.flagEscritura = False
         self.flagColor = False
         self.visCamera = False
+
+        self.previusButton = ""
 
         # Imagen de inicio de en lugar de visualizacion de muestras 
         self.img_pixmap = QPixmap("images\microscopio.png")
@@ -101,8 +112,11 @@ class MyApp(QtWidgets.QMainWindow):
         ## Elementos en el main 
         # Boton de inicio de conexion
         self.ui.pbConnect.clicked.connect(self.conexion)
+        self.original_style = self.ui.pbConnect.styleSheet()
+
         #Texto inicial de conexion 
         self.ui.txtConnect.setText("No conectado")
+        self.ui.txtConnect.setAlignment(Qt.AlignRight)
         # Slider de espectro visible
         self.ui.VisibleEsp.valueChanged.connect(self.slider_value_changed)
         
@@ -111,6 +125,8 @@ class MyApp(QtWidgets.QMainWindow):
 
         #Obejto envio
         self.send_data = TCP_comunication()
+
+        
         
         # Deshabilitamos los elementos del main, estos se irán actualizando
         self.ui.wavelength.setEnabled(False)
@@ -136,7 +152,26 @@ class MyApp(QtWidgets.QMainWindow):
 
         self.manejoButton(False)
 
+    def cambiarColor(self, idx): 
         
+        for i, boton in enumerate(self.botones):
+            if i == idx:
+
+                if self.previusButton == idx: 
+                    boton.setStyleSheet("")
+                    self.previusButton = ""
+                    # self.deactivateButton()
+                else:
+                    # Cambiar el color del botón presionado
+                    boton.setStyleSheet("background-color: green")
+                    self.previusButton = idx
+                    
+
+            else:
+                # Restaurar el color original de los demás botones
+                boton.setStyleSheet("")
+
+
     
     def manejoButton(self, condicion): 
         buttonName = ("pbDot","pbRect","pbHide","pbTrash", "pbElip", "pbText", "pbDel", "pbROI", "pbSave", "pbArrow", "pbBack", "pbForw")
@@ -153,6 +188,7 @@ class MyApp(QtWidgets.QMainWindow):
                 if button:
                     button.setEnabled(condicion)
     
+    #Desactivacion de todos los botones al finalizar la conexion
     def deactivateButton(self):
         self.ui.tablero.habEscritura()
         self.habEscritura()
@@ -161,8 +197,8 @@ class MyApp(QtWidgets.QMainWindow):
     def habEscritura(self):
         self.flagEscritura = not self.flagEscritura
 
-        color = "red" if self.flagEscritura else "white"
-        self.ui.pbDot.setStyleSheet(f"QPushButton {{ background-color: {color}; }}")
+        # color = "red" if self.flagEscritura else "white"
+        # self.ui.pbDot.setStyleSheet(f"QPushButton {{ background-color: {color}; }}")
 
     
     def habColor(self):
@@ -266,6 +302,9 @@ class MyApp(QtWidgets.QMainWindow):
         else:
                 self.ui.wavelength.setText("Invalid value!")
 
+
+    
+
     # Proceso de conexion del pc-esp32
     def conexion(self):
         if self.connector.is_connected:     #Revisa el atributo en el constructor
@@ -273,8 +312,10 @@ class MyApp(QtWidgets.QMainWindow):
             
             if not self.connector.disconnect(): #Revisa los retornos de los metodos 
                 self.ui.pbConnect.setText('Conectar')
-                self.ui.pbConnect.setStyleSheet("QPushButton { background-color: red; }")
+                # self.ui.pbConnect.setStyleSheet("QPushButton { background-color: red; }")
+                self.ui.pbConnect.setStyleSheet(self.original_style)
                 self.ui.txtConnect.setText("Desconexión exitosa")
+                self.ui.txtConnect.setAlignment(Qt.AlignRight)
 
                 self.ui.RB_manual.setEnabled(False)
                 self.ui.RB_auto.setEnabled(False)
@@ -295,13 +336,22 @@ class MyApp(QtWidgets.QMainWindow):
 
 
             else:
-                self.ui.txtConnect.setText("No se pudo desconectar.")
+                self.ui.txtConnect.setText("No se pudo desconectar")
+                self.ui.txtConnect.setAlignment(Qt.AlignRight)
 
         else:
             if self.connector.connect():
                 self.ui.pbConnect.setText('Conectado')
-                self.ui.pbConnect.setStyleSheet("QPushButton { background-color: green; }")
-                self.ui.txtConnect.setText("Conexión establecida.")
+                self.ui.pbConnect.setStyleSheet(""" font: 75 16pt "MS Shell Dlg 2";
+                                                    background-color: rgb(50, 255, 50);
+                                                    padding: 8px;
+                                                    border-radius: 10px;
+                                                    color: rgb(0,0,0);
+                                                    border-color: rgb(0, 0, 0);
+                                                    """ )
+                
+                self.ui.txtConnect.setText("Conexión establecida")
+                self.ui.txtConnect.setAlignment(Qt.AlignRight)
 
                 # Encendemos los botonoes 
                
@@ -321,5 +371,5 @@ class MyApp(QtWidgets.QMainWindow):
                 # Realiza la conexion 
                 self.send_data.connect()
             else:
-                self.ui.txtConnect.setText("No se pudo establecer la conexión.")
-                
+                self.ui.txtConnect.setText("No se pudo establecer la conexión")
+                self.ui.txtConnect.setAlignment(Qt.AlignRight)
