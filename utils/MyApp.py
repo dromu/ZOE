@@ -71,6 +71,8 @@ class MyApp(QtWidgets.QMainWindow):
         self.flagColor = False
         self.visCamera = False
 
+        self.actualButton = []
+
         self.previusButton = "nan"
 
         # Imagen de inicio de en lugar de visualizacion de muestras 
@@ -181,11 +183,14 @@ class MyApp(QtWidgets.QMainWindow):
 
                     self.previusButton = idx
                     self.previusNamebutton = boton
+
+                    self.actualButton = boton
                     
 
             else:
                 # Restaurar el color original de los demás botones
                 boton.setStyleSheet("")
+                
 
 
         #Desactivacion de todos los botones al finalizar la conexion
@@ -239,7 +244,7 @@ class MyApp(QtWidgets.QMainWindow):
 
             dato  = str(R_)+str(G_)+str(B_)
 
-            print(R_, G_, B_ )
+            print(R_, G_, B_ ) 
         
         
 
@@ -354,6 +359,16 @@ class MyApp(QtWidgets.QMainWindow):
 
                # Desactivamos botones 
                 self.manejoButton(False)
+
+                if self.previusNamebutton != None:
+                    self.funcionHab[self.previusNamebutton]()
+                    self.actualButton.setStyleSheet("")
+                    
+
+              
+                
+                self.previusButton = None
+                self.previusNamebutton = None
 
                 # Limpiar la pantalla  para vovler a la imagen inicial
                 self.ui.tablero.clear()

@@ -600,12 +600,6 @@ border-color: rgb(0, 0, 0);</string>
        <property name="text">
         <string>Conectar</string>
        </property>
-       <property name="icon">
-        <iconset>
-         <normalon>../images/icons/disconnect.png</normalon>
-         <disabledoff>../images/icons/connect.png</disabledoff>
-        </iconset>
-       </property>
       </widget>
      </item>
      <item>
