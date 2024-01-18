@@ -72,73 +72,18 @@ border: 2px solid black;</string>
       <x>40</x>
       <y>870</y>
       <width>1047</width>
-      <height>80</height>
+      <height>43</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="pbSave">
-       <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="text">
-        <string>💾</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pbDot">
-       <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;
-</string>
-       </property>
-       <property name="text">
-        <string>✍️</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pbRect">
-       <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>◻️</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pbElip">
-       <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>◯</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pbArrow">
-       <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>🏹</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pbText">
-       <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>𝓐</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pbHide">
        <property name="styleSheet">
         <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
@@ -147,8 +92,166 @@ border: 2px solid black;</string>
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../images/icons/eye_invisible.ico</normaloff>
-         <normalon>../images/icons/eye_show.ico</normalon>../images/icons/eye_invisible.ico</iconset>
+         <normaloff>../images/icons/guardar.png</normaloff>../images/icons/guardar.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>28</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbDot">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;
+</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/lapiz.png</normaloff>../images/icons/lapiz.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>28</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbRect">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/rect.png</normaloff>../images/icons/rect.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>28</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbElip">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/circu.png</normaloff>../images/icons/circu.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>28</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbArrow">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normalon>../images/icons/flecha.png</normalon>
+        </iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>28</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbText">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/text.png</normaloff>../images/icons/text.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>28</width>
+         <height>28</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbHide">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/ocultar.png</normaloff>
+         <normalon>../images/icons/eye_show.ico</normalon>../images/icons/ocultar.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -160,26 +263,52 @@ border: 2px solid black;</string>
      </item>
      <item>
       <widget class="QPushButton" name="pbDel">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="styleSheet">
         <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>🧹</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/borrador.png</normaloff>../images/icons/borrador.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>28</width>
+         <height>28</height>
+        </size>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pbTrash">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="styleSheet">
         <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>🗑️</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/basura.png</normaloff>../images/icons/basura.png</iconset>
        </property>
        <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>28</width>
+         <height>28</height>
         </size>
        </property>
       </widget>
@@ -321,15 +450,19 @@ QSlider::add-page:horizontal {
      <rect>
       <x>1400</x>
       <y>470</y>
-      <width>51</width>
-      <height>51</height>
+      <width>71</width>
+      <height>71</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
     </property>
     <property name="text">
-     <string>🌈</string>
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../images/icons/colorComple.png</normaloff>../images/icons/colorComple.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -466,6 +599,12 @@ border-color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
         <string>Conectar</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normalon>../images/icons/disconnect.png</normalon>
+         <disabledoff>../images/icons/connect.png</disabledoff>
+        </iconset>
        </property>
       </widget>
      </item>

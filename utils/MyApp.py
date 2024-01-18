@@ -40,14 +40,25 @@ class MyApp(QtWidgets.QMainWindow):
 
         # self.ui.pbArrow.clicked.connect(self.ui.tablero.habArrow)
 
-        self.buttons = ["pbDot", "pbRect", "pbElip", "pbText","pbROI"]
+        self.buttons = ["pbDot", "pbRect", "pbElip", "pbText","pbDel","pbROI","pbHide"]
         self.botones = []
+        self.funcionHab = { self.ui.pbDot:  self.ui.tablero.habEscritura, 
+                            self.ui.pbRect: self.ui.tablero.habRect,
+                            self.ui.pbElip: self.ui.tablero.habElipse,
+                            self.ui.pbText: self.ui.tablero.habText,      
+                            self.ui.pbDel:  self.ui.tablero.habDel,     
+                            self.ui.pbROI:  self.ui.tablero.habColor,
+                            self.ui.pbHide: self.ui.tablero.hideWind
+                            }
+
        
         for i, button in enumerate(self.buttons): 
             base        =  self.ui
             buttonDato  =  getattr(base, button)
             buttonDato.clicked.connect(lambda _, idx=i: self.cambiarColor(idx))
             self.botones.append(buttonDato)
+        
+
 
 
         # Union a metodos locales de la clase para cambio de color 
@@ -60,7 +71,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.flagColor = False
         self.visCamera = False
 
-        self.previusButton = ""
+        self.previusButton = "nan"
 
         # Imagen de inicio de en lugar de visualizacion de muestras 
         self.img_pixmap = QPixmap("images\microscopio.png")
@@ -147,9 +158,8 @@ class MyApp(QtWidgets.QMainWindow):
             button.toggled.connect(lambda state, b=button: self.processRadioButton(b, self.ui.VisibleEsp, self.ui.wavelength))
 
         self.ui.value = 380
-        
-        
 
+        self.previusNamebutton = None
         self.manejoButton(False)
 
     def cambiarColor(self, idx): 
@@ -159,12 +169,18 @@ class MyApp(QtWidgets.QMainWindow):
 
                 if self.previusButton == idx: 
                     boton.setStyleSheet("")
-                    self.previusButton = ""
-                    # self.deactivateButton()
+                    self.previusButton = None
+                    self.previusNamebutton = None
+                    
                 else:
                     # Cambiar el color del botón presionado
                     boton.setStyleSheet("background-color: green")
+
+                    if self.previusNamebutton != None:
+                        self.funcionHab[self.previusNamebutton]()
+
                     self.previusButton = idx
+                    self.previusNamebutton = boton
                     
 
             else:
@@ -172,7 +188,21 @@ class MyApp(QtWidgets.QMainWindow):
                 boton.setStyleSheet("")
 
 
-    
+        #Desactivacion de todos los botones al finalizar la conexion
+    def deactivateButton(self):
+
+
+
+        self.ui.tablero.habEscritura()
+        self.ui.tablero.habRect()        # Rectangulos 
+        # self.ui.tablero.habElipse()      # Boton de generar elipses
+        # self.ui.tablero.habText()        # Texto
+        # self.ui.tablero.habColor()
+        
+        self.habEscritura()
+        self.habColor()
+
+
     def manejoButton(self, condicion): 
         buttonName = ("pbDot","pbRect","pbHide","pbTrash", "pbElip", "pbText", "pbDel", "pbROI", "pbSave", "pbArrow", "pbBack", "pbForw")
 
@@ -188,10 +218,7 @@ class MyApp(QtWidgets.QMainWindow):
                 if button:
                     button.setEnabled(condicion)
     
-    #Desactivacion de todos los botones al finalizar la conexion
-    def deactivateButton(self):
-        self.ui.tablero.habEscritura()
-        self.habEscritura()
+
         
 
     def habEscritura(self):
@@ -332,7 +359,7 @@ class MyApp(QtWidgets.QMainWindow):
                 self.ui.tablero.clear()
 
                 # Desactivacion de todos los botones 
-                self.deactivateButton()
+                # self.deactivateButton()
 
 
             else:
