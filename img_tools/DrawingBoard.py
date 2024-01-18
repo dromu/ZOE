@@ -56,19 +56,34 @@ class DrawingBoard(QtWidgets.QLabel):
         self.trazo = 0
 
 
-    def habColor(self):
+    def disarm(self):
+        self.draw       == False
+        self.drawRect   == False
+        self.drawElip   == False
+        self.drawText   == False
+        self.draft      == False
+        self.colorComp  == False
+
+    
+
+    def habColor(self):       
         self.colorComp = not self.colorComp
-        
         #Se habilita para dibujar un recuadro 
         self.habRect()
+        
         
 
 
     def habEscritura(self):
+        
         self.draw = not self.draw
+        
+        print("self.draw: ", self.draw)
         self.begin, self.destination = QPoint(), QPoint()	
+        self.setCursor(QCursor(Qt.ArrowCursor))
 
         if self.draw:
+            
             # Si deseas cargar un cursor personalizado, puedes hacerlo de la siguiente manera:
             cursor_path = 'images\icons\dibujo\lapiz2.ico'
             self.setCursor(QCursor(QPixmap(cursor_path)))
@@ -77,11 +92,17 @@ class DrawingBoard(QtWidgets.QLabel):
             
             
     def habRect(self):
+        
         self.drawRect = not self.drawRect 
+        self.setCursor(QCursor(Qt.ArrowCursor))
+
+        print("self.drawRect: ", self.drawRect)
         self.begin, self.destination = QPoint(), QPoint()	
 
         if self.drawRect:
+            
             self.setCursor(QCursor(Qt.CrossCursor))
+            
         else: 
             self.setCursor(QCursor(Qt.ArrowCursor))
         
@@ -89,8 +110,9 @@ class DrawingBoard(QtWidgets.QLabel):
     def habElipse(self):
         self.drawElip = not self.drawElip
         self.begin, self.destination = QPoint(), QPoint()	
-
+        self.setCursor(QCursor(Qt.ArrowCursor))
         if self.drawElip:
+            
             self.setCursor(QCursor(Qt.CrossCursor))
         else: 
             self.setCursor(QCursor(Qt.ArrowCursor))

@@ -57,7 +57,7 @@ class MyApp(QtWidgets.QMainWindow):
             buttonDato  =  getattr(base, button)
             buttonDato.clicked.connect(lambda _, idx=i: self.cambiarColor(idx))
             self.botones.append(buttonDato)
-        
+            
 
 
 
@@ -116,12 +116,10 @@ class MyApp(QtWidgets.QMainWindow):
             grupo_tamanos_pincel.addAction(actionSize)
             actionSize.triggered.connect(lambda _,dim=tamsize: self.ui.tablero.pincelSize(dim))
        
-
    
         #Boton de guardar pantallas 
         self.ui.pbSave.clicked.connect(self.save)
 
-        
         ## Elementos en el main 
         # Boton de inicio de conexion
         self.ui.pbConnect.clicked.connect(self.conexion)
@@ -139,8 +137,6 @@ class MyApp(QtWidgets.QMainWindow):
         #Obejto envio
         self.send_data = TCP_comunication()
 
-        
-        
         # Deshabilitamos los elementos del main, estos se irán actualizando
         self.ui.wavelength.setEnabled(False)
         self.ui.VisibleEsp.setEnabled(False)
@@ -169,43 +165,28 @@ class MyApp(QtWidgets.QMainWindow):
         for i, boton in enumerate(self.botones):
             if i == idx:
 
-                if self.previusButton == idx: 
+                if self.previusButton == idx:               #Sirve para desactivar el mismo boton presionado
                     boton.setStyleSheet("")
                     self.previusButton = None
                     self.previusNamebutton = None
                     
                 else:
-                    # Cambiar el color del botón presionado
-                    boton.setStyleSheet("background-color: green")
 
                     if self.previusNamebutton != None:
                         self.funcionHab[self.previusNamebutton]()
 
+                    # Cambiar el color del botón presionado
+                    boton.setStyleSheet("background-color: green")
+
                     self.previusButton = idx
                     self.previusNamebutton = boton
-
                     self.actualButton = boton
-                    
 
             else:
                 # Restaurar el color original de los demás botones
                 boton.setStyleSheet("")
                 
 
-
-        #Desactivacion de todos los botones al finalizar la conexion
-    def deactivateButton(self):
-
-
-
-        self.ui.tablero.habEscritura()
-        self.ui.tablero.habRect()        # Rectangulos 
-        # self.ui.tablero.habElipse()      # Boton de generar elipses
-        # self.ui.tablero.habText()        # Texto
-        # self.ui.tablero.habColor()
-        
-        self.habEscritura()
-        self.habColor()
 
 
     def manejoButton(self, condicion): 
