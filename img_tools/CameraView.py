@@ -33,6 +33,7 @@ class ProcesadorCamara(QObject):
     def actualizar_frame(self):
         ret, self.frame = self.cap.read()
 
+        
         #Acomodado a la resolucion de la Genius 
         ancho   = 1344
         alto    = 756
@@ -57,39 +58,87 @@ class ProcesadorCamara(QObject):
         coordenada1, coordenada2 = coordenadas
         x1, y1 = coordenada1
         x2, y2 = coordenada2
+        
+        # print("Tamaño frame: ", self.frame.shape)
 
+        # print("X1: ", x1,  "X2:", x2)
+        # print("Y1: ", y1,  "Y2:", y2)
+
+        
+        maximo  = self.frame.shape
+        maxX    = maximo[1]
+        maxY    = maximo[0]
+
+        # print("maxX: ", maxX)
+        # print("maxY: ", maxY)
+        
+
+        #minimos
+        x1 = 0 if x1 < 0 else x1
+        x2 = 0 if x2 < 0 else x2
+
+        y1 = 0 if y1 < 0 else y1
+        y2 = 0 if y2 < 0 else y2
+
+        #maximos
+        x1 = maxX if x1 > maxX else x1
+        x2 = maxX if x2 > maxX else x2
+
+        y1 = maxY if y1 > maxY else y1
+        y2 = maxY if y2 > maxY else y2
+
+
+        if x1 > x2:
+            tempX = x2
+            x2 = x1
+            x1 = tempX
+
+        if y1 > y2:
+            tempY = y2
+            y2 = y1
+            y1 = tempY
+        
+        # print("Configurados")
+        # print("X1: ", x1,  "X2", x2)
+        # print("Y1: ", y1,  "Y2", y2)
+        
+        # print(self.frame)
         #Seleccion de region de interes
-        imgROI = self.frame[y1:y2, x1:x2]
+        self.imgROI = self.frame[y1:y2, x1:x2,   :]
 
         #Transformacion al espacio HSV
-        R = (imgROI[:,:,0]/255).mean()
-        G = (imgROI[:,:,1]/255).mean()
-        B = (imgROI[:,:,2]/255).mean()
-
-        print(R, G, B)
+        R = np.mean(self.imgROI[:,:,0]/255)
+        G = np.mean(self.imgROI[:,:,1]/255)
+        B = np.mean(self.imgROI[:,:,2]/255)
 
         num = 0.5*((R-G) + (R-B))
         den = math.sqrt((R-G)**2 + (R-B)*(G-B))
-        H = degrees(np.arccos(num/den))
+        
+        H = round(degrees(np.arccos(num/den)))
 
-        H = 360-H
+        if  B>G:
+            H =  360 -H
 
-        if H>180:
-            H = H-360
+        # print("Valor inicial de H: ", H)
 
-        Hcomp = H + 180
+        if H>=0 and H<=180:
+            Hcomp = H + 180
+        else:
+            Hcomp = H - 180
+
+        if Hcomp == 360:
+            Hcomp = 0
+
 
         I = 1
         S = 1
 
         dato = Hcomp
 
-        R_ = 0
-        G_ = 0
-        B_ = 0
+        print(R, G, B)
 
-        if  dato < 120: 
-            R_ = I*( 1+ ( (S*np.cos(  radians(dato)  ) ) / np.cos( radians(60-dato)  )))
+        if  dato>= 0 and dato < 120: 
+            R_ = I*( 1+ ( (S*np.cos( radians(dato)  ) ) / np.cos( radians(60-dato)  )))
             G_ = 3*I - (R+B)
             B_ = I*(1-S)
 
@@ -103,16 +152,26 @@ class ProcesadorCamara(QObject):
             G_ = I*(1-S)
             B_ = I*(1 + (  (S * np.cos(radians(dato-240)  ) ) / ( np.cos(radians(300-dato))) ))
 
-        print(dato)
+        print("RGB complementario", "R:", R_,"G:", G_, "B:", B_)
 
-        R_ = R_*255
-        G_ = G_*255
-        B_ = B_*255
+        maxValue = self.maximoValor(R_,G_,B_)
 
-        R_ = min(255, max(0, R_))
-        G_ = min(255, max(0, G_))
-        B_ = min(255, max(0, B_))
+        R_ = (R_/3)*255
+        G_ = (G_/3)*255
+        B_ = (B_/3)*255
+
+
+        R_ = round(min(255, max(0, R_)))
+        G_ = round(min(255, max(0, G_)))
+        B_ = round(min(255, max(0, B_)))
 
         return R_, G_, B_
 
+    def maximoValor(self, R,G,B):
+        dato = [R,G,B]
+        return max(dato)
+
         
+
+
+

@@ -78,7 +78,7 @@ class DrawingBoard(QtWidgets.QLabel):
         
         self.draw = not self.draw
         
-        print("self.draw: ", self.draw)
+        # print("self.draw: ", self.draw)
         self.begin, self.destination = QPoint(), QPoint()	
         self.setCursor(QCursor(Qt.ArrowCursor))
 
@@ -96,7 +96,7 @@ class DrawingBoard(QtWidgets.QLabel):
         self.drawRect = not self.drawRect 
         self.setCursor(QCursor(Qt.ArrowCursor))
 
-        print("self.drawRect: ", self.drawRect)
+        # print("self.drawRect: ", self.drawRect)
         self.begin, self.destination = QPoint(), QPoint()	
 
         if self.drawRect:

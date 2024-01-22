@@ -74,6 +74,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.actualButton = []
 
         self.previusButton = "nan"
+        self.datoAuto  = ""
 
         # Imagen de inicio de en lugar de visualizacion de muestras 
         self.img_pixmap = QPixmap("images\microscopio.png")
@@ -84,7 +85,10 @@ class MyApp(QtWidgets.QMainWindow):
         self.send_data = TCP_comunication()
         self.ui.procesador_camara = ProcesadorCamara()
         
- 
+        self.R_ = 0
+        self.G_ = 0
+        self.B_ = 0
+
 
         # Conexion de las herramientas de la barra de tareas 
         color_actions = {
@@ -221,11 +225,12 @@ class MyApp(QtWidgets.QMainWindow):
         if self.flagColor == False:
             self.ui.RB_auto.setChecked(True)
             # Al presionar dos veces se comprueba el color complementario 
-            R_,G_,B_ = self.ui.procesador_camara.colorComplementary()
+            self.R_,self.G_,self.B_ = self.ui.procesador_camara.colorComplementary()
 
-            dato  = str(R_)+str(G_)+str(B_)
+            self.datoAuto  = str(self.R_).zfill(3)  +  str(self.G_).zfill(3)  +  str(self.B_).zfill(3)
+            print(self.R_, self.G_, self.B_)
 
-            print(R_, G_, B_ ) 
+            print("A"+self.datoAuto ) 
         
         
 
@@ -271,16 +276,16 @@ class MyApp(QtWidgets.QMainWindow):
                 
             if radio_button.text() == 'Automático':
                 ##self.ui.value = 500
-                self.send_data.send("A"+str(self.ui.value)+   "000000" )  
+                self.send_data.send("A"+self.datoAuto)  
 
                 # self.ui.send_data.send(str(self.ui.value) )  
 
                 # ACtualizamos el valor directamente, con el obtenido del cambio de espacio 
-                self.ui.wavelength.setText(str(self.ui.value))
+                # self.ui.wavelength.setText(str(self.ui.value))
 
                 # Se limitan las acciones para que no se pueda mover la longitud
-                self.ui.wavelength.setEnabled(False)
-                self.ui.VisibleEsp.setEnabled(False)
+                # self.ui.wavelength.setEnabled(False)
+                # self.ui.VisibleEsp.setEnabled(False)
                
             if radio_button.text() == 'Luz blanca':
                 # Se limitan y paran todas las acciones 
