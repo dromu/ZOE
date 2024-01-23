@@ -139,7 +139,6 @@ class DrawingBoard(QtWidgets.QLabel):
                 self.texto =  custom_input_dialog.findChild(QLineEdit).text()
 
             
-
         self.begin, self.destination = QPoint(), QPoint()	
 
     def hideWind(self):

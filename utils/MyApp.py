@@ -4,11 +4,15 @@ from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QColor
 from PyQt5.QtCore import Qt, QPoint
 from img_tools.CameraView import ProcesadorCamara
 from PyQt5.QtWidgets import QFileDialog, QActionGroup
+import numpy as np 
+import os
+import cv2 
 
 from img_tools.DrawingBoard import DrawingBoard
 from comunication.TCP_comunication import TCP_comunication
 from comunication.wificonnector import WifiConnector
 from PyQt5.QtGui import QCursor
+import pydicom
 
 
 class MyApp(QtWidgets.QMainWindow):
@@ -257,11 +261,69 @@ class MyApp(QtWidgets.QMainWindow):
         painter.drawPixmap(0, 0, self.ui.tablero.pixmap_tablero)
         painter.end()
 
-        filePath, _ = QFileDialog.getSaveFileName(self, "Guardar imagen", "", "PNG(*.png);;JPEG(*.jpg *.jpeg);; All Files(*.)")
+        # Convierte QImage a arreglo NumPy
+        width = combined_image.width()
+        height = combined_image.height()
+        ptr = combined_image.bits()
+        ptr.setsize(combined_image.byteCount())
+        arr = np.array(ptr).reshape((height, width, 4))
+        arr = cv2.cvtColor(arr, cv2.COLOR_BGR2RGB)
+        imagen_numpy = arr[:, :, :3]
+       
+
+
+        # image_Cv2 = cv2.imread(r"C:\Users\dromu\OneDrive\Escritorio\foto.jpeg")
+        # imagen_rgb = cv2.cvtColor(image_Cv2, cv2.COLOR_BGR2RGB)
+        # imagen_numpy = imagen_rgb
+
+
+        filePath, extension = QFileDialog.getSaveFileName(self, "Guardar imagen", "", "DICOM (*.dcm);;PNG (*.png);;JPEG (*.jpg *.jpeg);;All Files (*)")
+
+       
         if filePath == "":
             return
+        
+        print("filePath: ", filePath)
+        print("extension", extension )
 
-        combined_image.save(filePath)
+        if filePath:
+            _, file_extension = os.path.splitext(filePath)
+            print("Archivo seleccionado:", filePath)
+            print("Extensión seleccionada:", file_extension)
+        
+        if file_extension == ".dcm":
+            # Crear un objeto DICOM
+            dataset = pydicom.Dataset()
+
+            # Agregar información de metadatos
+            dataset.PatientName = "Nombre del Paciente"
+            dataset.PatientID = "ID del Paciente"
+            dataset.Modality = "OTRA"  # Modificar según el tipo de imagen
+        
+            color_channels = 3
+            # Asignar la imagen y sus metadatos al objeto DICOM
+            dataset.PixelData = imagen_numpy.tobytes()
+            dataset.Rows, dataset.Columns= imagen_numpy.shape[:2]
+            dataset.PlanarConfiguration = 0  # RGB intercalado
+            dataset.PixelSpacing = [1.0, 1.0]
+            dataset.BitsAllocated = 8
+            dataset.BitsStored = 8
+            dataset.SamplesPerPixel = color_channels
+            dataset.PhotometricInterpretation = "RGB"
+            dataset.HighBit = 7
+            dataset.PixelRepresentation = 0
+            dataset.RescaleIntercept = 0
+            dataset.RescaleSlope = 1
+
+            # Configuración adicional necesaria para evitar el error
+            dataset.is_little_endian = True  # Puedes ajustar según tus necesidades
+            dataset.is_implicit_VR = True  # Puedes ajustar según tus necesidades
+
+            # Guardar el objeto DICOM en un archivo
+            ruta_salida_dicom = filePath
+            dataset.save_as(ruta_salida_dicom)
+        else:       
+            combined_image.save(filePath)
 
     def processRadioButton(self, radio_button, slider, wavelength):
         if radio_button.isChecked():
