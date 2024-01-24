@@ -632,7 +632,7 @@ border-color: rgb(0, 0, 0);</string>
       <widget class="QLineEdit" name="barraInfo"/>
      </item>
      <item>
-      <widget class="QCheckBox" name="dataPaciente">
+      <widget class="QCheckBox" name="checkPaciente">
        <property name="styleSheet">
         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>

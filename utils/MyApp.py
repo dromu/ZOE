@@ -7,10 +7,13 @@ from PyQt5.QtWidgets import QFileDialog, QActionGroup
 import numpy as np 
 import os
 import cv2 
+from PyQt5.QtWidgets import QApplication, QDialog
 
 from img_tools.DrawingBoard import DrawingBoard
 from comunication.TCP_comunication import TCP_comunication
 from comunication.wificonnector import WifiConnector
+from utils.dataPaciente import dataPaciente
+
 from PyQt5.QtGui import QCursor
 import pydicom
 
@@ -42,7 +45,10 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbDel.clicked.connect(self.ui.tablero.habDel)           # Eliminacion de escrito
         self.ui.pbROI.clicked.connect(self.ui.tablero.habColor)         # Generacion de color complementario
 
+        self.ui.barraInfo.textChanged.connect(self.actualizarTexto)
         # self.ui.pbArrow.clicked.connect(self.ui.tablero.habArrow)
+
+        self.ui.checkPaciente.stateChanged.connect(self.datosPacientes)
 
         self.buttons = ["pbDot", "pbRect", "pbElip", "pbText","pbDel","pbROI","pbHide"]
         self.botones = []
@@ -69,6 +75,10 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbDot.clicked.connect(self.habEscritura)
         self.ui.pbROI.clicked.connect(self.habColor)
 
+        self.nombre         = ""
+        self.identificacion = ""
+        self.modalidad      = ""
+        self.textImage      = ""
 
         # Valores iniciales de las variables
         self.flagEscritura = False
@@ -167,6 +177,37 @@ class MyApp(QtWidgets.QMainWindow):
 
         self.previusNamebutton = None
         self.manejoButton(False)
+
+    
+    def datosPacientes(self,state):
+        
+        if state == Qt.Checked:  # Estado 2 significa que el QCheckBox está marcado (Qt.Checked)
+            cuadroDatapac = dataPaciente()
+            result = cuadroDatapac.exec_()
+
+            if result == QDialog.Accepted:
+                
+                self.nombre = cuadroDatapac.line_edit_nombre.text()
+                self.identificacion = cuadroDatapac.line_edit_identificacion.text()
+                self.modalidad = cuadroDatapac.line_edit_modalidad.text()  
+
+                print(self.nombre, self.identificacion, self.modalidad)
+
+                
+            else:
+                state = Qt.Unchecked  # Cambiar el valor de state a Qt.Unchecked
+                self.ui.checkPaciente.setChecked(state) 
+                
+                
+        else: 
+            self.nombre         = ""
+            self.identificacion = ""
+            self.modalidad      = ""
+
+    def actualizarTexto(self):
+        self.textImage = self.ui.barraInfo.text()
+        
+
 
     def cambiarColor(self, idx): 
         
@@ -271,12 +312,6 @@ class MyApp(QtWidgets.QMainWindow):
         imagen_numpy = arr[:, :, :3]
        
 
-
-        # image_Cv2 = cv2.imread(r"C:\Users\dromu\OneDrive\Escritorio\foto.jpeg")
-        # imagen_rgb = cv2.cvtColor(image_Cv2, cv2.COLOR_BGR2RGB)
-        # imagen_numpy = imagen_rgb
-
-
         filePath, extension = QFileDialog.getSaveFileName(self, "Guardar imagen", "", "DICOM (*.dcm);;PNG (*.png);;JPEG (*.jpg *.jpeg);;All Files (*)")
 
        
@@ -295,10 +330,12 @@ class MyApp(QtWidgets.QMainWindow):
             # Crear un objeto DICOM
             dataset = pydicom.Dataset()
 
+
             # Agregar información de metadatos
-            dataset.PatientName = "Nombre del Paciente"
-            dataset.PatientID = "ID del Paciente"
-            dataset.Modality = "OTRA"  # Modificar según el tipo de imagen
+            dataset.PatientName = self.nombre
+            dataset.PatientID   = self.identificacion
+            dataset.Modality    = self.modalidad
+            dataset.StudyDescription = self.textImage
         
             color_channels = 3
             # Asignar la imagen y sus metadatos al objeto DICOM
