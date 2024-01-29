@@ -14,9 +14,11 @@ class ProcesadorCamara(QObject):
     def __init__(self):
         super().__init__()
 
-        # Inicializar la cámara de OpenCV
-        self.cap = cv2.VideoCapture(0)
+        self.idxCamera = self.readCamera()
 
+        # Inicializar la cámara de OpenCV
+        self.cap = cv2.VideoCapture(self.idxCamera)
+    
         # Iniciar el temporizador para capturar frames periódicamente
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.actualizar_frame)
@@ -24,7 +26,24 @@ class ProcesadorCamara(QObject):
         
         self.frame = []
 
+    def readCamera(self):
+        with open("img_tools\camera.dat", 'r') as archivo:
+            contenido = archivo.read()
+        
+        if contenido[0] == None:
+            return 0 
+        else: 
+            return int(contenido[0])
+
+
     def iniciar_camara(self):
+
+
+        # Inicializar la cámara de OpenCV
+        self.cap = cv2.VideoCapture(self.idxCamera)
+
+        print(self.idxCamera)
+
         if not self.cap.isOpened():
             print("Error: No se pudo abrir la cámara.")
         else:

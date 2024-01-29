@@ -3,11 +3,12 @@ from PyQt5 import uic, QtWidgets
 from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QColor
 from PyQt5.QtCore import Qt, QPoint
 from img_tools.CameraView import ProcesadorCamara
-from PyQt5.QtWidgets import QFileDialog, QActionGroup
+from PyQt5.QtWidgets import QFileDialog, QActionGroup,QAction
 import numpy as np 
 import os
 import cv2 
 from PyQt5.QtWidgets import QApplication, QDialog,QMessageBox
+from PyQt5.QtMultimedia import QCameraInfo
 
 from img_tools.DrawingBoard import DrawingBoard
 from comunication.TCP_comunication import TCP_comunication
@@ -16,6 +17,7 @@ from utils.dataPaciente import dataPaciente
 
 from PyQt5.QtGui import QCursor
 import pydicom
+import pickle
 
 
 class MyApp(QtWidgets.QMainWindow):
@@ -179,6 +181,39 @@ class MyApp(QtWidgets.QMainWindow):
         self.manejoButton(False)
 
         self.ui.actionClose.triggered.connect(self.exitSystem)
+
+        cameras = QCameraInfo.availableCameras()
+        self.camera_group = QActionGroup(self)
+        self.camera_group.setExclusive(True)
+
+        # Mostrar los nombres de las cámaras en el menú
+    
+        for camera in cameras:
+            action = QAction(camera.description(), self)
+            action.setCheckable(True)
+            self.camera_group.addAction(action)
+            self.ui.menuCamara.addAction(action)
+        
+        if self.camera_group.actions():
+            ind = self.readCamera()
+
+
+            self.camera_group.actions()[ind].setChecked(True)
+
+
+
+        
+    def readCamera(self):
+        with open("img_tools\camera.dat", 'r') as archivo:
+            contenido = archivo.read()
+        
+        if contenido[0] == None:
+            salida =  0 
+        else: 
+            salida =  int(contenido[0])
+        
+        print(salida)
+        return salida 
     
     def exitSystem(self):
         respuesta = QMessageBox.question(self, 'Salir', '¿Estás seguro de que quieres salir?',
@@ -292,6 +327,7 @@ class MyApp(QtWidgets.QMainWindow):
             self.ui.RB_auto.setChecked(True)
             # Al presionar dos veces se comprueba el color complementario 
             self.R_,self.G_,self.B_ = self.ui.procesador_camara.colorComplementary()
+
 
             self.datoAuto  = str(self.R_).zfill(3)  +  str(self.G_).zfill(3)  +  str(self.B_).zfill(3)
             print(self.R_, self.G_, self.B_)
@@ -449,6 +485,7 @@ class MyApp(QtWidgets.QMainWindow):
             
             
             if not self.connector.disconnect(): #Revisa los retornos de los metodos 
+                self.ui.menuCamara.setEnabled(True)
                 self.ui.pbConnect.setText('Conectar')
                 # self.ui.pbConnect.setStyleSheet("QPushButton { background-color: red; }")
                 self.ui.pbConnect.setStyleSheet(self.original_style)
@@ -506,6 +543,18 @@ class MyApp(QtWidgets.QMainWindow):
                 self.manejoButton(True)
 
                 # Procesamiento de Camara
+
+                for indx, act in enumerate(self.camera_group.actions()):
+                    if act.isChecked():
+                        # print(f'Opción checkeada: {act.text()}')
+                        # print(indx)
+                        cameraUse = indx
+                        self.ui.menuCamara.setEnabled(False)
+                        dataCamera = str(indx)+str(act.text())
+                        self.guardar_variable(dataCamera,"img_tools/camera.dat" )
+
+
+
                 
                 self.ui.procesador_camara.iniciar_camara()
                 self.ui.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)
@@ -521,3 +570,9 @@ class MyApp(QtWidgets.QMainWindow):
             else:
                 self.ui.txtConnect.setText("No se pudo establecer la conexión")
                 self.ui.txtConnect.setAlignment(Qt.AlignRight)
+
+    def guardar_variable(self,variable,archivo):
+
+        with open(archivo, 'w') as archivo:
+            archivo.write(variable)
+        

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1924</width>
-    <height>1088</height>
+    <width>1928</width>
+    <height>1097</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -109,6 +109,9 @@ border: 2px solid black;</string>
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="cursor">
+        <cursorShape>ArrowCursor</cursorShape>
        </property>
        <property name="styleSheet">
         <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;
@@ -751,8 +754,8 @@ border-color: rgb(0, 0, 0);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1924</width>
-     <height>26</height>
+     <width>1928</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArchivo">
