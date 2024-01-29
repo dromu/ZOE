@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QFileDialog, QActionGroup
 import numpy as np 
 import os
 import cv2 
-from PyQt5.QtWidgets import QApplication, QDialog
+from PyQt5.QtWidgets import QApplication, QDialog,QMessageBox
 
 from img_tools.DrawingBoard import DrawingBoard
 from comunication.TCP_comunication import TCP_comunication
@@ -69,7 +69,7 @@ class MyApp(QtWidgets.QMainWindow):
             self.botones.append(buttonDato)
             
 
-
+        self.ui.pbExit.clicked.connect(self.exitSystem)
 
         # Union a metodos locales de la clase para cambio de color 
         self.ui.pbDot.clicked.connect(self.habEscritura)
@@ -177,6 +177,27 @@ class MyApp(QtWidgets.QMainWindow):
 
         self.previusNamebutton = None
         self.manejoButton(False)
+
+        self.ui.actionClose.triggered.connect(self.exitSystem)
+    
+    def exitSystem(self):
+        respuesta = QMessageBox.question(self, 'Salir', '¿Estás seguro de que quieres salir?',
+                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+        
+
+        if respuesta == QMessageBox.Yes:
+
+            if self.connector.is_connected: 
+                self.ui.pbConnect.click()
+                QApplication.quit()
+            else: 
+                QApplication.quit()
+            
+            
+
+
+
 
     
     def datosPacientes(self,state):

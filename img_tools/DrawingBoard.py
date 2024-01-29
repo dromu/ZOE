@@ -13,7 +13,7 @@ from PyQt5.QtCore import Qt, QPoint, QRect, QPointF
 import sys
 from PyQt5.QtWidgets import QWidget, QInputDialog, QVBoxLayout
 from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton
-from PyQt5.QtWidgets import QApplication, QDialog, QFormLayout, QLineEdit, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QApplication, QDialog, QFormLayout, QLineEdit, QVBoxLayout, QPushButton,QMessageBox
 from utils.dialogText import CustomInputDialog
 
 class DrawingBoard(QtWidgets.QLabel):
@@ -69,6 +69,9 @@ class DrawingBoard(QtWidgets.QLabel):
     def habColor(self):       
         self.colorComp = not self.colorComp
         #Se habilita para dibujar un recuadro 
+        if self.colorComp:
+            self.brushSize = 3
+
         self.habRect()
         
         

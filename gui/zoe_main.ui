@@ -319,9 +319,9 @@ border: 2px solid black;</string>
     <property name="geometry">
      <rect>
       <x>1410</x>
-      <y>250</y>
+      <y>150</y>
       <width>491</width>
-      <height>202</height>
+      <height>250</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -443,39 +443,33 @@ QSlider::add-page:horizontal {
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="pbROI">
+       <property name="styleSheet">
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Color complementario</string>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/colorComple.png</normaloff>../images/icons/colorComple.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
+     </item>
     </layout>
-   </widget>
-   <widget class="QPushButton" name="pbROI">
-    <property name="geometry">
-     <rect>
-      <x>1400</x>
-      <y>470</y>
-      <width>71</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="icon">
-     <iconset>
-      <normaloff>../images/icons/colorComple.png</normaloff>../images/icons/colorComple.png</iconset>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>32</width>
-      <height>32</height>
-     </size>
-    </property>
    </widget>
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
       <x>1460</x>
-      <y>610</y>
+      <y>570</y>
       <width>409</width>
       <height>201</height>
      </rect>
@@ -567,8 +561,8 @@ QSlider::add-page:horizontal {
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>1460</x>
-      <y>550</y>
+      <x>1440</x>
+      <y>430</y>
       <width>391</width>
       <height>51</height>
      </rect>
@@ -576,40 +570,6 @@ QSlider::add-page:horizontal {
     <property name="text">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Control de movimientos&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
-   </widget>
-   <widget class="QWidget" name="verticalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>1640</x>
-      <y>860</y>
-      <width>231</width>
-      <height>94</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="pbConnect">
-       <property name="styleSheet">
-        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(240, 0, 0);
-padding: 8px;
-border-radius:20px;
-color: rgb(244, 244, 244);
-border-color: rgb(0, 0, 0);</string>
-       </property>
-       <property name="text">
-        <string>Conectar</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="txtConnect">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;conexión&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </widget>
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
@@ -629,7 +589,11 @@ border-color: rgb(0, 0, 0);</string>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="barraInfo"/>
+      <widget class="QLineEdit" name="barraInfo">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QCheckBox" name="checkPaciente">
@@ -643,16 +607,143 @@ border-color: rgb(0, 0, 0);</string>
      </item>
     </layout>
    </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>1470</x>
+      <y>100</y>
+      <width>391</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Modo de operación&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>1440</x>
+      <y>480</y>
+      <width>431</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_7">
+       <property name="styleSheet">
+        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>Aumento</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton">
+       <property name="text">
+        <string>4X</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_2">
+       <property name="text">
+        <string>10X</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_3">
+       <property name="text">
+        <string>40X</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="radioButton_4">
+       <property name="text">
+        <string>100X</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>1560</x>
+      <y>850</y>
+      <width>311</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="pbExit">
+       <property name="styleSheet">
+        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;
+padding: 8px;
+border-radius:20px;
+color: rgb(244, 244, 244);
+border-color: rgb(0, 0, 0);
+background-color: rgb(9, 200, 203);
+
+</string>
+       </property>
+       <property name="text">
+        <string>Salir</string>
+       </property>
+       <property name="checkable">
+        <bool>false</bool>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+       <property name="default">
+        <bool>false</bool>
+       </property>
+       <property name="flat">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="pbConnect">
+       <property name="styleSheet">
+        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;
+background-color: rgb(240, 0, 0);
+padding: 8px;
+border-radius:20px;
+color: rgb(244, 244, 244);
+border-color: rgb(0, 0, 0);</string>
+       </property>
+       <property name="text">
+        <string>Conectar</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="txtConnect">
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;conexión&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
    <zorder>cameraSpace</zorder>
    <zorder>img_microscopy</zorder>
    <zorder>horizontalLayoutWidget</zorder>
    <zorder>tablero</zorder>
    <zorder>verticalLayoutWidget</zorder>
-   <zorder>pbROI</zorder>
    <zorder>gridLayoutWidget</zorder>
    <zorder>label_4</zorder>
-   <zorder>verticalLayoutWidget_2</zorder>
    <zorder>horizontalLayoutWidget_2</zorder>
+   <zorder>label_6</zorder>
+   <zorder>horizontalLayoutWidget_3</zorder>
+   <zorder>gridLayoutWidget_2</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menuBar">

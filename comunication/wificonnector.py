@@ -12,7 +12,10 @@ class WifiConnector:
         self.wifi = pywifi.PyWiFi()  # Inicializa la biblioteca pywifi
         self.iface = self.wifi.interfaces()[0]  # Obtiene la primera interfaz WiFi
         
+
     def connect(self):
+
+        self.olvidarRed()
         """
         La función se conecta a una red WiFi utilizando el SSID y la contraseña proporcionados.
         
@@ -52,9 +55,11 @@ class WifiConnector:
         """
         self.iface.disconnect()  # Desconecta de la red WiFi actual
 
+        
         if self.iface.status() == pywifi.const.IFACE_DISCONNECTED:  # Verifica si se ha desconectado correctamente
             print("Desconexión exitosa.")
             self.is_connected = False
+            self.olvidarRed()
         else:
             print("No se pudo desconectar.")
             self.is_connected = True
@@ -75,3 +80,17 @@ class WifiConnector:
         """
         current_ssid = self.iface.ssid()  # Obtiene el SSID de la red WiFi actual
         return current_ssid == ssid
+    
+    def olvidarRed(self):
+
+        if self.iface.status() == pywifi.const.IFACE_DISCONNECTED:  # Verifica si se ha desconectado correctamente
+            print("Desconexión exitosa.")
+            self.is_connected = False
+
+            perfiles = self.iface.network_profiles()
+
+            for perfil in perfiles:
+                if perfil.ssid == 'ZOE':
+                    self.iface.remove_network_profile(perfil)
+                    print('Red "ZOE" olvidada correctamente.')
+                    break
