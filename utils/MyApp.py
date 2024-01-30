@@ -3,7 +3,8 @@ from PyQt5 import uic, QtWidgets
 from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QColor
 from PyQt5.QtCore import Qt, QPoint
 from img_tools.CameraView import ProcesadorCamara
-from PyQt5.QtWidgets import QFileDialog, QActionGroup,QAction
+
+from PyQt5.QtWidgets import QFileDialog, QActionGroup,QAction,QButtonGroup
 import numpy as np 
 import os
 import cv2 
@@ -14,6 +15,8 @@ from img_tools.DrawingBoard import DrawingBoard
 from comunication.TCP_comunication import TCP_comunication
 from comunication.wificonnector import WifiConnector
 from utils.dataPaciente import dataPaciente
+from utils.About import aboutZOE
+from utils.instruccion import instrucciones
 
 from PyQt5.QtGui import QCursor
 import pydicom
@@ -180,6 +183,10 @@ class MyApp(QtWidgets.QMainWindow):
         self.previusNamebutton = None
         self.manejoButton(False)
 
+
+        self.ui.zoeDev.triggered.connect(self.aboutZOE)
+        self.ui.actionCalibrar.triggered.connect(self.calibrarZOE)
+        self.ui.actionInstrucciones.triggered.connect(self.instruccionesZOE)
         self.ui.actionClose.triggered.connect(self.exitSystem)
 
         cameras = QCameraInfo.availableCameras()
@@ -201,8 +208,111 @@ class MyApp(QtWidgets.QMainWindow):
             self.camera_group.actions()[ind].setChecked(True)
 
 
+        #   CONTROL DE MOTORES 
+        #   Eje X 
+        self.valueX = 0
+        self.movAumento = 0.1
+        self.ui.plusX.clicked.connect(self.aumentarX)
+        self.ui.minusX.clicked.connect(self.disminuirX)
 
+        #   Eje Y
+        self.valueY = 0
+        self.ui.plusY.clicked.connect(self.aumentarY)
+        self.ui.minusY.clicked.connect(self.disminuirY)        
+
+        #   Eje Y
+        self.valueZ = 0
+        self.ui.plusZ.clicked.connect(self.aumentarZ)
+        self.ui.minusZ.clicked.connect(self.disminuirZ)  
+
+        # Control de aumento 
+         # Crear un grupo de botones
+        self.aumentoGroup = QButtonGroup(self)
+
+        self.aumentoGroup.addButton(self.ui.aum4x)
+        self.aumentoGroup.addButton(self.ui.aum10x)
+        self.aumentoGroup.addButton(self.ui.aum40x)
+        self.aumentoGroup.addButton(self.ui.aum100x)
+
+        # Conectar la señal de cambio para manejar eventos
+        self.aumentoGroup.buttonClicked.connect(self.aumentoRev)
+
+
+    def aumentarX(self):
+        self.valueX = self.valueX  + self.movAumento
+        self.valueX= self.limitValue(self.valueX)
+        self.ui.coordX.setText("{:.3f}".format(self.valueX))
+
+    def disminuirX(self):
+        self.valueX = self.valueX - self.movAumento
+        self.valueX = self.limitValue(self.valueX)
+        self.ui.coordX.setText("{:.3f}".format(self.valueX)) # Muestra siempre con tres cifras decimales
+
+    def aumentarY(self):
+        self.valueY = self.valueY  + self.movAumento
+        self.valueY= self.limitValue(self.valueY)
+        self.ui.coordY.setText("{:.3f}".format(self.valueY))
+
+    def disminuirY(self):
+        self.valueY -= self.movAumento
+        self.valueY= self.limitValue(self.valueY)
+        self.ui.coordY.setText("{:.3f}".format(self.valueY))
+
+    def aumentarZ(self):
+        self.valueZ = self.valueZ  +  self.movAumento
+        self.valueZ= self.limitValue(self.valueZ)
+        self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
+
+    def disminuirZ(self):
+        self.valueZ -=  self.movAumento
+        self.valueZ= self.limitValue(self.valueZ)
+        self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
+
+    def aumentoRev(self,button):
+        print(f'Se seleccionó: {button.text()}')
         
+        if button.text() == "4X":
+            self.movAumento = 0.1
+            print("4x")
+        elif button.text() == "10X":
+            self.movAumento = 0.05
+        elif button.text() == "40X":
+            self.movAumento = 0.01
+        elif button.text() == "100X":
+            self.movAumento = 0.005
+        else:
+            self.movAumento = 0.1
+
+
+    def limitValue(self, value):
+        
+        if value <0:
+            return 0
+        
+        elif value > 1:
+            return 1
+        
+        else: 
+            return value
+
+
+    def instruccionesZOE(self):
+        ZOEinstruccion = instrucciones()
+        ZOEinstruccion.exec_()
+
+
+    def aboutZOE(self):
+        ZOEabout = aboutZOE()
+        ZOEabout.exec_()
+
+    def calibrarZOE(self):
+
+        respuesta = QMessageBox.question(self, 'Calibracion', '¿Desea calibrar el sistema ZOE?',
+                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        pass
+
+
+     
     def readCamera(self):
         with open("img_tools\camera.dat", 'r') as archivo:
             contenido = archivo.read()
