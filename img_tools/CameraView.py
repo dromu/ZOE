@@ -38,7 +38,8 @@ class ProcesadorCamara(QObject):
 
     def iniciar_camara(self):
 
-
+        self.idxCamera = self.readCamera()
+        
         # Inicializar la cámara de OpenCV
         self.cap = cv2.VideoCapture(self.idxCamera)
 

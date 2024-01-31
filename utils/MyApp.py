@@ -9,6 +9,7 @@ import numpy as np
 import os
 import cv2 
 from PyQt5.QtWidgets import QApplication, QDialog,QMessageBox
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QSlider, QLabel
 from PyQt5.QtMultimedia import QCameraInfo
 
 from img_tools.DrawingBoard import DrawingBoard
@@ -131,6 +132,8 @@ class MyApp(QtWidgets.QMainWindow):
             self.ui.ninepxAction: 9
         }
         
+        self.rbuttonAug = 0
+        
         grupo_tamanos_pincel = QActionGroup(self)
         
 
@@ -167,6 +170,8 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.RB_auto.setEnabled(False)
         self.ui.RB_white.setEnabled(False)
 
+        self.autoAnte = None
+
         # Cambiar el valor del slider en texto
         self.ui.wavelength.returnPressed.connect(self.line_edit_return_pressed)
 
@@ -183,7 +188,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.previusNamebutton = None
         self.manejoButton(False)
 
-
+        self.valueMotor = ""
         self.ui.zoeDev.triggered.connect(self.aboutZOE)
         self.ui.actionCalibrar.triggered.connect(self.calibrarZOE)
         self.ui.actionInstrucciones.triggered.connect(self.instruccionesZOE)
@@ -199,19 +204,31 @@ class MyApp(QtWidgets.QMainWindow):
             action = QAction(camera.description(), self)
             action.setCheckable(True)
             self.camera_group.addAction(action)
+            action.triggered.connect(self.camera_selected)  # Conectar la función al evento triggered
             self.ui.menuCamara.addAction(action)
-        
+
         if self.camera_group.actions():
             ind = self.readCamera()
-
-
             self.camera_group.actions()[ind].setChecked(True)
 
 
         #   CONTROL DE MOTORES 
+        #   Aumento del mov    
+        self.movAumento = 0.005
+        valueSpinbox = [0.005,0.01,0.05,0.1]
+        self.ui.aumentoMov.setRange(0, len(valueSpinbox)-1)
+        self.ui.aumentoMov.setPageStep(1)
+        self.ui.aumentoMov.setTickInterval(1)
+        self.ui.aumentoMov.setTickPosition(QSlider.TicksBelow)
+        self.ui.aumentoMov.valueChanged.connect(self.aumentoRev)
+        self.ui.textAumento.setText("{:.3f}".format(self.movAumento))
+        
+        
+
+
         #   Eje X 
         self.valueX = 0
-        self.movAumento = 0.1
+        
         self.ui.plusX.clicked.connect(self.aumentarX)
         self.ui.minusX.clicked.connect(self.disminuirX)
 
@@ -235,54 +252,89 @@ class MyApp(QtWidgets.QMainWindow):
         self.aumentoGroup.addButton(self.ui.aum100x)
 
         # Conectar la señal de cambio para manejar eventos
-        self.aumentoGroup.buttonClicked.connect(self.aumentoRev)
+        self.aumentoGroup.buttonClicked.connect(self.aumentoImg)
+
+
+    def aumentoImg(self,botonR):
+        
+        augment  = botonR.text()
+        print(augment)
+        print(type(augment))
+
+        if augment == "4X":
+            self.rbuttonAug = 0
+        if augment == "10X":
+            self.rbuttonAug = 1
+        if augment == "40X":
+            self.rbuttonAug = 2
+        if augment == "100X":
+            self.rbuttonAug = 3
+
+        self.sendMotor("G")
 
 
     def aumentarX(self):
         self.valueX = self.valueX  + self.movAumento
         self.valueX= self.limitValue(self.valueX)
         self.ui.coordX.setText("{:.3f}".format(self.valueX))
+        self.sendMotor("X")
+
 
     def disminuirX(self):
         self.valueX = self.valueX - self.movAumento
         self.valueX = self.limitValue(self.valueX)
         self.ui.coordX.setText("{:.3f}".format(self.valueX)) # Muestra siempre con tres cifras decimales
+        self.sendMotor("X")
+
+
 
     def aumentarY(self):
         self.valueY = self.valueY  + self.movAumento
         self.valueY= self.limitValue(self.valueY)
         self.ui.coordY.setText("{:.3f}".format(self.valueY))
+        self.sendMotor("Y")
+
 
     def disminuirY(self):
         self.valueY -= self.movAumento
         self.valueY= self.limitValue(self.valueY)
         self.ui.coordY.setText("{:.3f}".format(self.valueY))
+        self.sendMotor("Y")
 
     def aumentarZ(self):
         self.valueZ = self.valueZ  +  self.movAumento
         self.valueZ= self.limitValue(self.valueZ)
         self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
+        self.sendMotor("Z")
 
     def disminuirZ(self):
         self.valueZ -=  self.movAumento
         self.valueZ= self.limitValue(self.valueZ)
         self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
+        self.sendMotor("Z")
+    
 
-    def aumentoRev(self,button):
-        print(f'Se seleccionó: {button.text()}')
-        
-        if button.text() == "4X":
-            self.movAumento = 0.1
-            print("4x")
-        elif button.text() == "10X":
-            self.movAumento = 0.05
-        elif button.text() == "40X":
-            self.movAumento = 0.01
-        elif button.text() == "100X":
-            self.movAumento = 0.005
-        else:
-            self.movAumento = 0.1
+    def aumentoRev(self,indice):
+        valueSpinbox = [0.005,0.01,0.05,0.1]
+        self.movAumento = valueSpinbox[indice]
+        self.ui.textAumento.setText("{:.3f}".format(self.movAumento))
+    
+    def sendMotor(self,motor):
+        if motor == "X": 
+            self.valueMotor = str(int(self.valueX*1000)).zfill(9)
+        elif motor == "Y":
+            self.valueMotor = str(int(self.valueY*1000)).zfill(9) 
+        elif motor == "Z":
+            self.valueMotor = str(int(self.valueZ*1000)).zfill(9)
 
+        elif motor == "G":
+            self.valueMotor  = "00000000" + str(self.rbuttonAug)
+
+        self.valueMotor = motor+self.valueMotor
+
+        self.send_data.send(self.valueMotor)  
+
+        print(self.valueMotor)
 
     def limitValue(self, value):
         
@@ -295,6 +347,22 @@ class MyApp(QtWidgets.QMainWindow):
         else: 
             return value
 
+    def camera_selected(self):
+        selected_camera = None
+        indCamera = None
+
+        # Buscar la cámara seleccionada
+        for i, action in enumerate(self.camera_group.actions()):
+            if action.isChecked():
+                selected_camera = action.text()
+                indCamera = i
+                break
+
+        # Guardar la variable seleccionada (aquí puedes hacer lo que necesites con selected_camera)
+        if selected_camera:
+            print(f"Cámara seleccionada: {selected_camera}")
+            dataCamera = str(indCamera)+str(selected_camera)
+            self.guardar_variable(dataCamera,"img_tools/camera.dat" )
 
     def instruccionesZOE(self):
         ZOEinstruccion = instrucciones()
@@ -405,7 +473,8 @@ class MyApp(QtWidgets.QMainWindow):
 
 
     def manejoButton(self, condicion): 
-        buttonName = ("pbDot","pbRect","pbHide","pbTrash", "pbElip", "pbText", "pbDel", "pbROI", "pbSave", "pbArrow", "pbBack", "pbForw")
+        buttonName = ("pbDot","pbRect","pbHide","pbTrash", "pbElip", "pbText", "pbDel", "pbROI", "pbSave", "pbArrow", "pbBack", "pbForw",
+                      "aum4x","aum10x","aum40x","aum100x", "aumentoMov","coordX","coordY", "coordZ", "plusX","plusY", "plusZ", "minusX", "minusY", "minusZ")
 
         if condicion:
             for key in buttonName:
@@ -440,6 +509,9 @@ class MyApp(QtWidgets.QMainWindow):
 
 
             self.datoAuto  = str(self.R_).zfill(3)  +  str(self.G_).zfill(3)  +  str(self.B_).zfill(3)
+            
+            self.ui.RB_auto.setChecked(True)
+           
             print(self.R_, self.G_, self.B_)
 
             print("A"+self.datoAuto ) 
@@ -541,9 +613,14 @@ class MyApp(QtWidgets.QMainWindow):
                 
                 
             if radio_button.text() == 'Automático':
-                ##self.ui.value = 500
-                self.send_data.send("A"+self.datoAuto)  
+                self.autoAnte = self.datoAuto
+                
 
+                
+                self.send_data.send("A"+self.autoAnte) 
+
+
+                
                 # self.ui.send_data.send(str(self.ui.value) )  
 
                 # ACtualizamos el valor directamente, con el obtenido del cambio de espacio 
@@ -654,14 +731,11 @@ class MyApp(QtWidgets.QMainWindow):
 
                 # Procesamiento de Camara
 
-                for indx, act in enumerate(self.camera_group.actions()):
-                    if act.isChecked():
-                        # print(f'Opción checkeada: {act.text()}')
-                        # print(indx)
-                        cameraUse = indx
-                        self.ui.menuCamara.setEnabled(False)
-                        dataCamera = str(indx)+str(act.text())
-                        self.guardar_variable(dataCamera,"img_tools/camera.dat" )
+                # for indx, act in enumerate(self.camera_group.actions()):
+                #     if act.isChecked():
+                self.ui.menuCamara.setEnabled(False)
+                # #         dataCamera = str(indx)+str(act.text())
+                #         self.guardar_variable(dataCamera,"img_tools/camera.dat" )
 
 
 

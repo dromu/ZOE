@@ -1,43 +1,47 @@
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QSlider, QLabel
+from PyQt5.QtCore import Qt
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QPushButton
-from PyQt5.QtGui import QIntValidator
 
-
-class MyWidget(QWidget):
+class MiVentana(QWidget):
     def __init__(self):
-        super(MyWidget, self).__init__()
+        super().__init__()
 
         self.initUI()
 
     def initUI(self):
-        self.layout = QVBoxLayout()
+        layout = QVBoxLayout()
 
-        self.line_edit = QLineEdit(self)
-        self.line_edit.setValidator(QIntValidator(0, 100, self))  # Establecer un validador para permitir solo números de 0 a 100
-        self.layout.addWidget(self.line_edit)
+        self.slider = QSlider(Qt.Horizontal)
 
-        self.btn_increase = QPushButton('Aumentar', self)
-        self.btn_increase.clicked.connect(self.increase_value)
-        self.layout.addWidget(self.btn_increase)
+        valores_fijos = [0, 25, 50, 75, 100]
 
-        self.btn_decrease = QPushButton('Disminuir', self)
-        self.btn_decrease.clicked.connect(self.decrease_value)
-        self.layout.addWidget(self.btn_decrease)
+        self.slider.setRange(0, len(valores_fijos) - 1)
+        self.slider.setTickInterval(1)
+        self.slider.setTickPosition(QSlider.TicksBelow)
 
-        self.setLayout(self.layout)
+        self.slider.sliderPressed.connect(self.incrementar_valor_fijo)
+        self.slider.valueChanged.connect(self.actualizar_label)
 
-    def increase_value(self):
-        current_value = int(self.line_edit.text())
-        if current_value < 100:
-            self.line_edit.setText(str(current_value + 1))
+        layout.addWidget(self.slider)
 
-    def decrease_value(self):
-        current_value = int(self.line_edit.text())
-        if current_value > 0:
-            self.line_edit.setText(str(current_value - 1))
+        self.label_valor = QLabel()
+        layout.addWidget(self.label_valor)
 
-if __name__ == "__main__":
+        self.setLayout(layout)
+        self.setWindowTitle('QSlider con Valores Fijos')
+        self.show()
+
+    def incrementar_valor_fijo(self):
+        # Aumentar el valor fijo al hacer clic en el QSlider
+        valor_actual = self.slider.value()
+        self.slider.setValue(min(valor_actual + 1, self.slider.maximum()))
+
+    def actualizar_label(self, indice):
+        valores_fijos = [0, 25, 50, 75, 100]
+        valor_seleccionado = valores_fijos[indice]
+        self.label_valor.setText(f"Valor seleccionado: {valor_seleccionado}")
+
+if __name__ == '__main__':
     app = QApplication(sys.argv)
-    my_widget = MyWidget()
-    my_widget.show()
+    ventana = MiVentana()
     sys.exit(app.exec_())
