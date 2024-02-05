@@ -1,47 +1,41 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QSlider, QLabel
-from PyQt5.QtCore import Qt
 import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLineEdit, QPushButton
 
-class MiVentana(QWidget):
+class MyWidget(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.initUI()
+        self.init_ui()
 
-    def initUI(self):
+    def init_ui(self):
         layout = QVBoxLayout()
 
-        self.slider = QSlider(Qt.Horizontal)
+        # QLineEdit para ingresar valores flotantes
+        self.coord_z_line_edit = QLineEdit()
+        layout.addWidget(self.coord_z_line_edit)
 
-        valores_fijos = [0, 25, 50, 75, 100]
-
-        self.slider.setRange(0, len(valores_fijos) - 1)
-        self.slider.setTickInterval(1)
-        self.slider.setTickPosition(QSlider.TicksBelow)
-
-        self.slider.sliderPressed.connect(self.incrementar_valor_fijo)
-        self.slider.valueChanged.connect(self.actualizar_label)
-
-        layout.addWidget(self.slider)
-
-        self.label_valor = QLabel()
-        layout.addWidget(self.label_valor)
+        # Botón para obtener y procesar el valor flotante
+        process_button = QPushButton("Procesar Valor")
+        process_button.clicked.connect(self.process_value)
+        layout.addWidget(process_button)
 
         self.setLayout(layout)
-        self.setWindowTitle('QSlider con Valores Fijos')
+        self.setWindowTitle("Ejemplo de Valor Flotante en QLineEdit")
         self.show()
 
-    def incrementar_valor_fijo(self):
-        # Aumentar el valor fijo al hacer clic en el QSlider
-        valor_actual = self.slider.value()
-        self.slider.setValue(min(valor_actual + 1, self.slider.maximum()))
-
-    def actualizar_label(self, indice):
-        valores_fijos = [0, 25, 50, 75, 100]
-        valor_seleccionado = valores_fijos[indice]
-        self.label_valor.setText(f"Valor seleccionado: {valor_seleccionado}")
+    def process_value(self):
+        try:
+            # Obtener el texto del QLineEdit y convertirlo a un número flotante
+            coord_z_value = float(self.coord_z_line_edit.text())
+            
+            # Hacer algo con el valor flotante, por ejemplo, imprimir en la consola
+            print("Valor flotante ingresado:", coord_z_value)
+            
+        except ValueError:
+            # Manejar el caso en el que el texto no sea un número flotante válido
+            print("Error: Ingrese un valor flotante válido.")
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ventana = MiVentana()
+    widget = MyWidget()
     sys.exit(app.exec_())

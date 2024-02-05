@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1928</width>
-    <height>1097</height>
+    <width>1924</width>
+    <height>1088</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,9 +37,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>50</y>
-      <width>1344</width>
-      <height>756</height>
+      <y>20</y>
+      <width>1400</width>
+      <height>787</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -54,9 +54,9 @@ border: 2px solid black;</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>50</y>
-      <width>1344</width>
-      <height>756</height>
+      <y>20</y>
+      <width>1400</width>
+      <height>787</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -69,7 +69,7 @@ border: 2px solid black;</string>
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>30</x>
       <y>880</y>
       <width>1047</width>
       <height>43</height>
@@ -502,8 +502,8 @@ border: 2px solid black;</string>
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>820</y>
+      <x>30</x>
+      <y>830</y>
       <width>1051</width>
       <height>41</height>
      </rect>
@@ -834,7 +834,7 @@ QSlider::add-page:horizontal {
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1928</width>
+     <width>1924</width>
      <height>26</height>
     </rect>
    </property>

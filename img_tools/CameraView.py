@@ -55,8 +55,8 @@ class ProcesadorCamara(QObject):
 
         
         #Acomodado a la resolucion de la Genius 
-        ancho   = 1344
-        alto    = 756
+        ancho   = 1400
+        alto    = 787
 
         self.frame = cv2.resize(self.frame, (ancho, alto))
         self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)

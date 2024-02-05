@@ -94,7 +94,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.actualButton = []
 
         self.previusButton = "nan"
-        self.datoAuto  = ""
+        self.datoAuto  = None
 
         # Imagen de inicio de en lugar de visualizacion de muestras 
         self.img_pixmap = QPixmap("images\microscopio.png")
@@ -174,6 +174,11 @@ class MyApp(QtWidgets.QMainWindow):
 
         # Cambiar el valor del slider en texto
         self.ui.wavelength.returnPressed.connect(self.line_edit_return_pressed)
+
+        self.ui.coordX.returnPressed.connect(self.valueMx)
+        self.ui.coordY.returnPressed.connect(self.valueMy)
+        self.ui.coordZ.returnPressed.connect(self.valueMz)
+
 
         # Seleccion de modo luz blanca por defecto
         self.ui.RB_white.setChecked(True)
@@ -286,8 +291,6 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.coordX.setText("{:.3f}".format(self.valueX)) # Muestra siempre con tres cifras decimales
         self.sendMotor("X")
 
-
-
     def aumentarY(self):
         self.valueY = self.valueY  + self.movAumento
         self.valueY= self.limitValue(self.valueY)
@@ -313,6 +316,59 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
         self.sendMotor("Z")
     
+    def valueMx(self):
+        try: 
+            value = float(self.ui.coordX.text())
+            print("valor X: ", value)
+            if value>=0 and value <= 1:
+                self.valueX = value
+                self.ui.coordX.setText("{:.3f}".format(self.valueX))
+                self.sendMotor("X")
+            else: 
+                value = self.valueX
+                self.ui.coordX.setText("{:.3f}".format(self.valueX))
+
+        except ValueError:
+            value = self.valueX
+            self.ui.coordX.setText("{:.3f}".format(self.valueX))
+
+
+    def valueMy(self):
+        
+        try:
+            value = float(self.ui.coordY.text())
+            print("valor Y: ", value)
+            if value>=0 and value <= 1:
+                self.valueY = value
+                self.ui.coordY.setText("{:.3f}".format(self.valueY))
+                self.sendMotor("Y")
+
+            else: 
+                value = self.valueY
+                self.ui.coordY.setText("{:.3f}".format(self.valueY))
+      
+        except ValueError:
+            value = self.valueY
+            self.ui.coordY.setText("{:.3f}".format(self.valueY))
+
+    def valueMz(self):
+        try:
+            value = float(self.ui.coordZ.text())
+            print("valor Z: ", value)
+
+            if value>=0 and value <= 1:
+                self.valueZ = value
+                self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
+                self.sendMotor("Z")
+
+            else: 
+                value = self.valueZ
+                self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
+                
+        except ValueError:
+            value = self.valueZ
+            self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
+
 
     def aumentoRev(self,indice):
         valueSpinbox = [0.005,0.01,0.05,0.1]
@@ -504,19 +560,18 @@ class MyApp(QtWidgets.QMainWindow):
 
         if self.flagColor == False:
             self.ui.RB_auto.setChecked(True)
+            self.ui.RB_auto.setEnabled(True)
+            
             # Al presionar dos veces se comprueba el color complementario 
             self.R_,self.G_,self.B_ = self.ui.procesador_camara.colorComplementary()
 
 
             self.datoAuto  = str(self.R_).zfill(3)  +  str(self.G_).zfill(3)  +  str(self.B_).zfill(3)
             
-            self.ui.RB_auto.setChecked(True)
-           
-            print(self.R_, self.G_, self.B_)
-
-            print("A"+self.datoAuto ) 
-        
-        
+            if self.datoAuto != None:
+                    self.send_data.send("A"+self.datoAuto) 
+                    print("A"+self.datoAuto)
+                   
 
     def actualizar_interfaz(self, frame):
         if self.visCamera:
@@ -611,28 +666,23 @@ class MyApp(QtWidgets.QMainWindow):
                 slider.setEnabled(True)    
                 wavelength.setEnabled(True)    
                 
+            
+            
+                # Envio en modo manual
+                self.send_data.send("M" + str(self.ui.value) +  "000000" )  
+                print("M" + str(self.ui.value) +  "000000" )
+                
                 
             if radio_button.text() == 'Automático':
-                self.autoAnte = self.datoAuto
+           
+                if self.datoAuto != None:
+                    self.send_data.send("A"+self.datoAuto) 
+                    print("A"+self.datoAuto)
+                    
                 
-
-                
-                self.send_data.send("A"+self.autoAnte) 
-
-
-                
-                # self.ui.send_data.send(str(self.ui.value) )  
-
-                # ACtualizamos el valor directamente, con el obtenido del cambio de espacio 
-                # self.ui.wavelength.setText(str(self.ui.value))
-
-                # Se limitan las acciones para que no se pueda mover la longitud
-                # self.ui.wavelength.setEnabled(False)
-                # self.ui.VisibleEsp.setEnabled(False)
-               
             if radio_button.text() == 'Luz blanca':
                 # Se limitan y paran todas las acciones 
-                self.send_data.send("W"+str(self.ui.value)+  "000000" ) 
+                self.send_data.send("W000000000" ) 
                 self.ui.wavelength.setEnabled(False)
                 self.ui.VisibleEsp.setEnabled(False)
                 
@@ -644,8 +694,12 @@ class MyApp(QtWidgets.QMainWindow):
         if self.ui.RB_manual.isChecked():
             self.ui.wavelength.setText(str(value))
             self.ui.value = int(value) # ACtualizamos el valor para que la barra quede en el mismo punto del manual
-            print(str(value))
+            
+            
+            # Envio en modo manual
             self.send_data.send("M" + str(value) +  "000000" )  
+            print("M" + str(value) +  "000000" )
+        
         else:
             # Se deshabilita cualquier accion diferente
             self.ui.wavelength.setEnabled(False)
@@ -674,16 +728,24 @@ class MyApp(QtWidgets.QMainWindow):
             if not self.connector.disconnect(): #Revisa los retornos de los metodos 
                 self.ui.menuCamara.setEnabled(True)
                 self.ui.pbConnect.setText('Conectar')
-                # self.ui.pbConnect.setStyleSheet("QPushButton { background-color: red; }")
+                
                 self.ui.pbConnect.setStyleSheet(self.original_style)
                 self.ui.txtConnect.setText("Desconexión exitosa")
                 self.ui.txtConnect.setAlignment(Qt.AlignRight)
+
+
+                self.ui.RB_white.setChecked(True)
+                self.ui.RB_manual.setChecked(False)
+                self.ui.RB_auto.setChecked(False)
+                
 
                 self.ui.RB_manual.setEnabled(False)
                 self.ui.RB_auto.setEnabled(False)
                 self.ui.RB_white.setEnabled(False)
                 self.ui.wavelength.setEnabled(False)
                 self.ui.VisibleEsp.setEnabled(False)
+
+                
 
                 self.visCamera = False
 
@@ -729,6 +791,8 @@ class MyApp(QtWidgets.QMainWindow):
                
                 self.manejoButton(True)
 
+                
+
                 # Procesamiento de Camara
 
                 # for indx, act in enumerate(self.camera_group.actions()):
@@ -746,11 +810,18 @@ class MyApp(QtWidgets.QMainWindow):
                 self.visCamera = True
 
                 self.ui.RB_manual.setEnabled(True)
-                self.ui.RB_auto.setEnabled(True)
+                
                 self.ui.RB_white.setEnabled(True)
                 
                 # Realiza la conexion 
                 self.send_data.connect()
+
+                if self.datoAuto == None:
+                    self.ui.RB_auto.setEnabled(False)
+            
+            
+
+
             else:
                 self.ui.txtConnect.setText("No se pudo establecer la conexión")
                 self.ui.txtConnect.setAlignment(Qt.AlignRight)

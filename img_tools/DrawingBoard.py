@@ -22,7 +22,7 @@ class DrawingBoard(QtWidgets.QLabel):
         self.last_point = QPoint()
         self.dibujando = False
         self.draw = False
-        self.pixmap_tablero = QPixmap(1344, 756)
+        self.pixmap_tablero = QPixmap(1400, 787)
         self.pixmap_tablero.fill(QColor(0, 0, 0, 0))
         self.setPixmap(self.pixmap_tablero)
         self.brushColor = Qt.black
