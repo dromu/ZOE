@@ -18,11 +18,13 @@ from comunication.wificonnector import WifiConnector
 from utils.dataPaciente import dataPaciente
 from utils.About import aboutZOE
 from utils.instruccion import instrucciones
+from utils.calibration import calibration
+from PyQt5.QtCore import QTimer
 
 from PyQt5.QtGui import QCursor
 import pydicom
 import pickle
-
+import time 
 
 class MyApp(QtWidgets.QMainWindow):
     def __init__(self, *args, **kwargs):
@@ -169,6 +171,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.RB_manual.setEnabled(False)
         self.ui.RB_auto.setEnabled(False)
         self.ui.RB_white.setEnabled(False)
+        self.ui.actionCalibrar.setEnabled(False)
 
         self.autoAnte = None
 
@@ -330,7 +333,7 @@ class MyApp(QtWidgets.QMainWindow):
 
         except ValueError:
             value = self.valueX
-            self.ui.coordX.setText("{:.3f}".format(self.valueX))
+            self.ui.coordX.setTqext("{:.3f}".format(self.valueX))
 
 
     def valueMy(self):
@@ -433,7 +436,19 @@ class MyApp(QtWidgets.QMainWindow):
 
         respuesta = QMessageBox.question(self, 'Calibracion', '¿Desea calibrar el sistema ZOE?',
                                          QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-        pass
+        
+        if respuesta:
+            self.send_data.send("K"+"000000000") 
+            
+            time.sleep(5)
+
+            QMessageBox.information(None, 'Calibración', 'Sistema Calibrado.')
+
+               
+
+
+
+            
 
 
      
@@ -477,11 +492,31 @@ class MyApp(QtWidgets.QMainWindow):
 
             if result == QDialog.Accepted:
                 
-                self.nombre = cuadroDatapac.line_edit_nombre.text()
-                self.identificacion = cuadroDatapac.line_edit_identificacion.text()
-                self.modalidad = cuadroDatapac.line_edit_modalidad.text()  
+                # PACIENTE
+                self.nombre = cuadroDatapac.namePac.text()
+                self.sexo = cuadroDatapac.sexPac.currentText()
+                self.typeid = cuadroDatapac.typedocPac.currentText()
+                self.identificacion = cuadroDatapac.idPac.text()
+                self.edad = cuadroDatapac.agePac.text()  
+                self.birthday = cuadroDatapac.birthdatePac.date().toString("dd/MM/yyyy")
+                
+                #IMAGEN 
+                self.date       = cuadroDatapac.dateImg.date().toString("dd/MM/yyyy")
+                self.posPaciente    = cuadroDatapac.positionMuestra.currentText()
+                self.modalidad      = cuadroDatapac.modImg.text()
+                self.imgType        = cuadroDatapac.typeImg.text()
 
-                print(self.nombre, self.identificacion, self.modalidad)
+                #EQUIPO
+                self.institucion    = cuadroDatapac.insEqu.text()
+                self.nameEquipo    = cuadroDatapac.nameEqu.text()
+
+                if self.posPaciente == "Si":
+                    self.posPaciente = [str(int(self.valueX*1000)), str(int(self.valueY*1000)),str(int(self.valueZ*1000))]
+
+                else:
+                    self.posPaciente = ""
+
+                
 
                 
             else:
@@ -491,8 +526,17 @@ class MyApp(QtWidgets.QMainWindow):
                 
         else: 
             self.nombre         = ""
+            self.sexo           = ""
+            self.typeid         = ""
             self.identificacion = ""
+            self.edad           = ""
+            self.birthday       = ""
+            self.date           = ""
+            self.posPaciente    = ""
             self.modalidad      = ""
+            self.imgType        = ""
+            self.institucion    = ""
+            self.nameEquipo     = ""
 
     def actualizarTexto(self):
         self.textImage = self.ui.barraInfo.text()
@@ -626,11 +670,23 @@ class MyApp(QtWidgets.QMainWindow):
 
 
             # Agregar información de metadatos
-            dataset.PatientName = self.nombre
-            dataset.PatientID   = self.identificacion
-            dataset.Modality    = self.modalidad
+            
             dataset.StudyDescription = self.textImage
-        
+
+            dataset.PatientName         = self.nombre
+            dataset.PatientID           = self.typeid + "  "+self.identificacion
+            dataset.PatientBirthDate    = self.birthday 
+            dataset.PatientSex          = self.sexo
+            dataset.PatientAge          = self.edad
+
+            dataset.StudyDate           = self.date
+            dataset.ImagePositionPatient = self.posPaciente
+            dataset.Modality            = self.modalidad
+            dataset.ImageType           = self.imgType
+
+            dataset.InstitucionName     = self.institucion
+            dataset.Manufacturer        = self.nameEquipo
+                    
             color_channels = 3
             # Asignar la imagen y sus metadatos al objeto DICOM
             dataset.PixelData = imagen_numpy.tobytes()
@@ -790,6 +846,7 @@ class MyApp(QtWidgets.QMainWindow):
                 # Encendemos los botonoes 
                
                 self.manejoButton(True)
+                self.ui.actionCalibrar.setEnabled(True)
 
                 
 
