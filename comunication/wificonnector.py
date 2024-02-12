@@ -1,6 +1,7 @@
 import pywifi
 from pywifi import const
 import time 
+from comunication.TCP_comunication import TCP_comunication
 
 class WifiConnector:
     def __init__(self):
@@ -12,6 +13,7 @@ class WifiConnector:
         self.wifi = pywifi.PyWiFi()  # Inicializa la biblioteca pywifi
         self.iface = self.wifi.interfaces()[0]  # Obtiene la primera interfaz WiFi
         
+        self.sendData = TCP_comunication()
 
     def connect(self):
 
@@ -53,9 +55,10 @@ class WifiConnector:
         Returns:
           El método devuelve el valor de la variable "self.is_connected".
         """
+        
+
         self.iface.disconnect()  # Desconecta de la red WiFi actual
 
-        
         if self.iface.status() == pywifi.const.IFACE_DISCONNECTED:  # Verifica si se ha desconectado correctamente
             print("Desconexión exitosa.")
             self.is_connected = False

@@ -87,6 +87,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.identificacion = ""
         self.modalidad      = ""
         self.textImage      = ""
+        self.cerrado = False
 
         # Valores iniciales de las variables
         self.flagEscritura = False
@@ -473,7 +474,9 @@ class MyApp(QtWidgets.QMainWindow):
         if respuesta == QMessageBox.Yes:
 
             if self.connector.is_connected: 
+                self.send_data.close()
                 self.ui.pbConnect.click()
+                
                 QApplication.quit()
             else: 
                 QApplication.quit()
@@ -735,7 +738,8 @@ class MyApp(QtWidgets.QMainWindow):
                     self.send_data.send("A"+self.datoAuto) 
                     print("A"+self.datoAuto)
                     
-                
+
+
             if radio_button.text() == 'Luz blanca':
                 # Se limitan y paran todas las acciones 
                 self.send_data.send("W000000000" ) 
@@ -778,56 +782,56 @@ class MyApp(QtWidgets.QMainWindow):
 
     # Proceso de conexion del pc-esp32
     def conexion(self):
+
         if self.connector.is_connected:     #Revisa el atributo en el constructor
-            
-            
-            if not self.connector.disconnect(): #Revisa los retornos de los metodos 
-                self.ui.menuCamara.setEnabled(True)
-                self.ui.pbConnect.setText('Conectar')
+            self.cerrado = self.send_data.close()
+
+            print("isConnect")
+
+            if self.cerrado == True :
+                self.ui.RB_white.setChecked(False)
+
+                print("Cerrado")
+
+                if not self.connector.disconnect() :
                 
-                self.ui.pbConnect.setStyleSheet(self.original_style)
-                self.ui.txtConnect.setText("Desconexión exitosa")
-                self.ui.txtConnect.setAlignment(Qt.AlignRight)
-
-
-                self.ui.RB_white.setChecked(True)
-                self.ui.RB_manual.setChecked(False)
-                self.ui.RB_auto.setChecked(False)
-                
-
-                self.ui.RB_manual.setEnabled(False)
-                self.ui.RB_auto.setEnabled(False)
-                self.ui.RB_white.setEnabled(False)
-                self.ui.wavelength.setEnabled(False)
-                self.ui.VisibleEsp.setEnabled(False)
-
-                
-
-                self.visCamera = False
-
-               # Desactivamos botones 
-                self.manejoButton(False)
-
-                if self.previusNamebutton != None:
-                    self.funcionHab[self.previusNamebutton]()
-                    self.actualButton.setStyleSheet("")
+                    #Revisa los retornos de los metodos 
+                    self.ui.menuCamara.setEnabled(True)
+                    self.ui.pbConnect.setText('Conectar')
                     
+                    self.ui.pbConnect.setStyleSheet(self.original_style)
+                    self.ui.txtConnect.setText("Desconexión exitosa")
+                    self.ui.txtConnect.setAlignment(Qt.AlignRight)
 
-              
-                
-                self.previusButton = None
-                self.previusNamebutton = None
+                    
+                    self.ui.RB_manual.setChecked(False)
+                    self.ui.RB_auto.setChecked(False)
+                    
+                    self.ui.RB_manual.setEnabled(False)
+                    self.ui.RB_auto.setEnabled(False)
+                    self.ui.RB_white.setEnabled(False)
+                    self.ui.wavelength.setEnabled(False)
+                    self.ui.VisibleEsp.setEnabled(False)             
 
-                # Limpiar la pantalla  para vovler a la imagen inicial
-                self.ui.tablero.clear()
+                    self.visCamera = False
 
-                # Desactivacion de todos los botones 
-                # self.deactivateButton()
+                # Desactivamos botones 
+                    self.manejoButton(False)
 
+                    if self.previusNamebutton != None:
+                        self.funcionHab[self.previusNamebutton]()
+                        self.actualButton.setStyleSheet("")
+                        
+                    self.previusButton = None
+                    self.previusNamebutton = None
+
+                    # Limpiar la pantalla  para vovler a la imagen inicial
+                    self.ui.tablero.clear()
 
             else:
                 self.ui.txtConnect.setText("No se pudo desconectar")
                 self.ui.txtConnect.setAlignment(Qt.AlignRight)
+                self.cerrado = False
 
         else:
             if self.connector.connect():
@@ -848,19 +852,8 @@ class MyApp(QtWidgets.QMainWindow):
                 self.manejoButton(True)
                 self.ui.actionCalibrar.setEnabled(True)
 
-                
-
-                # Procesamiento de Camara
-
-                # for indx, act in enumerate(self.camera_group.actions()):
-                #     if act.isChecked():
                 self.ui.menuCamara.setEnabled(False)
-                # #         dataCamera = str(indx)+str(act.text())
-                #         self.guardar_variable(dataCamera,"img_tools/camera.dat" )
 
-
-
-                
                 self.ui.procesador_camara.iniciar_camara()
                 self.ui.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)
                 
@@ -873,10 +866,9 @@ class MyApp(QtWidgets.QMainWindow):
                 # Realiza la conexion 
                 self.send_data.connect()
 
+
                 if self.datoAuto == None:
                     self.ui.RB_auto.setEnabled(False)
-            
-            
 
 
             else:

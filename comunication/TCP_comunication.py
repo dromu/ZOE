@@ -31,11 +31,23 @@ class TCP_comunication:
         """
         self.cliente.sendall(datos.encode('utf-8'))
 
+    # def endArduino(self):       
+    #     response = self.send_command("W000000000")
+    #     print(response)
+    #     if response == "True":
+    #         return True
+    #     else:
+    #         return False
+
+ 
+
     def close(self):
         """
         La función de cierre cierra la conexión del cliente si existe.
         """
         if self.cliente:
+            print("Desconectando del socket")
             self.cliente.close()
             self.cliente = None
+            return True
 
