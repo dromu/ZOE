@@ -13,6 +13,9 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(100, 100, 100);</string>
+  </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
@@ -211,10 +214,36 @@
      <x>20</x>
      <y>290</y>
      <width>761</width>
-     <height>61</height>
+     <height>86</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_2">
+    <item row="1" column="0">
+     <widget class="QLabel" name="label_12">
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Modalidad&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QComboBox" name="positionMuestra">
+      <item>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Si</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>No</string>
+       </property>
+      </item>
+     </widget>
+    </item>
     <item row="0" column="2">
      <widget class="QLabel" name="label_9">
       <property name="text">
@@ -224,6 +253,12 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="modImg"/>
+    </item>
+    <item row="1" column="3">
+     <widget class="QLineEdit" name="typeImg"/>
     </item>
     <item row="0" column="1">
      <widget class="QDateEdit" name="dateImg">
@@ -252,19 +287,6 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label_12">
-      <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Modalidad&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="modImg"/>
-    </item>
-    <item row="1" column="3">
-     <widget class="QLineEdit" name="typeImg"/>
-    </item>
     <item row="1" column="2">
      <widget class="QLabel" name="label_10">
       <property name="text">
@@ -272,23 +294,14 @@
       </property>
      </widget>
     </item>
-    <item row="0" column="3">
-     <widget class="QComboBox" name="positionMuestra">
-      <item>
-       <property name="text">
-        <string>-</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Si</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>No</string>
-       </property>
-      </item>
+    <item row="2" column="1">
+     <widget class="QLineEdit" name="descrImg"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_15">
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;Descripción&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
      </widget>
     </item>
    </layout>

@@ -22,7 +22,7 @@ class DrawingBoard(QtWidgets.QLabel):
         self.last_point = QPoint()
         self.dibujando = False
         self.draw = False
-        self.pixmap_tablero = QPixmap(1400, 787)
+        self.pixmap_tablero = QPixmap(1600, 891)
         self.pixmap_tablero.fill(QColor(0, 0, 0, 0))
         self.setPixmap(self.pixmap_tablero)
         self.brushColor = Qt.black
@@ -273,9 +273,13 @@ class DrawingBoard(QtWidgets.QLabel):
         self.repaint()
         self.update()
 
-    def pincelColor(self, color):
-        colores = {"blue": Qt.blue, "red": Qt.red, "green": Qt.green, "black": Qt.black, "yellow": Qt.yellow, "white": Qt.white}
-        self.brushColor = colores.get(color, Qt.black)  #Color negro como predeterminado
+    def pincelColor(self, color_hex):
+        color = QColor(color_hex)
+        if color.isValid():
+            self.brushColor = color
+        else:
+            # Si el color hexadecimal no es válido, utiliza negro como color predeterminado
+            self.brushColor = Qt.black#Color negro como predeterminado
 
     def pincelSize(self,size):
         self.brushSize = size

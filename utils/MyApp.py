@@ -3,6 +3,7 @@ from PyQt5 import uic, QtWidgets
 from PyQt5.QtGui import QImage, QPixmap, QPainter, QPen, QColor
 from PyQt5.QtCore import Qt, QPoint
 from img_tools.CameraView import ProcesadorCamara
+from img_tools.cameraSelection import DialogoSeleccionCamara
 
 from PyQt5.QtWidgets import QFileDialog, QActionGroup,QAction,QButtonGroup
 import numpy as np 
@@ -11,6 +12,7 @@ import cv2
 from PyQt5.QtWidgets import QApplication, QDialog,QMessageBox
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QSlider, QLabel
 from PyQt5.QtMultimedia import QCameraInfo
+from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QComboBox, QPushButton, QColorDialog
 
 from img_tools.DrawingBoard import DrawingBoard
 from comunication.TCP_comunication import TCP_comunication
@@ -53,10 +55,12 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbDel.clicked.connect(self.ui.tablero.habDel)           # Eliminacion de escrito
         self.ui.pbROI.clicked.connect(self.ui.tablero.habColor)         # Generacion de color complementario
 
-        self.ui.barraInfo.textChanged.connect(self.actualizarTexto)
+        # self.ui.barraInfo.textChanged.connect(self.actualizarTexto)
         # self.ui.pbArrow.clicked.connect(self.ui.tablero.habArrow)
 
-        self.ui.checkPaciente.stateChanged.connect(self.datosPacientes)
+        # self.ui.checkPaciente.stateChanged.connect(self.datosPacientes)
+        self.ui.checkPacient.clicked.connect(self.datosPacientes)
+
 
         self.buttons = ["pbDot", "pbRect", "pbElip", "pbText","pbDel","pbROI","pbHide"]
         self.botones = []
@@ -112,38 +116,15 @@ class MyApp(QtWidgets.QMainWindow):
         self.G_ = 0
         self.B_ = 0
 
+        self.ui.pbCamera.clicked.connect(self.cameraSelection)
 
-        # Conexion de las herramientas de la barra de tareas 
-        color_actions = {
-            self.ui.blueAction: "blue",
-            self.ui.redAction: "red",
-            self.ui.greenAction: "green",
-            self.ui.blackAction: "black",
-            self.ui.yellowAction: "yellow",
-            self.ui.whiteAction: "white",
-        }
+        self.ui.pbColor.clicked.connect(self.paletteColor) 
+
+        self.ui.tamPincel.currentIndexChanged.connect(self.sizePincel)
+
+        self.ui.tamPincel.setCurrentIndex(1) #Defecto 3px
         
 
-        for action, color in color_actions.items():
-            action.triggered.connect(lambda _, c=color: self.ui.tablero.pincelColor(c))
-
-        size_actions = {
-            self.ui.onepxAction: 1,
-            self.ui.threepxAction:3,
-            self.ui.fivepxAction: 5,
-            self.ui.sevenpxAction: 7,
-            self.ui.ninepxAction: 9
-        }
-        
-        self.rbuttonAug = 0
-        
-        grupo_tamanos_pincel = QActionGroup(self)
-        
-
-        for actionSize, tamsize in size_actions.items():
-            actionSize.setCheckable(True)
-            grupo_tamanos_pincel.addAction(actionSize)
-            actionSize.triggered.connect(lambda _,dim=tamsize: self.ui.tablero.pincelSize(dim))
        
    
         #Boton de guardar pantallas 
@@ -198,27 +179,13 @@ class MyApp(QtWidgets.QMainWindow):
         self.manejoButton(False)
 
         self.valueMotor = ""
-        self.ui.zoeDev.triggered.connect(self.aboutZOE)
-        self.ui.actionCalibrar.triggered.connect(self.calibrarZOE)
-        self.ui.actionInstrucciones.triggered.connect(self.instruccionesZOE)
-        self.ui.actionClose.triggered.connect(self.exitSystem)
+        self.ui.pbAbout.clicked.connect(self.aboutZOE)
+        self.ui.pbCalibrate.clicked.connect(self.calibrarZOE)
+        self.ui.pbHelp.clicked.connect(self.instruccionesZOE)
 
-        cameras = QCameraInfo.availableCameras()
-        self.camera_group = QActionGroup(self)
-        self.camera_group.setExclusive(True)
+        
+        
 
-        # Mostrar los nombres de las cámaras en el menú
-    
-        for camera in cameras:
-            action = QAction(camera.description(), self)
-            action.setCheckable(True)
-            self.camera_group.addAction(action)
-            action.triggered.connect(self.camera_selected)  # Conectar la función al evento triggered
-            self.ui.menuCamara.addAction(action)
-
-        if self.camera_group.actions():
-            ind = self.readCamera()
-            self.camera_group.actions()[ind].setChecked(True)
 
 
         #   CONTROL DE MOTORES 
@@ -262,7 +229,29 @@ class MyApp(QtWidgets.QMainWindow):
 
         # Conectar la señal de cambio para manejar eventos
         self.aumentoGroup.buttonClicked.connect(self.aumentoImg)
+    
+    def cameraSelection(self):
+        cameraSel = DialogoSeleccionCamara()
+        cameraSel.exec_()
 
+
+    def sizePincel(self):
+        size = (1,3,5,7,9)
+        ind= self.ui.tamPincel.currentIndex()
+
+        self.ui.tablero.pincelSize(size[ind])
+
+
+
+    def paletteColor(self):
+        color = QColorDialog.getColor()
+        if color.isValid():
+            # Aquí podrías hacer algo con el color seleccionado
+            print("Color seleccionado:", color.name())
+            color_hex = color.name()
+
+            self.ui.pbColor.setStyleSheet(f"background-color: {color_hex};")
+            self.ui.tablero.pincelColor(color_hex)
 
     def aumentoImg(self,botonR):
         
@@ -407,22 +396,7 @@ class MyApp(QtWidgets.QMainWindow):
         else: 
             return value
 
-    def camera_selected(self):
-        selected_camera = None
-        indCamera = None
-
-        # Buscar la cámara seleccionada
-        for i, action in enumerate(self.camera_group.actions()):
-            if action.isChecked():
-                selected_camera = action.text()
-                indCamera = i
-                break
-
-        # Guardar la variable seleccionada (aquí puedes hacer lo que necesites con selected_camera)
-        if selected_camera:
-            print(f"Cámara seleccionada: {selected_camera}")
-            dataCamera = str(indCamera)+str(selected_camera)
-            self.guardar_variable(dataCamera,"img_tools/camera.dat" )
+    
 
     def instruccionesZOE(self):
         ZOEinstruccion = instrucciones()
@@ -488,44 +462,35 @@ class MyApp(QtWidgets.QMainWindow):
 
     
     def datosPacientes(self,state):
-        
-        if state == Qt.Checked:  # Estado 2 significa que el QCheckBox está marcado (Qt.Checked)
-            cuadroDatapac = dataPaciente()
-            result = cuadroDatapac.exec_()
+        cuadroDatapac = dataPaciente()
+        result = cuadroDatapac.exec_()
 
-            if result == QDialog.Accepted:
-                
-                # PACIENTE
-                self.nombre = cuadroDatapac.namePac.text()
-                self.sexo = cuadroDatapac.sexPac.currentText()
-                self.typeid = cuadroDatapac.typedocPac.currentText()
-                self.identificacion = cuadroDatapac.idPac.text()
-                self.edad = cuadroDatapac.agePac.text()  
-                self.birthday = cuadroDatapac.birthdatePac.date().toString("dd/MM/yyyy")
-                
-                #IMAGEN 
-                self.date       = cuadroDatapac.dateImg.date().toString("dd/MM/yyyy")
-                self.posPaciente    = cuadroDatapac.positionMuestra.currentText()
-                self.modalidad      = cuadroDatapac.modImg.text()
-                self.imgType        = cuadroDatapac.typeImg.text()
+        if result == QDialog.Accepted:
+            
+            # PACIENTE
+            self.nombre = cuadroDatapac.namePac.text()
+            self.sexo = cuadroDatapac.sexPac.currentText()
+            self.typeid = cuadroDatapac.typedocPac.currentText()
+            self.identificacion = cuadroDatapac.idPac.text()
+            self.edad = cuadroDatapac.agePac.text()  
+            self.birthday = cuadroDatapac.birthdatePac.date().toString("dd/MM/yyyy")
+            
+            #IMAGEN 
+            self.date       = cuadroDatapac.dateImg.date().toString("dd/MM/yyyy")
+            self.posPaciente    = cuadroDatapac.positionMuestra.currentText()
+            self.modalidad      = cuadroDatapac.modImg.text()
+            self.imgType        = cuadroDatapac.typeImg.text()
+            self.descrImg       = cuadroDatapac.descrImg.text()
 
-                #EQUIPO
-                self.institucion    = cuadroDatapac.insEqu.text()
-                self.nameEquipo    = cuadroDatapac.nameEqu.text()
+            #EQUIPO
+            self.institucion    = cuadroDatapac.insEqu.text()
+            self.nameEquipo    = cuadroDatapac.nameEqu.text()
 
-                if self.posPaciente == "Si":
-                    self.posPaciente = [str(int(self.valueX*1000)), str(int(self.valueY*1000)),str(int(self.valueZ*1000))]
+            if self.posPaciente == "Si":
+                self.posPaciente = [str(int(self.valueX*1000)), str(int(self.valueY*1000)),str(int(self.valueZ*1000))]
 
-                else:
-                    self.posPaciente = ""
-
-                
-
-                
             else:
-                state = Qt.Unchecked  # Cambiar el valor de state a Qt.Unchecked
-                self.ui.checkPaciente.setChecked(state) 
-                
+                self.posPaciente = ""
                 
         else: 
             self.nombre         = ""
@@ -540,11 +505,7 @@ class MyApp(QtWidgets.QMainWindow):
             self.imgType        = ""
             self.institucion    = ""
             self.nameEquipo     = ""
-
-    def actualizarTexto(self):
-        self.textImage = self.ui.barraInfo.text()
-        
-
+            self.descrImg       = ""
 
     def cambiarColor(self, idx): 
         
@@ -576,7 +537,7 @@ class MyApp(QtWidgets.QMainWindow):
 
 
     def manejoButton(self, condicion): 
-        buttonName = ("pbDot","pbRect","pbHide","pbTrash", "pbElip", "pbText", "pbDel", "pbROI", "pbSave", "pbArrow", "pbBack", "pbForw",
+        buttonName = ("pbDot","pbRect","pbHide","pbTrash", "pbElip", "pbText", "pbDel", "pbROI", "pbSave", "pbArrow", "pbBack", "pbForw","checkPacient",
                       "aum4x","aum10x","aum40x","aum100x", "aumentoMov","coordX","coordY", "coordZ", "plusX","plusY", "plusZ", "minusX", "minusY", "minusZ")
 
         if condicion:
@@ -674,7 +635,7 @@ class MyApp(QtWidgets.QMainWindow):
 
             # Agregar información de metadatos
             
-            dataset.StudyDescription = self.textImage
+            dataset.StudyDescription = self.descrImg
 
             dataset.PatientName         = self.nombre
             dataset.PatientID           = self.typeid + "  "+self.identificacion
@@ -796,8 +757,8 @@ class MyApp(QtWidgets.QMainWindow):
                 if not self.connector.disconnect() :
                 
                     #Revisa los retornos de los metodos 
-                    self.ui.menuCamara.setEnabled(True)
-                    self.ui.pbConnect.setText('Conectar')
+                    self.ui.pbCamera.setEnabled(True)
+                    self.ui.pbConnect.setText('C')
                     
                     self.ui.pbConnect.setStyleSheet(self.original_style)
                     self.ui.txtConnect.setText("Desconexión exitosa")
@@ -835,14 +796,8 @@ class MyApp(QtWidgets.QMainWindow):
 
         else:
             if self.connector.connect():
-                self.ui.pbConnect.setText('Conectado')
-                self.ui.pbConnect.setStyleSheet(""" font: 75 16pt "MS Shell Dlg 2";
-                                                    background-color: rgb(50, 255, 50);
-                                                    padding: 8px;
-                                                    border-radius: 10px;
-                                                    color: rgb(0,0,0);
-                                                    border-color: rgb(0, 0, 0);
-                                                    """ )
+                self.ui.pbConnect.setText('C')
+                self.ui.pbConnect.setStyleSheet(""" background-color: rgb(50, 255, 50); """ )
                 
                 self.ui.txtConnect.setText("Conexión establecida")
                 self.ui.txtConnect.setAlignment(Qt.AlignRight)
@@ -852,7 +807,7 @@ class MyApp(QtWidgets.QMainWindow):
                 self.manejoButton(True)
                 self.ui.actionCalibrar.setEnabled(True)
 
-                self.ui.menuCamara.setEnabled(False)
+                self.ui.pbCamera.setEnabled(False)
 
                 self.ui.procesador_camara.iniciar_camara()
                 self.ui.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)

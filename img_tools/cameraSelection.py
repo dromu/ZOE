@@ -58,8 +58,3 @@ class DialogoSeleccionCamara(QDialog):
         with open(archivo, 'w') as archivo:
             archivo.write(variable)
         
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    dialogo = DialogoSeleccionCamara()
-    dialogo.exec_()

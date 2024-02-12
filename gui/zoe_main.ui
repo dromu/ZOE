@@ -10,6 +10,12 @@
     <height>1097</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Ignored">
+    <horstretch>64</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>ZOE microscopy</string>
   </property>
@@ -17,14 +23,14 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(31, 55, 64);</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="img_microscopy">
     <property name="geometry">
      <rect>
-      <x>1430</x>
-      <y>20</y>
+      <x>1730</x>
+      <y>60</y>
       <width>71</width>
       <height>111</height>
      </rect>
@@ -42,10 +48,10 @@
    <widget class="QLabel" name="tablero">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>20</y>
-      <width>40</width>
-      <height>40</height>
+      <x>150</x>
+      <y>50</y>
+      <width>1600</width>
+      <height>891</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -59,10 +65,10 @@ border: 2px solid black;</string>
    <widget class="QLabel" name="cameraSpace">
     <property name="geometry">
      <rect>
-      <x>-60</x>
-      <y>-220</y>
-      <width>1400</width>
-      <height>787</height>
+      <x>150</x>
+      <y>50</y>
+      <width>1600</width>
+      <height>891</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -72,18 +78,21 @@ border: 2px solid black;</string>
      <string/>
     </property>
    </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget">
+   <widget class="QWidget" name="gridLayoutWidget_4">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>880</y>
-      <width>1047</width>
-      <height>43</height>
+      <x>10</x>
+      <y>100</y>
+      <width>41</width>
+      <height>521</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="pbText">
+    <layout class="QGridLayout" name="gridLayout_4">
+     <property name="verticalSpacing">
+      <number>9</number>
+     </property>
+     <item row="8" column="0">
+      <widget class="QPushButton" name="pbDel">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
          <horstretch>0</horstretch>
@@ -91,24 +100,50 @@ border: 2px solid black;</string>
         </sizepolicy>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">background-color: rgb(72, 79, 82);</string>
        </property>
        <property name="text">
         <string/>
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../images/icons/text.png</normaloff>../images/icons/text.png</iconset>
+         <normaloff>../images/icons/borrador.png</normaloff>../images/icons/borrador.png</iconset>
        </property>
        <property name="iconSize">
         <size>
-         <width>28</width>
-         <height>28</height>
+         <width>20</width>
+         <height>20</height>
         </size>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="1" column="0">
+      <widget class="QPushButton" name="pbRect">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(72, 79, 82);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/rect.png</normaloff>../images/icons/rect.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
       <widget class="QPushButton" name="pbHide">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
@@ -117,7 +152,7 @@ border: 2px solid black;</string>
         </sizepolicy>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">background-color: rgb(72, 79, 82);</string>
        </property>
        <property name="text">
         <string/>
@@ -129,14 +164,40 @@ border: 2px solid black;</string>
        </property>
        <property name="iconSize">
         <size>
-         <width>32</width>
-         <height>32</height>
+         <width>20</width>
+         <height>20</height>
         </size>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="pbDel">
+     <item row="7" column="0">
+      <widget class="QPushButton" name="pbText">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(72, 79, 82);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/text.png</normaloff>../images/icons/text.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QPushButton" name="pbROI">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
          <horstretch>0</horstretch>
@@ -151,17 +212,43 @@ border: 2px solid black;</string>
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../images/icons/borrador.png</normaloff>../images/icons/borrador.png</iconset>
+         <normaloff>../images/icons/colorComple.png</normaloff>../images/icons/colorComple.png</iconset>
        </property>
        <property name="iconSize">
         <size>
-         <width>28</width>
-         <height>28</height>
+         <width>20</width>
+         <height>20</height>
         </size>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="12" column="0">
+      <widget class="QPushButton" name="pbSave">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(72, 79, 82);</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/guardar.png</normaloff>../images/icons/guardar.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
       <widget class="QPushButton" name="pbTrash">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
@@ -170,7 +257,7 @@ border: 2px solid black;</string>
         </sizepolicy>
        </property>
        <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">background-color: rgb(72, 79, 82);</string>
        </property>
        <property name="text">
         <string/>
@@ -181,425 +268,178 @@ border: 2px solid black;</string>
        </property>
        <property name="iconSize">
         <size>
-         <width>28</width>
-         <height>28</height>
+         <width>20</width>
+         <height>20</height>
         </size>
        </property>
       </widget>
      </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="gridLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>1468</x>
-      <y>570</y>
-      <width>405</width>
-      <height>230</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="coordY">
+     <item row="5" column="0">
+      <widget class="QPushButton" name="pbArrow">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="styleSheet">
-        <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">background-color: rgb(72, 79, 82);</string>
        </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;Control&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QPushButton" name="minusY">
-       <property name="styleSheet">
-        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>-</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QPushButton" name="minusX">
-       <property name="styleSheet">
-        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>-</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QPushButton" name="plusY">
-       <property name="styleSheet">
-        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>+</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QPushButton" name="plusX">
-       <property name="styleSheet">
-        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>+</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;EJE Y&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QPushButton" name="plusZ">
-       <property name="styleSheet">
-        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>+</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="coordX">
-       <property name="styleSheet">
-        <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QPushButton" name="minusZ">
-       <property name="styleSheet">
-        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>-</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;EJE X&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt; font-weight:600;&quot;&gt;EJE Z&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="coordZ">
-       <property name="styleSheet">
-        <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="textAumento">
-       <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QSlider" name="aumentoMov">
-       <property name="maximum">
-        <number>16</number>
-       </property>
-       <property name="pageStep">
-        <number>4</number>
-       </property>
-       <property name="sliderPosition">
-        <number>0</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="tickPosition">
-        <enum>QSlider::NoTicks</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>1440</x>
-      <y>430</y>
-      <width>391</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt;&quot;&gt;Control de movimientos&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>830</y>
-      <width>1051</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Información:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="barraInfo">
        <property name="text">
         <string/>
        </property>
+       <property name="icon">
+        <iconset>
+         <normalon>../images/icons/flecha.png</normalon>
+        </iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
       </widget>
      </item>
-     <item>
-      <widget class="QCheckBox" name="checkPaciente">
+     <item row="4" column="0">
+      <widget class="QPushButton" name="pbElip">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">background-color: rgb(72, 79, 82);</string>
        </property>
        <property name="text">
-        <string>Datos del paciente </string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/circu.png</normaloff>../images/icons/circu.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
        </property>
       </widget>
      </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="horizontalLayoutWidget_3">
-    <property name="geometry">
-     <rect>
-      <x>1440</x>
-      <y>480</y>
-      <width>431</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="QLabel" name="textoAumento">
+     <item row="10" column="0">
+      <widget class="QPushButton" name="checkPacient">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">background-color: rgb(72, 79, 82);</string>
        </property>
        <property name="text">
-        <string>Aumento</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/person.ico</normaloff>../images/icons/person.ico</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QRadioButton" name="aum4x">
-       <property name="styleSheet">
-        <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>4X</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="aum10x">
-       <property name="styleSheet">
-        <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>10X</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="aum40x">
-       <property name="styleSheet">
-        <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>40X</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="aum100x">
-       <property name="styleSheet">
-        <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>100X</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="gridLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>1560</x>
-      <y>850</y>
-      <width>311</width>
-      <height>111</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
-      <widget class="QPushButton" name="pbExit">
+      <widget class="QPushButton" name="pbDot">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+         <horstretch>64</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="cursor">
+        <cursorShape>ArrowCursor</cursorShape>
+       </property>
+       <property name="toolTip">
+        <string comment="lapiz" extracomment="Lápiz"/>
+       </property>
+       <property name="toolTipDuration">
+        <number>1</number>
+       </property>
+       <property name="whatsThis">
+        <string notr="true"/>
+       </property>
        <property name="styleSheet">
-        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;
-padding: 8px;
-border-radius:20px;
-color: rgb(244, 244, 244);
-border-color: rgb(0, 0, 0);
-background-color: rgb(9, 200, 203);
-
-</string>
+        <string notr="true">background-color: rgb(100,100,100);</string>
        </property>
        <property name="text">
-        <string>Salir</string>
+        <string/>
        </property>
-       <property name="checkable">
-        <bool>false</bool>
+       <property name="icon">
+        <iconset>
+         <normaloff>../images/icons/lapiz.png</normaloff>../images/icons/lapiz.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
        </property>
-       <property name="default">
-        <bool>false</bool>
-       </property>
-       <property name="flat">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="pbConnect">
-       <property name="styleSheet">
-        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;
-background-color: rgb(240, 0, 0);
-padding: 8px;
-border-radius:20px;
-color: rgb(244, 244, 244);
-border-color: rgb(0, 0, 0);</string>
-       </property>
-       <property name="text">
-        <string>Conectar</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="txtConnect">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;conexión&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
       </widget>
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="gridLayoutWidget_3">
+   <widget class="QPushButton" name="pbConnect">
     <property name="geometry">
      <rect>
-      <x>1430</x>
-      <y>60</y>
-      <width>431</width>
-      <height>331</height>
+      <x>1890</x>
+      <y>20</y>
+      <width>20</width>
+      <height>20</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_3">
-     <item row="4" column="0">
-      <widget class="QRadioButton" name="RB_auto">
-       <property name="styleSheet">
-        <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Automático</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QPushButton" name="pbROI">
-       <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Color complementario</string>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>../images/icons/colorComple.png</normaloff>../images/icons/colorComple.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>32</width>
-         <height>32</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QRadioButton" name="RB_manual">
-       <property name="styleSheet">
-        <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="text">
-        <string>Manual</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QSlider" name="VisibleEsp">
-       <property name="cursor">
-        <cursorShape>ArrowCursor</cursorShape>
-       </property>
-       <property name="mouseTracking">
-        <bool>true</bool>
-       </property>
-       <property name="tabletTracking">
-        <bool>false</bool>
-       </property>
-       <property name="focusPolicy">
-        <enum>Qt::StrongFocus</enum>
-       </property>
-       <property name="toolTipDuration">
-        <number>-1</number>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QSlider {
+    <property name="styleSheet">
+     <string notr="true">
+background-color: rgb(240, 0, 0);
+</string>
+    </property>
+    <property name="text">
+     <string>C</string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="VisibleEsp">
+    <property name="geometry">
+     <rect>
+      <x>1580</x>
+      <y>20</y>
+      <width>221</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="tabletTracking">
+     <bool>false</bool>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
+    <property name="toolTipDuration">
+     <number>-1</number>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QSlider {
     background-color: transparent;
 }
 
@@ -635,99 +475,184 @@ QSlider::add-page:horizontal {
 }
 
 </string>
-       </property>
-       <property name="minimum">
-        <number>380</number>
-       </property>
-       <property name="maximum">
-        <number>780</number>
-       </property>
-       <property name="pageStep">
-        <number>10</number>
-       </property>
-       <property name="tracking">
-        <bool>true</bool>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="tickPosition">
-        <enum>QSlider::TicksAbove</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:18pt;&quot;&gt;Modo de operación&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QRadioButton" name="RB_white">
+    </property>
+    <property name="minimum">
+     <number>380</number>
+    </property>
+    <property name="maximum">
+     <number>780</number>
+    </property>
+    <property name="pageStep">
+     <number>10</number>
+    </property>
+    <property name="tracking">
+     <bool>true</bool>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::TicksAbove</enum>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="RB_manual">
+    <property name="geometry">
+     <rect>
+      <x>1540</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+    </property>
+    <property name="text">
+     <string>M</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="RB_auto">
+    <property name="geometry">
+     <rect>
+      <x>1500</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+    </property>
+    <property name="text">
+     <string>A</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="RB_white">
+    <property name="geometry">
+     <rect>
+      <x>1460</x>
+      <y>20</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+    </property>
+    <property name="text">
+     <string>W</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="wavelength">
+    <property name="geometry">
+     <rect>
+      <x>1810</x>
+      <y>20</y>
+      <width>41</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+    </property>
+    <property name="text">
+     <string>380</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>10</y>
+      <width>203</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QRadioButton" name="aum4x">
        <property name="styleSheet">
-        <string notr="true">font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Luz blanca</string>
+        <string>4X</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLineEdit" name="wavelength">
+     <item>
+      <widget class="QRadioButton" name="aum10x">
        <property name="styleSheet">
-        <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>380</string>
+        <string>10X</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="aum40x">
+       <property name="styleSheet">
+        <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>40X</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="aum100x">
+       <property name="styleSheet">
+        <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>100X</string>
        </property>
       </widget>
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="pbSave">
+   <widget class="QPushButton" name="pbAbout">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>470</y>
-      <width>40</width>
-      <height>40</height>
+      <x>440</x>
+      <y>10</y>
+      <width>29</width>
+      <height>27</height>
      </rect>
     </property>
     <property name="sizePolicy">
-     <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+     <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;
-alternate-background-color: rgb(242, 242, 242);</string>
+     <string notr="true">background-color: rgb(72, 79, 82);</string>
     </property>
     <property name="text">
      <string/>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../images/icons/guardar.png</normaloff>../images/icons/guardar.png</iconset>
+      <normaloff>../images/icons/info.ico</normaloff>../images/icons/info.ico</iconset>
     </property>
     <property name="iconSize">
      <size>
-      <width>28</width>
-      <height>28</height>
+      <width>20</width>
+      <height>20</height>
      </size>
     </property>
    </widget>
-   <widget class="QPushButton" name="pbDot">
+   <widget class="QPushButton" name="pbCamera">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>510</y>
-      <width>40</width>
-      <height>40</height>
+      <x>400</x>
+      <y>10</y>
+      <width>32</width>
+      <height>27</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -739,63 +664,149 @@ alternate-background-color: rgb(242, 242, 242);</string>
     <property name="cursor">
      <cursorShape>ArrowCursor</cursorShape>
     </property>
+    <property name="toolTip">
+     <string comment="lapiz" extracomment="Lápiz"/>
+    </property>
+    <property name="toolTipDuration">
+     <number>1</number>
+    </property>
+    <property name="whatsThis">
+     <string notr="true"/>
+    </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;
-</string>
+     <string notr="true">background-color: rgb(100,100,100);</string>
     </property>
     <property name="text">
      <string/>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../images/icons/lapiz.png</normaloff>../images/icons/lapiz.png</iconset>
+      <normaloff>../images/icons/camera.ico</normaloff>../images/icons/camera.ico</iconset>
     </property>
     <property name="iconSize">
      <size>
-      <width>28</width>
-      <height>28</height>
+      <width>20</width>
+      <height>20</height>
      </size>
     </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
    </widget>
-   <widget class="QPushButton" name="pbRect">
+   <widget class="QPushButton" name="pbExit">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>550</y>
-      <width>40</width>
-      <height>40</height>
+      <x>480</x>
+      <y>10</y>
+      <width>32</width>
+      <height>27</height>
      </rect>
     </property>
     <property name="sizePolicy">
-     <sizepolicy hsizetype="Ignored" vsizetype="MinimumExpanding">
+     <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
       <horstretch>0</horstretch>
       <verstretch>0</verstretch>
      </sizepolicy>
     </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="toolTipDuration">
+     <number>1</number>
+    </property>
+    <property name="whatsThis">
+     <string notr="true"/>
+    </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+     <string notr="true">background-color: rgb(100,100,100);</string>
     </property>
     <property name="text">
      <string/>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../images/icons/rect.png</normaloff>../images/icons/rect.png</iconset>
+      <normaloff>../images/icons/close.ico</normaloff>../images/icons/close.ico</iconset>
     </property>
     <property name="iconSize">
      <size>
-      <width>28</width>
-      <height>28</height>
+      <width>20</width>
+      <height>20</height>
      </size>
     </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
    </widget>
-   <widget class="QPushButton" name="pbElip">
+   <widget class="QLabel" name="txtConnect">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>590</y>
-      <width>40</width>
-      <height>40</height>
+      <x>1730</x>
+      <y>40</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;conexión&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbCalibrate">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>10</y>
+      <width>32</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="cursor">
+     <cursorShape>ArrowCursor</cursorShape>
+    </property>
+    <property name="toolTip">
+     <string/>
+    </property>
+    <property name="toolTipDuration">
+     <number>1</number>
+    </property>
+    <property name="whatsThis">
+     <string notr="true"/>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(100,100,100);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../images/icons/calibrate.ico</normaloff>../images/icons/calibrate.ico</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>20</height>
+     </size>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbHelp">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>10</y>
+      <width>32</width>
+      <height>27</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -805,143 +816,303 @@ alternate-background-color: rgb(242, 242, 242);</string>
      </sizepolicy>
     </property>
     <property name="styleSheet">
-     <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+     <string notr="true">background-color: rgb(72, 79, 82);</string>
     </property>
     <property name="text">
      <string/>
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>../images/icons/circu.png</normaloff>../images/icons/circu.png</iconset>
+      <normaloff>../images/icons/help.ico</normaloff>../images/icons/help.ico</iconset>
     </property>
     <property name="iconSize">
      <size>
-      <width>28</width>
-      <height>28</height>
+      <width>20</width>
+      <height>20</height>
      </size>
     </property>
    </widget>
-   <widget class="QWidget" name="verticalLayoutWidget">
+   <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>520</y>
-      <width>42</width>
-      <height>191</height>
+      <x>750</x>
+      <y>10</y>
+      <width>131</width>
+      <height>31</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetNoConstraint</enum>
-     </property>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLineEdit" name="coordX">
+       <property name="styleSheet">
+        <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="plusX">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="minusX">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="pbArrow">
+   <widget class="QSlider" name="aumentoMov">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>630</y>
-      <width>40</width>
-      <height>40</height>
+      <x>1210</x>
+      <y>20</y>
+      <width>101</width>
+      <height>20</height>
      </rect>
     </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Minimum" vsizetype="Ignored">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
+    <property name="maximum">
+     <number>16</number>
+    </property>
+    <property name="pageStep">
+     <number>4</number>
+    </property>
+    <property name="sliderPosition">
+     <number>0</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::NoTicks</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="textAumento">
+    <property name="geometry">
+     <rect>
+      <x>1330</x>
+      <y>10</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
     </property>
     <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>890</x>
+      <y>10</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLineEdit" name="coordY">
+       <property name="styleSheet">
+        <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="plusY">
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="minusY">
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="horizontalLayoutWidget_4">
+    <property name="geometry">
+     <rect>
+      <x>1030</x>
+      <y>10</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QLineEdit" name="coordZ">
+       <property name="styleSheet">
+        <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="plusZ">
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>+</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="minusZ">
+       <property name="styleSheet">
+        <string notr="true">font: 75 18pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
+       <property name="text">
+        <string>-</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="pbColor">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>10</y>
+      <width>32</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
      <string/>
     </property>
     <property name="icon">
      <iconset>
-      <normalon>../images/icons/flecha.png</normalon>
-     </iconset>
+      <normaloff>../images/icons/color.ico</normaloff>../images/icons/color.ico</iconset>
     </property>
     <property name="iconSize">
      <size>
-      <width>28</width>
-      <height>28</height>
+      <width>20</width>
+      <height>20</height>
      </size>
     </property>
    </widget>
+   <widget class="QComboBox" name="tamPincel">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>10</y>
+      <width>61</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>1 px</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>3 px</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>5 px</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>7 px</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>9 px</string>
+     </property>
+    </item>
+   </widget>
    <zorder>cameraSpace</zorder>
    <zorder>img_microscopy</zorder>
-   <zorder>horizontalLayoutWidget</zorder>
    <zorder>tablero</zorder>
-   <zorder>gridLayoutWidget</zorder>
-   <zorder>label_4</zorder>
-   <zorder>horizontalLayoutWidget_2</zorder>
+   <zorder>gridLayoutWidget_4</zorder>
+   <zorder>pbConnect</zorder>
+   <zorder>VisibleEsp</zorder>
+   <zorder>RB_manual</zorder>
+   <zorder>RB_auto</zorder>
+   <zorder>RB_white</zorder>
+   <zorder>wavelength</zorder>
    <zorder>horizontalLayoutWidget_3</zorder>
-   <zorder>gridLayoutWidget_2</zorder>
-   <zorder>gridLayoutWidget_3</zorder>
-   <zorder>pbSave</zorder>
-   <zorder>pbDot</zorder>
-   <zorder>pbRect</zorder>
-   <zorder>pbElip</zorder>
-   <zorder>verticalLayoutWidget</zorder>
-   <zorder>pbArrow</zorder>
+   <zorder>pbAbout</zorder>
+   <zorder>pbCamera</zorder>
+   <zorder>pbExit</zorder>
+   <zorder>txtConnect</zorder>
+   <zorder>pbCalibrate</zorder>
+   <zorder>pbHelp</zorder>
+   <zorder>horizontalLayoutWidget</zorder>
+   <zorder>aumentoMov</zorder>
+   <zorder>textAumento</zorder>
+   <zorder>horizontalLayoutWidget_2</zorder>
+   <zorder>horizontalLayoutWidget_4</zorder>
+   <zorder>pbColor</zorder>
+   <zorder>tamPincel</zorder>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1928</width>
-     <height>26</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuArchivo">
-    <property name="title">
-     <string>ZOE</string>
-    </property>
-    <addaction name="actionInstrucciones"/>
-    <addaction name="actionCalibrar"/>
-    <addaction name="actionClose"/>
-   </widget>
-   <widget class="QMenu" name="menuColor">
-    <property name="title">
-     <string>Color </string>
-    </property>
-    <addaction name="redAction"/>
-    <addaction name="greenAction"/>
-    <addaction name="blueAction"/>
-    <addaction name="yellowAction"/>
-    <addaction name="blackAction"/>
-    <addaction name="whiteAction"/>
-   </widget>
-   <widget class="QMenu" name="menuTamano">
-    <property name="title">
-     <string>Tamaño</string>
-    </property>
-    <addaction name="onepxAction"/>
-    <addaction name="threepxAction"/>
-    <addaction name="fivepxAction"/>
-    <addaction name="sevenpxAction"/>
-    <addaction name="ninepxAction"/>
-   </widget>
-   <widget class="QMenu" name="menuCamara">
-    <property name="title">
-     <string>Camara</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menuAcerca_de">
-    <property name="title">
-     <string>Acerca de </string>
-    </property>
-    <addaction name="zoeDev"/>
-   </widget>
-   <addaction name="menuArchivo"/>
-   <addaction name="menuColor"/>
-   <addaction name="menuTamano"/>
-   <addaction name="menuCamara"/>
-   <addaction name="menuAcerca_de"/>
-  </widget>
   <action name="actionSave">
    <property name="text">
     <string>Guardar</string>
@@ -1011,6 +1182,11 @@ alternate-background-color: rgb(242, 242, 242);</string>
   <action name="actionInstrucciones">
    <property name="text">
     <string>Instrucciones </string>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
    </property>
   </action>
   <action name="actionClose">
