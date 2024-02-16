@@ -93,6 +93,8 @@ class MyApp(QtWidgets.QMainWindow):
         self.textImage      = ""
         self.cerrado = False
 
+        self.movAumento = 0.1
+
         # Valores iniciales de las variables
         self.flagEscritura = False
         self.flagColor = False
@@ -188,17 +190,7 @@ class MyApp(QtWidgets.QMainWindow):
 
 
 
-        #   CONTROL DE MOTORES 
-        #   Aumento del mov    
-        self.movAumento = 0.005
-        valueSpinbox = [0.005,0.01,0.05,0.1]
-        self.ui.aumentoMov.setRange(0, len(valueSpinbox)-1)
-        self.ui.aumentoMov.setPageStep(1)
-        self.ui.aumentoMov.setTickInterval(1)
-        self.ui.aumentoMov.setTickPosition(QSlider.TicksBelow)
-        self.ui.aumentoMov.valueChanged.connect(self.aumentoRev)
-        self.ui.textAumento.setText("{:.3f}".format(self.movAumento))
-        
+ 
         
 
 
@@ -220,16 +212,13 @@ class MyApp(QtWidgets.QMainWindow):
 
         # Control de aumento 
          # Crear un grupo de botones
-        self.aumentoGroup = QButtonGroup(self)
+        
+        self.ui.aumentoMov.currentIndexChanged.connect(self.aumentoRev)
+        self.ui.aumentoMov.setCurrentIndex(0)
+        
+        self.ui.aumentoGroup.currentIndexChanged.connect(self.aumentoImg)
+        self.ui.aumentoGroup.setCurrentIndex(0)
 
-        self.aumentoGroup.addButton(self.ui.aum4x)
-        self.aumentoGroup.addButton(self.ui.aum10x)
-        self.aumentoGroup.addButton(self.ui.aum40x)
-        self.aumentoGroup.addButton(self.ui.aum100x)
-
-        # Conectar la señal de cambio para manejar eventos
-        self.aumentoGroup.buttonClicked.connect(self.aumentoImg)
-    
     def cameraSelection(self):
         cameraSel = DialogoSeleccionCamara()
         cameraSel.exec_()
@@ -253,20 +242,10 @@ class MyApp(QtWidgets.QMainWindow):
             self.ui.pbColor.setStyleSheet(f"background-color: {color_hex};")
             self.ui.tablero.pincelColor(color_hex)
 
-    def aumentoImg(self,botonR):
-        
-        augment  = botonR.text()
-        print(augment)
-        print(type(augment))
-
-        if augment == "4X":
-            self.rbuttonAug = 0
-        if augment == "10X":
-            self.rbuttonAug = 1
-        if augment == "40X":
-            self.rbuttonAug = 2
-        if augment == "100X":
-            self.rbuttonAug = 3
+    def aumentoImg(self):
+        size = (4,10,40,100)
+        ind= self.ui.aumentoGroup.currentIndex()
+        self.rbuttonAug = size[ind]
 
         self.sendMotor("G")
 
@@ -366,7 +345,7 @@ class MyApp(QtWidgets.QMainWindow):
     def aumentoRev(self,indice):
         valueSpinbox = [0.005,0.01,0.05,0.1]
         self.movAumento = valueSpinbox[indice]
-        self.ui.textAumento.setText("{:.3f}".format(self.movAumento))
+        
     
     def sendMotor(self,motor):
         if motor == "X": 
@@ -412,7 +391,7 @@ class MyApp(QtWidgets.QMainWindow):
         respuesta = QMessageBox.question(self, 'Calibracion', '¿Desea calibrar el sistema ZOE?',
                                          QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         
-        if respuesta:
+        if respuesta == True:
             self.send_data.send("K"+"000000000") 
             
             time.sleep(5)
@@ -750,7 +729,7 @@ class MyApp(QtWidgets.QMainWindow):
             print("isConnect")
 
             if self.cerrado == True :
-                self.ui.RB_white.setChecked(False)
+                self.ui.RB_white.setChecked(True)
 
                 print("Cerrado")
 
@@ -808,6 +787,7 @@ class MyApp(QtWidgets.QMainWindow):
                 self.ui.actionCalibrar.setEnabled(True)
 
                 self.ui.pbCamera.setEnabled(False)
+                self.ui.VisibleEsp.setEnabled(True)     
 
                 self.ui.procesador_camara.iniciar_camara()
                 self.ui.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)
