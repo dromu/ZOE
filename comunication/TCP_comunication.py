@@ -11,6 +11,8 @@ class TCP_comunication:
         self.addres = "192.168.4.1"
         self.port   = 8080
         self.cliente = None
+
+        self.flag = False
         
 
     def connect(self):
@@ -45,9 +47,16 @@ class TCP_comunication:
         """
         La función de cierre cierra la conexión del cliente si existe.
         """
-        if self.cliente:
-            print("Desconectando del socket")
-            self.cliente.close()
-            self.cliente = None
-            return True
+        if self.flag == False:
 
+            if self.cliente:
+                print("Desconectando del socket")
+                self.cliente.close()
+                self.cliente = None
+                self.flag = True
+                return True
+            else:
+                self.flag = False
+                return False
+        else: 
+            return self.flag

@@ -140,6 +140,8 @@ class DrawingBoard(QtWidgets.QLabel):
 
             if result == QDialog.Accepted:
                 self.texto =  custom_input_dialog.findChild(QLineEdit).text()
+            else:
+                self.texto = ""
 
             
         self.begin, self.destination = QPoint(), QPoint()	

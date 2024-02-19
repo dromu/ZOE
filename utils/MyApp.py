@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QFileDialog, QActionGroup,QAction,QButtonGroup
 import numpy as np 
 import os
 import cv2 
-from PyQt5.QtWidgets import QApplication, QDialog,QMessageBox
+from PyQt5.QtWidgets import QApplication, QDialog,QMessageBox,QToolTip
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QSlider, QLabel
 from PyQt5.QtMultimedia import QCameraInfo
 from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QComboBox, QPushButton, QColorDialog
@@ -127,7 +127,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.tamPincel.setCurrentIndex(1) #Defecto 3px
         
 
-       
+        self.ui.pbCalibrate.setEnabled(False)  
    
         #Boton de guardar pantallas 
         self.ui.pbSave.clicked.connect(self.save)
@@ -156,6 +156,8 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.RB_auto.setEnabled(False)
         self.ui.RB_white.setEnabled(False)
         self.ui.actionCalibrar.setEnabled(False)
+
+        self.ui.aumentoGroup.setEnabled(False)
 
         self.autoAnte = None
 
@@ -188,12 +190,6 @@ class MyApp(QtWidgets.QMainWindow):
         
         
 
-
-
- 
-        
-
-
         #   Eje X 
         self.valueX = 0
         
@@ -219,6 +215,37 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.aumentoGroup.currentIndexChanged.connect(self.aumentoImg)
         self.ui.aumentoGroup.setCurrentIndex(0)
 
+        #ToolTip
+
+        
+        QToolTip.setFont(QToolTip.font())
+        self.ui.pbDot.setToolTip('Lápiz')
+        self.ui.pbCalibrate.setToolTip("Calibrar")
+        self.ui.pbElip.setToolTip("Circulo")
+        self.ui.pbText.setToolTip("Texto")
+        self.ui.pbTrash.setToolTip("Limpiar")
+        self.ui.pbDel.setToolTip("Borrador")
+        self.ui.checkPacient.setToolTip("Información del paciente")
+        self.ui.pbROI.setToolTip("Color complementario")
+        self.ui.pbHide.setToolTip("Ocultar")
+        
+        self.ui.pbAbout.setToolTip("Acerca de")
+        self.ui.pbHelp.setToolTip("Ayuda")
+        self.ui.pbRect.setToolTip("Rectángulo")
+        self.ui.tamPincel.setToolTip("Tamaño")
+        self.ui.pbCamera.setToolTip('Cámara')
+        self.ui.pbColor.setToolTip("Color")
+        self.ui.pbSave.setToolTip("Guardar")
+        self.ui.pbConnect.setToolTip("Conexión")
+        self.ui.pbExit.setToolTip("Salir")
+
+        self.ui.RB_white.setToolTip("Luz blanca")
+        self.ui.RB_auto.setToolTip("Automático")
+        self.ui.RB_auto.setToolTip("Manual")
+
+        
+
+
     def cameraSelection(self):
         cameraSel = DialogoSeleccionCamara()
         cameraSel.exec_()
@@ -239,7 +266,7 @@ class MyApp(QtWidgets.QMainWindow):
             print("Color seleccionado:", color.name())
             color_hex = color.name()
 
-            self.ui.pbColor.setStyleSheet(f"background-color: {color_hex};")
+            # self.ui.pbColor.setStyleSheet(f"background-color: {color_hex};")
             self.ui.tablero.pincelColor(color_hex)
 
     def aumentoImg(self):
@@ -398,14 +425,7 @@ class MyApp(QtWidgets.QMainWindow):
 
             QMessageBox.information(None, 'Calibración', 'Sistema Calibrado.')
 
-               
 
-
-
-            
-
-
-     
     def readCamera(self):
         with open("img_tools\camera.dat", 'r') as archivo:
             contenido = archivo.read()
@@ -433,11 +453,6 @@ class MyApp(QtWidgets.QMainWindow):
                 QApplication.quit()
             else: 
                 QApplication.quit()
-            
-            
-
-
-
 
     
     def datosPacientes(self,state):
@@ -660,7 +675,7 @@ class MyApp(QtWidgets.QMainWindow):
 
             print(radio_button.text())
             
-            if radio_button.text() == 'Manual':
+            if radio_button.text() == 'M':
                 # Se habilitan todas las modificaciones al espectro 
                 slider.setEnabled(True)    
                 wavelength.setEnabled(True)    
@@ -672,15 +687,14 @@ class MyApp(QtWidgets.QMainWindow):
                 print("M" + str(self.ui.value) +  "000000" )
                 
                 
-            if radio_button.text() == 'Automático':
+            if radio_button.text() == 'A':
            
                 if self.datoAuto != None:
                     self.send_data.send("A"+self.datoAuto) 
                     print("A"+self.datoAuto)
-                    
 
 
-            if radio_button.text() == 'Luz blanca':
+            if radio_button.text() == 'W':
                 # Se limitan y paran todas las acciones 
                 self.send_data.send("W000000000" ) 
                 self.ui.wavelength.setEnabled(False)
@@ -724,15 +738,13 @@ class MyApp(QtWidgets.QMainWindow):
     def conexion(self):
 
         if self.connector.is_connected:     #Revisa el atributo en el constructor
+            self.ui.RB_white.setChecked(True)
             self.cerrado = self.send_data.close()
 
-            print("isConnect")
-
-            if self.cerrado == True :
-                self.ui.RB_white.setChecked(True)
-
-                print("Cerrado")
-
+            print(self.cerrado)
+            
+            if self.cerrado:
+                
                 if not self.connector.disconnect() :
                 
                     #Revisa los retornos de los metodos 
@@ -751,7 +763,9 @@ class MyApp(QtWidgets.QMainWindow):
                     self.ui.RB_auto.setEnabled(False)
                     self.ui.RB_white.setEnabled(False)
                     self.ui.wavelength.setEnabled(False)
-                    self.ui.VisibleEsp.setEnabled(False)             
+                    self.ui.VisibleEsp.setEnabled(False) 
+                    self.ui.aumentoGroup.setEnabled(False)
+                    self.ui.pbCalibrate.setEnabled(False)            
 
                     self.visCamera = False
 
@@ -768,10 +782,10 @@ class MyApp(QtWidgets.QMainWindow):
                     # Limpiar la pantalla  para vovler a la imagen inicial
                     self.ui.tablero.clear()
 
-            else:
-                self.ui.txtConnect.setText("No se pudo desconectar")
-                self.ui.txtConnect.setAlignment(Qt.AlignRight)
-                self.cerrado = False
+                else:
+                    self.ui.txtConnect.setText("No se pudo desconectar")
+                    self.ui.txtConnect.setAlignment(Qt.AlignRight)
+                    
 
         else:
             if self.connector.connect():
@@ -782,19 +796,23 @@ class MyApp(QtWidgets.QMainWindow):
                 self.ui.txtConnect.setAlignment(Qt.AlignRight)
 
                 # Encendemos los botonoes 
+
+                self.cerrado = False
                
                 self.manejoButton(True)
                 self.ui.actionCalibrar.setEnabled(True)
 
                 self.ui.pbCamera.setEnabled(False)
-                self.ui.VisibleEsp.setEnabled(True)     
+                self.ui.VisibleEsp.setEnabled(False)     
 
                 self.ui.procesador_camara.iniciar_camara()
                 self.ui.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)
                 
                 self.visCamera = True
+                self.ui.aumentoGroup.setEnabled(True)
 
                 self.ui.RB_manual.setEnabled(True)
+                self.ui.pbCalibrate.setEnabled(True)      
                 
                 self.ui.RB_white.setEnabled(True)
                 
