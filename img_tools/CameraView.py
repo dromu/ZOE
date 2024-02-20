@@ -76,6 +76,7 @@ class ProcesadorCamara(QObject):
             self.senal_conexion_perdida.emit()
             if not self.conexion_perdida_emitida:
                 self.emitir_conexion_perdida()
+                
     def emitir_conexion_perdida(self):
         self.senal_conexion_perdida.emit()
         self.conexion_perdida_emitida = True

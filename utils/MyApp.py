@@ -259,15 +259,21 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.RB_auto.setToolTip("Automático")
         self.ui.RB_auto.setToolTip("Manual")
 
+        self.flagCamara = True
+        # self.flagDesCam = True
         
         self.ui.procesador_camara.senal_conexion_perdida.connect(self.mostrar_mensaje_conexion_perdida)
     
     def mostrar_mensaje_conexion_perdida(self):
 
-        if self.ui.procesador_camara.conexion_perdida_emitida:
         
+
+        if self.ui.procesador_camara.conexion_perdida_emitida and self.flagCamara:
+            
             QMessageBox.warning(self, "Error", "Se ha perdido la conexión con la cámara.")
+            time.sleep(1)
             self.ui.pbConnect.click()
+            self.flagCamara = False
 
     def closeEvent(self, event):
         self.ui.procesador_camara.cap.release()
@@ -713,13 +719,9 @@ class MyApp(QtWidgets.QMainWindow):
                 # Se habilitan todas las modificaciones al espectro 
                 slider.setEnabled(True)    
                 wavelength.setEnabled(True)    
-                
-            
-            
+
                 # Envio en modo manual
-                 
                 self.sendHardware("M" + str(self.ui.value) +  "000000" )
-                
                 
             if radio_button.text() == 'A':
            
@@ -793,13 +795,12 @@ class MyApp(QtWidgets.QMainWindow):
 
             else: 
                 self.cerrado = True
-
-            
-            
+        
             if self.cerrado:
                 
                 if not self.connector.disconnect() :
 
+                    self.flagCamara = False             
                     self.flagConx   = False
                     self.cerrado    = False
                 
@@ -810,8 +811,7 @@ class MyApp(QtWidgets.QMainWindow):
                     self.ui.pbConnect.setStyleSheet(self.original_style)
                     self.ui.txtConnect.setText("Desconexión exitosa")
                     self.ui.txtConnect.setAlignment(Qt.AlignRight)
-
-                    
+                 
                     self.ui.RB_manual.setChecked(False)
                     self.ui.RB_auto.setChecked(False)
                     
@@ -824,6 +824,7 @@ class MyApp(QtWidgets.QMainWindow):
                     self.ui.pbCalibrate.setEnabled(False)            
 
                     self.visCamera = False
+                    
 
                 # Desactivamos botones 
                     self.manejoButton(False)
@@ -847,6 +848,8 @@ class MyApp(QtWidgets.QMainWindow):
 
         else:
             if self.connector.connect():
+                self.flagCamara = True
+               
                 self.ui.pbConnect.setText('C')
                 self.ui.pbConnect.setStyleSheet(""" background-color: rgb(50, 255, 50); """ )
                 
