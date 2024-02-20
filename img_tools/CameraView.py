@@ -10,6 +10,7 @@ from math import radians, degrees
 
 class ProcesadorCamara(QObject):
     senal_actualizacion = pyqtSignal(np.ndarray)
+    senal_conexion_perdida = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -23,7 +24,7 @@ class ProcesadorCamara(QObject):
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.actualizar_frame)
         self.timer.start(33)  # Actualizar cada 33 ms (aproximadamente 30 fps)
-        
+        self.conexion_perdida_emitida = False
         self.frame = []
 
     def readCamera(self):
@@ -47,26 +48,38 @@ class ProcesadorCamara(QObject):
 
         if not self.cap.isOpened():
             print("Error: No se pudo abrir la cámara.")
+
+            self.senal_conexion_perdida.emit()
         else:
             print("Cámara iniciada.")
 
     def actualizar_frame(self):
         ret, self.frame = self.cap.read()
 
-        
         #Acomodado a la resolucion de la Genius 
         ancho   = 1600
         alto    = 891
 
-        self.frame = cv2.resize(self.frame, (ancho, alto))
-        self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
+    
 
         if ret:
             # Realizar cualquier procesamiento adicional aquí si es necesario
             # Emitir la señal con el frame actualizado
             
+            self.frame = cv2.resize(self.frame, (ancho, alto))
+            self.frame = cv2.cvtColor(self.frame, cv2.COLOR_BGR2RGB)
             self.senal_actualizacion.emit(self.frame)
-    
+
+            if self.conexion_perdida_emitida:
+                self.conexion_perdida_emitida = False
+        else: 
+            self.senal_conexion_perdida.emit()
+            if not self.conexion_perdida_emitida:
+                self.emitir_conexion_perdida()
+    def emitir_conexion_perdida(self):
+        self.senal_conexion_perdida.emit()
+        self.conexion_perdida_emitida = True
+        
     def colorComplementary(self):
 
         # lectura archivo de coordenadas
@@ -78,20 +91,10 @@ class ProcesadorCamara(QObject):
         coordenada1, coordenada2 = coordenadas
         x1, y1 = coordenada1
         x2, y2 = coordenada2
-        
-        # print("Tamaño frame: ", self.frame.shape)
 
-        # print("X1: ", x1,  "X2:", x2)
-        # print("Y1: ", y1,  "Y2:", y2)
-
-        
         maximo  = self.frame.shape
         maxX    = maximo[1]
         maxY    = maximo[0]
-
-        # print("maxX: ", maxX)
-        # print("maxY: ", maxY)
-        
 
         #minimos
         x1 = 0 if x1 < 0 else x1
@@ -117,13 +120,7 @@ class ProcesadorCamara(QObject):
             tempY = y2
             y2 = y1
             y1 = tempY
-        
-        # print("Configurados")
-        # print("X1: ", x1,  "X2", x2)
-        # print("Y1: ", y1,  "Y2", y2)
-        
-        # print(self.frame)
-        #Seleccion de region de interes
+
         self.imgROI = self.frame[y1:y2, x1:x2,   :]
 
         #Transformacion al espacio HSV

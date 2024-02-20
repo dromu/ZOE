@@ -103,6 +103,8 @@ class MyApp(QtWidgets.QMainWindow):
         self.nameEquipo     = ""
         self.descrImg       = ""
 
+        self.respuestaCon = []
+
 
 
         self.cerrado = False
@@ -258,7 +260,18 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.RB_auto.setToolTip("Manual")
 
         
+        self.ui.procesador_camara.senal_conexion_perdida.connect(self.mostrar_mensaje_conexion_perdida)
+    
+    def mostrar_mensaje_conexion_perdida(self):
 
+        if self.ui.procesador_camara.conexion_perdida_emitida:
+        
+            QMessageBox.warning(self, "Error", "Se ha perdido la conexión con la cámara.")
+            self.ui.pbConnect.click()
+
+    def closeEvent(self, event):
+        self.ui.procesador_camara.cap.release()
+        event.accept()
 
     def cameraSelection(self):
         cameraSel = DialogoSeleccionCamara()
@@ -404,9 +417,11 @@ class MyApp(QtWidgets.QMainWindow):
 
         self.valueMotor = motor+self.valueMotor
 
-        self.send_data.send(self.valueMotor)  
+        self.sendHardware(self.valueMotor)
 
-        print(self.valueMotor)
+        # self.send_data.send(self.valueMotor)  
+
+     
 
     def limitValue(self, value):
         
@@ -436,7 +451,8 @@ class MyApp(QtWidgets.QMainWindow):
                                          QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         
         if respuesta == True:
-            self.send_data.send("K"+"000000000") 
+            self.sendHardware("K000000000")
+            
             
             time.sleep(5)
 
@@ -588,7 +604,8 @@ class MyApp(QtWidgets.QMainWindow):
             self.datoAuto  = str(self.R_).zfill(3)  +  str(self.G_).zfill(3)  +  str(self.B_).zfill(3)
             
             if self.datoAuto != None:
-                    self.send_data.send("A"+self.datoAuto) 
+                    self.sendHardware("A"+self.datoAuto)
+                    
                     print("A"+self.datoAuto)
                    
 
@@ -605,7 +622,7 @@ class MyApp(QtWidgets.QMainWindow):
 
             self.ui.cameraSpace.setPixmap(self.img_pixmap)
 
-
+    
 
     def save(self):
         combined_image = QImage(self.ui.tablero.size(), QImage.Format_ARGB32)
@@ -700,20 +717,24 @@ class MyApp(QtWidgets.QMainWindow):
             
             
                 # Envio en modo manual
-                self.send_data.send("M" + str(self.ui.value) +  "000000" )  
-                print("M" + str(self.ui.value) +  "000000" )
+                 
+                self.sendHardware("M" + str(self.ui.value) +  "000000" )
                 
                 
             if radio_button.text() == 'A':
            
                 if self.datoAuto != None:
-                    self.send_data.send("A"+self.datoAuto) 
+                    
+
+                    self.sendHardware("A"+self.datoAuto )
+                    
                     print("A"+self.datoAuto)
 
 
             if radio_button.text() == 'W':
                 # Se limitan y paran todas las acciones 
-                self.send_data.send("W000000000" ) 
+                 
+                self.sendHardware("W000000000")
                 self.ui.wavelength.setEnabled(False)
                 self.ui.VisibleEsp.setEnabled(False)
                 
@@ -728,8 +749,9 @@ class MyApp(QtWidgets.QMainWindow):
             
             
             # Envio en modo manual
-            self.send_data.send("M" + str(value) +  "000000" )  
-            print("M" + str(value) +  "000000" )
+            
+            self.sendHardware("M" + str(value) +  "000000")
+            
         
         else:
             # Se deshabilita cualquier accion diferente
@@ -755,17 +777,22 @@ class MyApp(QtWidgets.QMainWindow):
     def conexion(self):
 
         if self.connector.is_connected:     #Revisa el atributo en el constructor
-            self.ui.RB_white.setChecked(True)
+            
+            if self.respuestaCon != True:
+                self.ui.RB_white.setChecked(True)
 
-            if self.flagConx == False:
-                self.send_data.send("D000000000" )  
+                if self.flagConx == False:
+                    
+                    self.sendHardware("D000000000")
 
-                print("D000000000")
-                # self.cerrado = self.send_data.close()
-                self.flagConx = True
+                    
+                    # self.cerrado = self.send_data.close()
+                    self.flagConx = True
+                    self.cerrado = True
+                    time.sleep(0.5)
+
+            else: 
                 self.cerrado = True
-                time.sleep(0.5)
-                
 
             
             
@@ -850,17 +877,30 @@ class MyApp(QtWidgets.QMainWindow):
                 # Realiza la conexion 
                 self.send_data.connect()
 
-
                 if self.datoAuto == None:
                     self.ui.RB_auto.setEnabled(False)
-
 
             else:
                 self.ui.txtConnect.setText("No se pudo establecer la conexión")
                 self.ui.txtConnect.setAlignment(Qt.AlignRight)
 
     def guardar_variable(self,variable,archivo):
-
         with open(archivo, 'w') as archivo:
             archivo.write(variable)
-        
+
+    def sendHardware(self, dato):
+        print(dato)
+        self.respuestaCon = self.send_data.send(dato)  
+
+        if self.respuestaCon: 
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Information)
+            msg.setText("No es posible enviar datos. Revisa la conexión")
+            msg.setWindowTitle("Conexión")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec_()
+
+            self.ui.pbConnect.setStyleSheet(""" background-color: rgb(255,255,0); """ )
+            self.ui.txtConnect.setText("Error de conexión")
+            
+            

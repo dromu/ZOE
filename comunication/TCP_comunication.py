@@ -36,9 +36,10 @@ class TCP_comunication:
         try:
             self.cliente.sendall(datos.encode('utf-8'))
             print("Datos enviados exitosamente.")
+            return False
         except socket.error:
             print("Error al enviar datos.")
-
+            return True
  
 
     def close(self):
