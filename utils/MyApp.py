@@ -87,10 +87,24 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbDot.clicked.connect(self.habEscritura)
         self.ui.pbROI.clicked.connect(self.habColor)
 
+        self.flagConx = False
+
         self.nombre         = ""
+        self.sexo           = ""
+        self.typeid         = ""
         self.identificacion = ""
+        self.edad           = ""
+        self.birthday       = ""
+        self.date           = ""
+        self.posPaciente    = ""
         self.modalidad      = ""
-        self.textImage      = ""
+        self.imgType        = ""
+        self.institucion    = ""
+        self.nameEquipo     = ""
+        self.descrImg       = ""
+
+
+
         self.cerrado = False
 
         self.movAumento = 0.1
@@ -370,7 +384,8 @@ class MyApp(QtWidgets.QMainWindow):
 
 
     def aumentoRev(self,indice):
-        valueSpinbox = [0.005,0.01,0.05,0.1]
+        
+        valueSpinbox = [0.1, 0.05, 0.01, 0.005]
         self.movAumento = valueSpinbox[indice]
         
     
@@ -383,7 +398,9 @@ class MyApp(QtWidgets.QMainWindow):
             self.valueMotor = str(int(self.valueZ*1000)).zfill(9)
 
         elif motor == "G":
-            self.valueMotor  = "00000000" + str(self.rbuttonAug)
+            # self.valueMotor  = "00000000" + str(self.rbuttonAug)
+
+            self.valueMotor = str(self.rbuttonAug).zfill(9)
 
         self.valueMotor = motor+self.valueMotor
 
@@ -447,7 +464,7 @@ class MyApp(QtWidgets.QMainWindow):
         if respuesta == QMessageBox.Yes:
 
             if self.connector.is_connected: 
-                self.send_data.close()
+                # self.send_data.close()
                 self.ui.pbConnect.click()
                 
                 QApplication.quit()
@@ -739,13 +756,25 @@ class MyApp(QtWidgets.QMainWindow):
 
         if self.connector.is_connected:     #Revisa el atributo en el constructor
             self.ui.RB_white.setChecked(True)
-            self.cerrado = self.send_data.close()
 
-            print(self.cerrado)
+            if self.flagConx == False:
+                self.send_data.send("D000000000" )  
+
+                print("D000000000")
+                # self.cerrado = self.send_data.close()
+                self.flagConx = True
+                self.cerrado = True
+                time.sleep(0.5)
+                
+
+            
             
             if self.cerrado:
                 
                 if not self.connector.disconnect() :
+
+                    self.flagConx   = False
+                    self.cerrado    = False
                 
                     #Revisa los retornos de los metodos 
                     self.ui.pbCamera.setEnabled(True)
@@ -785,6 +814,8 @@ class MyApp(QtWidgets.QMainWindow):
                 else:
                     self.ui.txtConnect.setText("No se pudo desconectar")
                     self.ui.txtConnect.setAlignment(Qt.AlignRight)
+
+                    self.manejoButton(False)
                     
 
         else:
@@ -797,7 +828,7 @@ class MyApp(QtWidgets.QMainWindow):
 
                 # Encendemos los botonoes 
 
-                self.cerrado = False
+                
                
                 self.manejoButton(True)
                 self.ui.actionCalibrar.setEnabled(True)

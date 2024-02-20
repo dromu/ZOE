@@ -31,15 +31,13 @@ class TCP_comunication:
           datos: El parámetro "datos" es una cadena que representa los datos que desea enviar. Se
         codificará utilizando la codificación UTF-8 antes de enviarlo a través del socket del cliente.
         """
-        self.cliente.sendall(datos.encode('utf-8'))
+        # self.cliente.sendall(datos.encode('utf-8'))
 
-    # def endArduino(self):       
-    #     response = self.send_command("W000000000")
-    #     print(response)
-    #     if response == "True":
-    #         return True
-    #     else:
-    #         return False
+        try:
+            self.cliente.sendall(datos.encode('utf-8'))
+            print("Datos enviados exitosamente.")
+        except socket.error:
+            print("Error al enviar datos.")
 
  
 
@@ -47,16 +45,22 @@ class TCP_comunication:
         """
         La función de cierre cierra la conexión del cliente si existe.
         """
-        if self.flag == False:
-
-            if self.cliente:
-                print("Desconectando del socket")
-                self.cliente.close()
-                self.cliente = None
-                self.flag = True
-                return True
-            else:
-                self.flag = False
-                return False
-        else: 
-            return self.flag
+        
+        if self.cliente:
+            print("Desconectando del socket")
+            self.cliente.close()
+            self.cliente = None
+            self.flag = True
+            return True
+        else:
+            
+            return False
+    
+    def check_connection(self):
+        """
+        Verifica si hay una conexión activa.
+        """
+        if self.client:
+            return True
+        else:
+            return False
