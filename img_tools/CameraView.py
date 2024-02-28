@@ -57,8 +57,13 @@ class ProcesadorCamara(QObject):
         ret, self.frame = self.cap.read()
 
         #Acomodado a la resolucion de la Genius 
-        ancho   = 1600
-        alto    = 891
+        # FullHD
+        # ancho   = 1600
+        # alto    = 891
+
+        ancho   = 1200
+        alto    = 900
+
 
     
 

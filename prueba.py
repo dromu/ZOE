@@ -1,34 +1,35 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QToolTip
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QInputDialog, QLabel
 
-class Example(QWidget):
 
+class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
         self.initUI()
 
     def initUI(self):
+        layout = QVBoxLayout()
 
-        QToolTip.setFont(QToolTip.font())
-        self.setToolTip('This is a <b>QWidget</b> widget')
+        self.button = QPushButton('Seleccionar tamaño del pincel', self)
+        self.button.clicked.connect(self.showInputDialog)
+        layout.addWidget(self.button)
 
-        btn = QPushButton('Button', self)
-        btn.setToolTip('This is a <b>QPushButton</b> widget')
-        btn.move(50, 50)
+        self.label = QLabel('Tamaño del pincel: 1', self)
+        layout.addWidget(self.label)
 
-        btn2 = QPushButton('Button 2', self)
-        btn2.setToolTip('This is another <b>QPushButton</b> widget')
-        btn2.move(150, 50)
+        self.setLayout(layout)
 
-        self.setGeometry(300, 300, 300, 200)
-        self.setWindowTitle('Tooltips')
-        self.show()
+        self.setWindowTitle('Ventana principal')
+
+    def showInputDialog(self):
+        size, okPressed = QInputDialog.getInt(self, "Tamaño del pincel", "Ingrese el tamaño del pincel:", 1, 1, 100, 1)
+        if okPressed:
+            self.label.setText(f'Tamaño del pincel: {size}')
 
 
 if __name__ == '__main__':
-
     app = QApplication(sys.argv)
-    ex = Example()
+    window = MainWindow()
+    window.show()
     sys.exit(app.exec_())
