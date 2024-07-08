@@ -15,13 +15,14 @@ from PyQt5.QtMultimedia import QCameraInfo
 from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QComboBox, QPushButton, QColorDialog
 
 from img_tools.DrawingBoard import DrawingBoard
-from comunication.TCP_comunication import TCP_comunication
-from comunication.wificonnector import WifiConnector
+
 from utils.dataPaciente import dataPaciente
 from utils.About import aboutZOE
 from utils.instruccion import instrucciones
 from utils.calibration import calibration
 from PyQt5.QtCore import QTimer
+
+from comunication.testConexion import ESP32Client
 
 from PyQt5.QtGui import QCursor
 import pydicom
@@ -122,12 +123,22 @@ class MyApp(QtWidgets.QMainWindow):
         self.datoAuto  = None
 
         # Imagen de inicio de en lugar de visualizacion de muestras 
-        self.img_pixmap = QPixmap("images\microscopio.png")
+        self.img_pixmap = QPixmap("images\micros.png")
         self.ui.cameraSpace.setPixmap(self.img_pixmap)
 
         # Objetos para envio de informacion 
-        self.connector = WifiConnector()
-        self.send_data = TCP_comunication()
+        # self.connector = WifiConnector()
+        # self.send_data = TCP_comunication()
+
+        self.client = ESP32Client('192.168.4.1', 80)
+        self.stateConexion = False
+
+        # Boton de inicio de conexion
+        self.ui.pbConnect.clicked.connect(self.connectESP)
+        self.original_style = self.ui.pbConnect.styleSheet()
+
+
+
         self.ui.procesador_camara = ProcesadorCamara()
         
         self.R_ = 0
@@ -149,9 +160,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbSave.clicked.connect(self.save)
 
         ## Elementos en el main 
-        # Boton de inicio de conexion
-        self.ui.pbConnect.clicked.connect(self.conexion)
-        self.original_style = self.ui.pbConnect.styleSheet()
+        
 
         #Texto inicial de conexion 
         self.ui.txtConnect.setText("No conectado")
@@ -159,11 +168,7 @@ class MyApp(QtWidgets.QMainWindow):
         # Slider de espectro visible
         self.ui.VisibleEsp.valueChanged.connect(self.slider_value_changed)
         
-        # Se crea un objeto connector
-        self.connector = WifiConnector()
 
-        #Obejto envio
-        self.send_data = TCP_comunication()
 
         # Deshabilitamos los elementos del main, estos se irán actualizando
         self.ui.wavelength.setEnabled(False)
@@ -203,9 +208,6 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbCalibrate.clicked.connect(self.calibrarZOE)
         self.ui.pbHelp.clicked.connect(self.instruccionesZOE)
 
-        
-        
-
         #   Eje X 
         self.valueX = 0
         
@@ -230,7 +232,9 @@ class MyApp(QtWidgets.QMainWindow):
         
         self.ui.aumentoGroup.currentIndexChanged.connect(self.aumentoImg)
         self.ui.aumentoGroup.setCurrentIndex(0)
+        
 
+        self.ui.muestraNum.currentIndexChanged.connect(self.eleccionMuestra)
         #ToolTip
 
         
@@ -263,11 +267,68 @@ class MyApp(QtWidgets.QMainWindow):
         # self.flagDesCam = True
         
         self.ui.procesador_camara.senal_conexion_perdida.connect(self.mostrar_mensaje_conexion_perdida)
-    
-    def mostrar_mensaje_conexion_perdida(self):
 
+
+    def positionGRBL(self):
+        pos = "%G00 " + self.valueX  +" " + self.valueY + " "+ self.valueZ + "%"
+        return pos
         
 
+
+    def eleccionMuestra(self):
+
+        size = ("muestra 1", "muestra 2 ", "muestra 3", "muestra 4")
+        ind= self.ui.muestraNum.currentIndex()
+        self.visCamera = False
+
+        #ENVIANDO MENSAJE DE LA POSICION 
+        if ind == 0:
+            self.valueX, self.valueY, self.valueZ = (10, 10, 0)
+            pos = "%G00 " + str(self.valueX)  +" " + str(self.valueY) + " "+ str(self.valueZ) + "%"
+
+            print(pos)
+
+            if self.client.send_receive(pos) == "OK":
+                self.show_message_box(title="Informacion", message= "En posición")
+
+        elif ind == 1:
+            self.valueX, self.valueY, self.valueZ = (20, 20, 0)
+            pos = "%G00 " + str(self.valueX)  +" " + str(self.valueY) + " "+ str(self.valueZ) + "%"
+
+            print(pos)
+
+            if self.client.send_receive(pos) == "OK":
+                self.show_message_box(title="Informacion", message= "En posición")
+        
+        elif ind == 2:
+            self.valueX, self.valueY, self.valueZ = (30, 30, 0)
+            pos = "%G00 " + str(self.valueX)  +" " + str(self.valueY) + " "+ str(self.valueZ) + "%"
+
+            print(pos)
+
+            if self.client.send_receive(pos) == "OK":
+                self.show_message_box(title="Informacion", message= "En posición")
+
+        elif ind == 3:
+            self.valueX, self.valueY, self.valueZ = (40, 40, 0)
+            pos = "%G00 " + str(self.valueX)  +" " + str(self.valueY) + " "+ str(self.valueZ) + "%"
+
+            print(pos)
+
+            if self.client.send_receive(pos) == "OK":
+                self.show_message_box(title="Informacion", message= "En posición")
+
+    def show_message_box(self, title , message, icon=QMessageBox.Information, buttons=QMessageBox.Ok):
+
+        self.visCamera = True
+        msg_box = QMessageBox()
+        msg_box.setIcon(icon)
+        msg_box.setWindowTitle(title)
+        msg_box.setText(message)
+        msg_box.setStandardButtons(buttons)
+        msg_box.exec_()
+    
+    def mostrar_mensaje_conexion_perdida(self):
         if self.ui.procesador_camara.conexion_perdida_emitida and self.flagCamara:
             
             QMessageBox.warning(self, "Error", "Se ha perdido la conexión con la cámara.")
@@ -283,14 +344,11 @@ class MyApp(QtWidgets.QMainWindow):
         cameraSel = DialogoSeleccionCamara()
         cameraSel.exec_()
 
-
     def sizePincel(self):
         size = (1,3,5,7,9)
         ind= self.ui.tamPincel.currentIndex()
 
         self.ui.tablero.pincelSize(size[ind])
-
-
 
     def paletteColor(self):
         color = QColorDialog.getColor()
@@ -306,47 +364,59 @@ class MyApp(QtWidgets.QMainWindow):
         size = (4,10,40,100)
         ind= self.ui.aumentoGroup.currentIndex()
         self.rbuttonAug = size[ind]
-
         self.sendMotor("G")
-
 
     def aumentarX(self):
         self.valueX = self.valueX  + self.movAumento
-        self.valueX= self.limitValue(self.valueX)
+        # self.valueX= self.limitValue(self.valueX)
         self.ui.coordX.setText("{:.3f}".format(self.valueX))
-        self.sendMotor("X")
 
+        pos = "%G00 X" + str(self.valueX) + "%"
+        if self.client.send_receive(pos) != "OK":
+            print("Error")
 
     def disminuirX(self):
         self.valueX = self.valueX - self.movAumento
-        self.valueX = self.limitValue(self.valueX)
+        # self.valueX = self.limitValue(self.valueX)
         self.ui.coordX.setText("{:.3f}".format(self.valueX)) # Muestra siempre con tres cifras decimales
-        self.sendMotor("X")
+        
+        pos = "%G00 X" + str(self.valueX) + "%"
+        if self.client.send_receive(pos) != "OK":
+            print("Error")
 
     def aumentarY(self):
         self.valueY = self.valueY  + self.movAumento
-        self.valueY= self.limitValue(self.valueY)
+        # self.valueY= self.limitValue(self.valueY)
         self.ui.coordY.setText("{:.3f}".format(self.valueY))
-        self.sendMotor("Y")
 
+        pos = "%G00 Y" + str(self.valueY) + "%"
+        if self.client.send_receive(pos) != "OK":
+            print("Error")
 
     def disminuirY(self):
         self.valueY -= self.movAumento
-        self.valueY= self.limitValue(self.valueY)
+        # self.valueY= self.limitValue(self.valueY)
         self.ui.coordY.setText("{:.3f}".format(self.valueY))
-        self.sendMotor("Y")
+
+        pos = "%G00 Y" + str(self.valueY) + "%"
+        if self.client.send_receive(pos) != "OK":
+            print("Error")
 
     def aumentarZ(self):
         self.valueZ = self.valueZ  +  self.movAumento
-        self.valueZ= self.limitValue(self.valueZ)
+        # self.valueZ= self.limitValue(self.valueZ)
         self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
-        self.sendMotor("Z")
+        pos = "%G00 Z" + str(self.valueZ) + "%"
+        if self.client.send_receive(pos) != "OK":
+            print("Error")
 
     def disminuirZ(self):
         self.valueZ -=  self.movAumento
-        self.valueZ= self.limitValue(self.valueZ)
+        # self.valueZ= self.limitValue(self.valueZ)
         self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
-        self.sendMotor("Z")
+        pos = "%G00 Z" + str(self.valueZ) + "%"
+        if self.client.send_receive(pos) != "OK":
+            print("Error")
     
     def valueMx(self):
         try: 
@@ -409,11 +479,24 @@ class MyApp(QtWidgets.QMainWindow):
         
     
     def sendMotor(self,motor):
-        if motor == "X": 
+        if motor == "R":       # Derecha
+
+            
             self.valueMotor = str(int(self.valueX*1000)).zfill(9)
-        elif motor == "Y":
+
+        if motor == "L":       # Izquierda
+            self.valueMotor = str(int(self.valueX*1000)).zfill(9)
+
+        elif motor == "S":
             self.valueMotor = str(int(self.valueY*1000)).zfill(9) 
-        elif motor == "Z":
+
+        elif motor == "T":
+            self.valueMotor = str(int(self.valueZ*1000)).zfill(9)
+
+        elif motor == "O":
+            self.valueMotor = str(int(self.valueY*1000)).zfill(9) 
+
+        elif motor == "P":
             self.valueMotor = str(int(self.valueZ*1000)).zfill(9)
 
         elif motor == "G":
@@ -429,19 +512,18 @@ class MyApp(QtWidgets.QMainWindow):
 
      
 
-    def limitValue(self, value):
+    # def limitValue(self, value):
         
-        if value <0:
-            return 0
+    #     if value <100:
+    #         return 0
         
-        elif value > 1:
-            return 1
+    #     elif value > 1:
+    #         return 1
         
-        else: 
-            return value
+    #     else: 
+    #         return value
 
     
-
     def instruccionesZOE(self):
         ZOEinstruccion = instrucciones()
         ZOEinstruccion.exec_()
@@ -456,12 +538,11 @@ class MyApp(QtWidgets.QMainWindow):
         respuesta = QMessageBox.question(self, 'Calibracion', '¿Desea calibrar el sistema ZOE?',
                                          QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         
-        if respuesta == True:
-            self.sendHardware("K000000000")
-            
-            
-            time.sleep(5)
+        print(QMessageBox.Yes)
 
+        if respuesta == QMessageBox.Yes:
+            self.sendHardware("K000000000")            
+            time.sleep(5)
             QMessageBox.information(None, 'Calibración', 'Sistema Calibrado.')
 
 
@@ -481,18 +562,9 @@ class MyApp(QtWidgets.QMainWindow):
         respuesta = QMessageBox.question(self, 'Salir', '¿Estás seguro de que quieres salir?',
                                          QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
+        if respuesta == QMessageBox.Yes:    
+            QApplication.quit()
         
-
-        if respuesta == QMessageBox.Yes:
-
-            if self.connector.is_connected: 
-                # self.send_data.close()
-                self.ui.pbConnect.click()
-                
-                QApplication.quit()
-            else: 
-                QApplication.quit()
-
     
     def datosPacientes(self,state):
         cuadroDatapac = dataPaciente()
@@ -509,7 +581,7 @@ class MyApp(QtWidgets.QMainWindow):
             self.birthday = cuadroDatapac.birthdatePac.date().toString("dd/MM/yyyy")
             
             #IMAGEN 
-            self.date       = cuadroDatapac.dateImg.date().toString("dd/MM/yyyy")
+            self.date           = cuadroDatapac.dateImg.date().toString("dd/MM/yyyy")
             self.posPaciente    = cuadroDatapac.positionMuestra.currentText()
             self.modalidad      = cuadroDatapac.modImg.text()
             self.imgType        = cuadroDatapac.typeImg.text()
@@ -571,7 +643,8 @@ class MyApp(QtWidgets.QMainWindow):
 
     def manejoButton(self, condicion): 
         buttonName = ("pbDot","pbRect","pbHide","pbTrash", "pbElip", "pbText", "pbDel", "pbROI", "pbSave", "pbArrow", "pbBack", "pbForw","checkPacient",
-                      "aum4x","aum10x","aum40x","aum100x", "aumentoMov","coordX","coordY", "coordZ", "plusX","plusY", "plusZ", "minusX", "minusY", "minusZ")
+                      "aum4x","aum10x","aum40x","aum100x", "aumentoMov","coordX","coordY", "coordZ", "plusX","plusY", "plusZ", "minusX", "minusY", "minusZ",
+                      "RB_auto", "RB_manual", "RB_white", "VisibleEsp", "wavelength", "aumentoGroup", "muestraNum")
 
         if condicion:
             for key in buttonName:
@@ -754,11 +827,11 @@ class MyApp(QtWidgets.QMainWindow):
             
             self.sendHardware("M" + str(value) +  "000000")
             
-        
         else:
             # Se deshabilita cualquier accion diferente
             self.ui.wavelength.setEnabled(False)
             self.ui.VisibleEsp.setEnabled(False)
+
 
     # Hace referencia al recuadro para cambio de longitud
     def line_edit_return_pressed(self):
@@ -773,119 +846,45 @@ class MyApp(QtWidgets.QMainWindow):
                 self.ui.wavelength.setText("Invalid value!")
 
 
-    
+    def connectESP(self):
+        if not self.stateConexion:
 
-    # Proceso de conexion del pc-esp32
-    def conexion(self):
+            #Se encienden todos los botones 
+            self.client.connect() 
+            self.client.send_receive("%Hola ESP32%")
 
-        if self.connector.is_connected:     #Revisa el atributo en el constructor
-            
-            if self.respuestaCon != True:
-                self.ui.RB_white.setChecked(True)
+            self.valueX, self.valueY, self.valueZ = (10,10,0)
+            pos = "%G00 " + str(self.valueX)  +" " + str(self.valueY) + " "+ str(self.valueZ) + "%"
 
-                if self.flagConx == False:
-                    
-                    self.sendHardware("D000000000")
 
-                    
-                    # self.cerrado = self.send_data.close()
-                    self.flagConx = True
-                    self.cerrado = True
-                    time.sleep(0.5)
+            response = self.client.send_receive("%G00 X10 Y10 Z0%")
 
-            else: 
-                self.cerrado = True
-        
-            if self.cerrado:
-                
-                if not self.connector.disconnect() :
+            if response == "OK":
+                self.stateConexion = True
 
-                    self.flagCamara = False             
-                    self.flagConx   = False
-                    self.cerrado    = False
-                
-                    #Revisa los retornos de los metodos 
-                    self.ui.pbCamera.setEnabled(True)
-                    self.ui.pbConnect.setText('C')
-                    
-                    self.ui.pbConnect.setStyleSheet(self.original_style)
-                    self.ui.txtConnect.setText("Desconexión exitosa")
-                    self.ui.txtConnect.setAlignment(Qt.AlignRight)
-                 
-                    self.ui.RB_manual.setChecked(False)
-                    self.ui.RB_auto.setChecked(False)
-                    
-                    self.ui.RB_manual.setEnabled(False)
-                    self.ui.RB_auto.setEnabled(False)
-                    self.ui.RB_white.setEnabled(False)
-                    self.ui.wavelength.setEnabled(False)
-                    self.ui.VisibleEsp.setEnabled(False) 
-                    self.ui.aumentoGroup.setEnabled(False)
-                    self.ui.pbCalibrate.setEnabled(False)            
-
-                    self.visCamera = False
-                    
-
-                # Desactivamos botones 
-                    self.manejoButton(False)
-
-                    if self.previusNamebutton != None:
-                        self.funcionHab[self.previusNamebutton]()
-                        self.actualButton.setStyleSheet("")
-                        
-                    self.previusButton = None
-                    self.previusNamebutton = None
-
-                    # Limpiar la pantalla  para vovler a la imagen inicial
-                    self.ui.tablero.clear()
-
-                else:
-                    self.ui.txtConnect.setText("No se pudo desconectar")
-                    self.ui.txtConnect.setAlignment(Qt.AlignRight)
-
-                    self.manejoButton(False)
-                    
-
-        else:
-            if self.connector.connect():
-                self.flagCamara = True
-               
                 self.ui.pbConnect.setText('C')
                 self.ui.pbConnect.setStyleSheet(""" background-color: rgb(50, 255, 50); """ )
                 
                 self.ui.txtConnect.setText("Conexión establecida")
-                self.ui.txtConnect.setAlignment(Qt.AlignRight)
-
+            
                 # Encendemos los botonoes 
-
-                
-               
                 self.manejoButton(True)
-                self.ui.actionCalibrar.setEnabled(True)
-
-                self.ui.pbCamera.setEnabled(False)
-                self.ui.VisibleEsp.setEnabled(False)     
-
+              
                 self.ui.procesador_camara.iniciar_camara()
                 self.ui.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)
                 
+                #Variable que activa la camara en pantalla
                 self.visCamera = True
-                self.ui.aumentoGroup.setEnabled(True)
-
-                self.ui.RB_manual.setEnabled(True)
-                self.ui.pbCalibrate.setEnabled(True)      
                 
-                self.ui.RB_white.setEnabled(True)
-                
-                # Realiza la conexion 
-                self.send_data.connect()
+        else:
+            #Se apagan todos los botones 
+            self.client.disconnect()
+            self.stateConexion = False
 
-                if self.datoAuto == None:
-                    self.ui.RB_auto.setEnabled(False)
+            self.manejoButton(False)
+            self.visCamera = False
+            self.ui.pbConnect.setStyleSheet(self.original_style)
 
-            else:
-                self.ui.txtConnect.setText("No se pudo establecer la conexión")
-                self.ui.txtConnect.setAlignment(Qt.AlignRight)
 
     def guardar_variable(self,variable,archivo):
         with open(archivo, 'w') as archivo:
@@ -893,9 +892,10 @@ class MyApp(QtWidgets.QMainWindow):
 
     def sendHardware(self, dato):
         print(dato)
-        self.respuestaCon = self.send_data.send(dato)  
+        dato = "%"+dato+"%"
+        self.client.send_receive(dato)
 
-        if self.respuestaCon: 
+        if self.respuestaCon == "error": 
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Information)
             msg.setText("No es posible enviar datos. Revisa la conexión")

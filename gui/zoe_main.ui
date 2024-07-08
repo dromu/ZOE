@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1928</width>
-    <height>1097</height>
+    <width>1932</width>
+    <height>1106</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -23,7 +23,8 @@
    <bool>false</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(100,100,100)</string>
+   <string notr="true">
+background-color: rgb(127, 128, 128);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="tablero">
@@ -464,8 +465,8 @@ background-color: rgb(83, 83, 83);</string>
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>840</x>
-      <y>10</y>
+      <x>1220</x>
+      <y>170</y>
       <width>131</width>
       <height>41</height>
      </rect>
@@ -528,8 +529,8 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>980</x>
-      <y>10</y>
+      <x>1230</x>
+      <y>240</y>
       <width>121</width>
       <height>41</height>
      </rect>
@@ -592,8 +593,8 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
    <widget class="QWidget" name="horizontalLayoutWidget_4">
     <property name="geometry">
      <rect>
-      <x>1110</x>
-      <y>10</y>
+      <x>1220</x>
+      <y>100</y>
       <width>121</width>
       <height>41</height>
      </rect>
@@ -1169,6 +1170,40 @@ background-color: rgb(83, 83, 83);</string>
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Avance&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
+   <widget class="QComboBox" name="muestraNum">
+    <property name="geometry">
+     <rect>
+      <x>880</x>
+      <y>10</y>
+      <width>111</width>
+      <height>39</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(244, 255, 254);
+font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
+    </property>
+    <item>
+     <property name="text">
+      <string>Muestra 1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Muestra 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Muestra 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Muestra 4</string>
+     </property>
+    </item>
+   </widget>
    <zorder>label_2</zorder>
    <zorder>label</zorder>
    <zorder>cameraSpace</zorder>
@@ -1192,6 +1227,7 @@ background-color: rgb(83, 83, 83);</string>
    <zorder>horizontalLayoutWidget_5</zorder>
    <zorder>label_5</zorder>
    <zorder>label_6</zorder>
+   <zorder>muestraNum</zorder>
   </widget>
   <action name="actionSave">
    <property name="text">
