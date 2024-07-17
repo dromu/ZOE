@@ -1,7 +1,7 @@
 import sys
 import cv2
 import numpy as np
-from PyQt5.QtCore import Qt, QTimer, QObject, pyqtSignal
+from PyQt5.QtCore import Qt, QTimer, QObject, pyqtSignal,QMutex, QMutexLocker
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWidget
 from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QWidget
@@ -26,6 +26,8 @@ class ProcesadorCamara(QObject):
         self.timer.start(33)  # Actualizar cada 33 ms (aproximadamente 30 fps)
         self.conexion_perdida_emitida = False
         self.frame = []
+
+        self.mutex = QMutex() 
 
     def readCamera(self):
         with open("img_tools\camera.dat", 'r') as archivo:
@@ -85,6 +87,15 @@ class ProcesadorCamara(QObject):
     def emitir_conexion_perdida(self):
         self.senal_conexion_perdida.emit()
         self.conexion_perdida_emitida = True
+
+    def currentFrame(self):
+   
+        with QMutexLocker(self.mutex):
+            if self.frame is not None:
+                return self.frame.copy()
+            else:
+                return None
+        
         
     def colorComplementary(self):
 

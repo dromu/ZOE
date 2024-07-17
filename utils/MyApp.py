@@ -38,14 +38,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
 
 
-        #Color complementario 
-        # self.ui.colorComp = complementaryColor(self.ui.tablero)
-
-
-
-        #Crea un objeto y llamada un metodo de la clase DrawingBoard
-
-        #Botones de dibujo
+        #Botones 
         self.ui.tablero = DrawingBoard(self.ui.tablero)                 # Objeto
         self.ui.pbDot.clicked.connect(self.ui.tablero.habEscritura)     # Dibujo libre
         self.ui.pbRect.clicked.connect(self.ui.tablero.habRect)         # Rectangulos 
@@ -55,12 +48,12 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbText.clicked.connect(self.ui.tablero.habText)         # Texto
         self.ui.pbDel.clicked.connect(self.ui.tablero.habDel)           # Eliminacion de escrito
         self.ui.pbROI.clicked.connect(self.ui.tablero.habColor)         # Generacion de color complementario
-
-        # self.ui.barraInfo.textChanged.connect(self.actualizarTexto)
-        # self.ui.pbArrow.clicked.connect(self.ui.tablero.habArrow)
-
-        # self.ui.checkPaciente.stateChanged.connect(self.datosPacientes)
         self.ui.checkPacient.clicked.connect(self.datosPacientes)
+        self.ui.pbExit.clicked.connect(self.exitSystem)
+        self.ui.pbDot.clicked.connect(self.habEscritura)
+        self.ui.pbROI.clicked.connect(self.habColor)
+
+        self.ui.pbOpen.clicked.connect(self.openTray)
 
 
         self.buttons = ["pbDot", "pbRect", "pbElip", "pbText","pbDel","pbROI","pbHide"]
@@ -82,14 +75,27 @@ class MyApp(QtWidgets.QMainWindow):
             self.botones.append(buttonDato)
             
 
-        self.ui.pbExit.clicked.connect(self.exitSystem)
+        #   Eje X 
+        self.valueX = 0
+        self.ui.plusX.clicked.connect(self.aumentarX)
+        self.ui.minusX.clicked.connect(self.disminuirX)
 
-        # Union a metodos locales de la clase para cambio de color 
-        self.ui.pbDot.clicked.connect(self.habEscritura)
-        self.ui.pbROI.clicked.connect(self.habColor)
+        #   Eje Y
+        self.valueY = 0
+        self.ui.plusY.clicked.connect(self.aumentarY)
+        self.ui.minusY.clicked.connect(self.disminuirY)        
 
-        self.flagConx = False
+        #   Eje Y
+        self.valueZ = 0
+        self.ui.plusZ.clicked.connect(self.aumentarZ)
+        self.ui.minusZ.clicked.connect(self.disminuirZ)  
 
+        self.ui.pbCamera.clicked.connect(self.cameraSelection)
+        self.ui.pbColor.clicked.connect(self.paletteColor) 
+        self.ui.tamPincel.currentIndexChanged.connect(self.sizePincel)
+        self.ui.tamPincel.setCurrentIndex(1) #Defecto 3px
+        self.ui.pbCalibrate.setEnabled(False)  
+        
         self.nombre         = ""
         self.sexo           = ""
         self.typeid         = ""
@@ -103,19 +109,15 @@ class MyApp(QtWidgets.QMainWindow):
         self.institucion    = ""
         self.nameEquipo     = ""
         self.descrImg       = ""
-
         self.respuestaCon = []
-
-
-
         self.cerrado = False
-
-        self.movAumento = 0.1
+        self.movAumento = 5
 
         # Valores iniciales de las variables
         self.flagEscritura = False
         self.flagColor = False
         self.visCamera = False
+        self.flagConx = False
 
         self.actualButton = []
 
@@ -126,10 +128,6 @@ class MyApp(QtWidgets.QMainWindow):
         self.img_pixmap = QPixmap("images\micros.png")
         self.ui.cameraSpace.setPixmap(self.img_pixmap)
 
-        # Objetos para envio de informacion 
-        # self.connector = WifiConnector()
-        # self.send_data = TCP_comunication()
-
         self.client = ESP32Client('192.168.4.1', 80)
         self.stateConexion = False
 
@@ -137,39 +135,26 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbConnect.clicked.connect(self.connectESP)
         self.original_style = self.ui.pbConnect.styleSheet()
 
-
-
         self.ui.procesador_camara = ProcesadorCamara()
         
         self.R_ = 0
         self.G_ = 0
         self.B_ = 0
 
-        self.ui.pbCamera.clicked.connect(self.cameraSelection)
-
-        self.ui.pbColor.clicked.connect(self.paletteColor) 
-
-        self.ui.tamPincel.currentIndexChanged.connect(self.sizePincel)
-
-        self.ui.tamPincel.setCurrentIndex(1) #Defecto 3px
         
-
-        self.ui.pbCalibrate.setEnabled(False)  
    
         #Boton de guardar pantallas 
         self.ui.pbSave.clicked.connect(self.save)
 
         ## Elementos en el main 
-        
-
         #Texto inicial de conexion 
         self.ui.txtConnect.setText("No conectado")
         self.ui.txtConnect.setAlignment(Qt.AlignRight)
         # Slider de espectro visible
         self.ui.VisibleEsp.valueChanged.connect(self.slider_value_changed)
+
+        self.ui.brilloSlider.valueChanged.connect(self.sliderBrillo)
         
-
-
         # Deshabilitamos los elementos del main, estos se irán actualizando
         self.ui.wavelength.setEnabled(False)
         self.ui.VisibleEsp.setEnabled(False)
@@ -179,16 +164,10 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.actionCalibrar.setEnabled(False)
 
         self.ui.aumentoGroup.setEnabled(False)
-
         self.autoAnte = None
 
         # Cambiar el valor del slider en texto
         self.ui.wavelength.returnPressed.connect(self.line_edit_return_pressed)
-
-        self.ui.coordX.returnPressed.connect(self.valueMx)
-        self.ui.coordY.returnPressed.connect(self.valueMy)
-        self.ui.coordZ.returnPressed.connect(self.valueMz)
-
 
         # Seleccion de modo luz blanca por defecto
         self.ui.RB_white.setChecked(True)
@@ -208,35 +187,7 @@ class MyApp(QtWidgets.QMainWindow):
         self.ui.pbCalibrate.clicked.connect(self.calibrarZOE)
         self.ui.pbHelp.clicked.connect(self.instruccionesZOE)
 
-        #   Eje X 
-        self.valueX = 0
-        
-        self.ui.plusX.clicked.connect(self.aumentarX)
-        self.ui.minusX.clicked.connect(self.disminuirX)
-
-        #   Eje Y
-        self.valueY = 0
-        self.ui.plusY.clicked.connect(self.aumentarY)
-        self.ui.minusY.clicked.connect(self.disminuirY)        
-
-        #   Eje Y
-        self.valueZ = 0
-        self.ui.plusZ.clicked.connect(self.aumentarZ)
-        self.ui.minusZ.clicked.connect(self.disminuirZ)  
-
-        # Control de aumento 
-         # Crear un grupo de botones
-        
-        self.ui.aumentoMov.currentIndexChanged.connect(self.aumentoRev)
-        self.ui.aumentoMov.setCurrentIndex(0)
-        
-        self.ui.aumentoGroup.currentIndexChanged.connect(self.aumentoImg)
-        self.ui.aumentoGroup.setCurrentIndex(0)
-        
-
-        self.ui.muestraNum.currentIndexChanged.connect(self.eleccionMuestra)
-        #ToolTip
-
+        self.rbuttonAug = 4
         
         QToolTip.setFont(QToolTip.font())
         self.ui.pbDot.setToolTip('Lápiz')
@@ -265,58 +216,304 @@ class MyApp(QtWidgets.QMainWindow):
 
         self.flagCamara = True
         # self.flagDesCam = True
+
+        ############### Listas de elementos #####################
+
+        self.ui.aumentoMov.currentIndexChanged.connect(self.aumentoRev)
+        self.ui.aumentoMov.setCurrentIndex(2)
+        
+        # self.ui.aumentoGroup.currentIndexChanged.connect(self.aumentoImg)
+        self.ui.aumentoGroup.setCurrentIndex(0)
+
+        # self.ui.muestraNum.currentIndexChanged.connect(self.eleccionMuestra)
+
+        self.velXY = 500
+        self.velZ = 100
+
+        self.ui.velXY.currentIndexChanged.connect(self.velocXY)
+        self.ui.velXY.setCurrentIndex(3)
+
+        self.ui.velZ.currentIndexChanged.connect(self.velocZ)
+        self.ui.velZ.setCurrentIndex(2)
+      
+        self.Zmax = {"4x": 10, "10x":5, "40x": 1.5}
+
+        ###############################################################
+       
+        self.brilloColor = "150"
         
         self.ui.procesador_camara.senal_conexion_perdida.connect(self.mostrar_mensaje_conexion_perdida)
 
+        self.limitPosition = { "muestra1": [ ] ,
+                               "muestra1": [] ,
+                               "muestra1": [] ,
+                               "muestra1": [] } 
+        
+        self.stateOpen = False
 
-    def positionGRBL(self):
-        pos = "%G00 " + self.valueX  +" " + self.valueY + " "+ self.valueZ + "%"
-        return pos
+        self.stateAum = "4X"
+        self.stateMuestra = []
+
+        self.FitXY  = 100
+        self.FitZ   = 100
+        self.pasoXY = 1
+        self.pasoZ  = 1
+
+        self.ui.pbGo.clicked.connect(self.goStation)
+        self.ui.pbFocus.clicked.connect(self.autofocus)
+
+
+        # Limites de la muestras X1 Y1 X2 Y2 
+        self.limitM1 = [ 70, 30, 30, 60 ]
+        self.limitM2 = [ 40, 70, 70, 90 ]
+        self.limitM3 = [ 40, 70, 70, 90 ]
+        self.limitM4 = [ 40, 70, 70, 90 ]
+
+
+
+    def laplaceAutofocus(self, image): 
+        # Verificar si la imagen se cargó correctamente
+        if image is None:
+            raise ValueError(f"Could not load image from {image}")
+        
+        # Aplicar el filtro Laplaciano a la imagen
+        laplacian = cv2.Laplacian(image, cv2.CV_64F)
+        
+        # Calcular la varianza del laplaciano
+        laplacian_var = laplacian.var()
+        
+        # Determinar si la imagen está borrosa comparando con el umbral
+        
+        
+        return round(laplacian_var, 0)
+    
+    
+    def autofocus(self):
+
+        regFocus    = []
+        zpaso       = 1
+        vel         = 500
+        minZ        = 0
+        maxZ        = 10
+        varAutofocus= {}
+        mov         = 10
+
+        #Leer en que aumento se encuentra 
+        if self.stateAum == "4X": 
+            zpaso       = 1
+            maxZ        = 10
+            minZ        = 5
+        elif self.stateAum == "10X": 
+            zpaso       = 0.1
+            maxZ        = 6
+            minZ        = 2
+        elif self.stateAum == "40X": 
+            zpaso       = 0.01
+            maxZ        = 3
+            minZ        = 1
+
+        while(maxZ >= minZ):
+
+            maxZ -= zpaso
+            maxZ = round(maxZ,3)
+
+            pos = "G00 Z" + str(maxZ) + " F500"
+            print(maxZ)
+            self.sendHardware(pos)
+            
+            img = self.ui.procesador_camara.currentFrame()
+
+            varImg = self.laplaceAutofocus(img)
+            varAutofocus[str(pos)] = varImg
+        
+        enfPos = max(varAutofocus, key=varAutofocus.get)
+
+        self.sendHardware(enfPos)
+            
+
+    def updateDatamov(self):
+
+        print(f'Valor FitXY {self.FitXY}')
+
+        velocidad   = (1,10,100,500,2500)
+        paso        = (5,2,1,0.5,0.1,0.01,0.005,0.001)
+
+        self.ui.velXY.setCurrentIndex(velocidad.index(self.FitXY))
+        self.ui.velZ.setCurrentIndex(velocidad.index(self.FitZ))
+
+        self.ui.aumentoMov.setCurrentIndex(paso.index(self.pasoXY))
+        self.ui.aumentoMovZ.setCurrentIndex(paso.index(self.pasoZ))
+        
+    def goStation(self):
+
+        # Lectura del espacio elegido 
+        muestra             = ("muestra1", "muestra2", "muestra3", "muestra4")
+        indM                = self.ui.muestraNum.currentIndex()
+        print(f'muestra: {muestra[indM-1]}')
+
+        self.stateMuestra   = muestra[indM-1]
+
+        # Lectura del objetivo elegido
+        objetivo        = ("4X","10X","40X")
+        indOb           = self.ui.aumentoGroup.currentIndex()
+        self.stateAum   = objetivo[indOb]
+        
+        # Movimiento Revolver 
+        self.settingObj()
+        self.settingMuest()
         
 
-
-    def eleccionMuestra(self):
-
-        size = ("muestra 1", "muestra 2 ", "muestra 3", "muestra 4")
-        ind= self.ui.muestraNum.currentIndex()
-        self.visCamera = False
-
-        #ENVIANDO MENSAJE DE LA POSICION 
-        if ind == 0:
-            self.valueX, self.valueY, self.valueZ = (10, 10, 0)
-            pos = "%G00 " + str(self.valueX)  +" " + str(self.valueY) + " "+ str(self.valueZ) + "%"
-
-            print(pos)
-
-            if self.client.send_receive(pos) == "OK":
-                self.show_message_box(title="Informacion", message= "En posición")
-
-        elif ind == 1:
-            self.valueX, self.valueY, self.valueZ = (20, 20, 0)
-            pos = "%G00 " + str(self.valueX)  +" " + str(self.valueY) + " "+ str(self.valueZ) + "%"
-
-            print(pos)
-
-            if self.client.send_receive(pos) == "OK":
-                self.show_message_box(title="Informacion", message= "En posición")
+    def settingObj(self):  
         
-        elif ind == 2:
-            self.valueX, self.valueY, self.valueZ = (30, 30, 0)
-            pos = "%G00 " + str(self.valueX)  +" " + str(self.valueY) + " "+ str(self.valueZ) + "%"
+        # Baja la posicion para no pegar con los objetivos 
+        self.valueZ = 10
+        codeText        = "G00 Z"+ str(self.valueZ) + " F2500" 
+        self.sendHardware(codeText)
+        self.coordCurrent()
+        
+        
+        #Movimiento del objetivo 
+        if self.stateAum == "4X":
+            self.valueZ =   10
+            self.FitXY  =   500
+            self.FitZ   =   500
+            self.pasoXY =   2
+            self.pasoZ  =   1
 
-            print(pos)
+            self.sendHardware("2")
+            self.updateDatamov()
 
-            if self.client.send_receive(pos) == "OK":
-                self.show_message_box(title="Informacion", message= "En posición")
+        elif self.stateAum == "10X":
+            self.valueZ = 5
+            self.FitXY  =   500
+            self.FitZ   =   100
+            self.pasoXY =   0.5
+            self.pasoZ  =   0.5
 
-        elif ind == 3:
-            self.valueX, self.valueY, self.valueZ = (40, 40, 0)
-            pos = "%G00 " + str(self.valueX)  +" " + str(self.valueY) + " "+ str(self.valueZ) + "%"
+            self.sendHardware("1")
+            self.updateDatamov()
 
-            print(pos)
+        elif self.stateAum == "40X":
+            self.valueZ = 2
+            self.FitXY  =   100
+            self.FitZ   =   10
+            self.pasoXY =   0.1
+            self.pasoZ  =   0.01
 
-            if self.client.send_receive(pos) == "OK":
-                self.show_message_box(title="Informacion", message= "En posición")
+            self.sendHardware("R")
+            self.updateDatamov()
+
+    def settingMuest(self):
+
+        if self.stateMuestra == "muestra1":
+
+            self.valueX, self.valueY = (55, 40)
+
+            pos = "G00 Z10 F2500"
+            self.sendHardware(pos)
+
+            pos = "G00 X" + str(self.valueX)  +" Y" + str(self.valueY) + " F2500"
+            self.sendHardware(pos)
+
+            pos = "G00 Z" +  str(self.valueZ) + " F1000"
+            self.sendHardware(pos)
+
+            self.limits = self.limitM1
+            
+            self.coordCurrent()
+
+        elif self.stateMuestra == "muestra2":
+            self.valueX, self.valueY = (55, 70)
+
+            pos = "G00 Z10 F2500"
+            self.sendHardware(pos)
+
+            pos = "G00 X" + str(self.valueX)  +" Y" + str(self.valueY) + " F2500"
+            self.sendHardware(pos)
+
+            pos = "G00 Z" +  str(self.valueZ) + " F1000"
+            self.sendHardware(pos)
+
+            self.limits = self.limitM2
+            
+            self.coordCurrent()
+
+        elif self.stateMuestra == "muestra3":
+            self.valueX, self.valueY = (165, 40)
+
+            pos = "G00 Z10 F2500"
+            self.sendHardware(pos)
+
+            pos = "G00 X" + str(self.valueX)  +" Y" + str(self.valueY) + " F2500"
+            self.sendHardware(pos)
+
+            pos = "G00 Z" +  str(self.valueZ) + " F1000"
+            self.sendHardware(pos)
+
+            self.limits = self.limitM3
+            
+            self.coordCurrent()
+
+        elif self.stateMuestra == "muestra4":
+            self.valueX, self.valueY = (55, 70)
+
+            pos = "G00 Z10 F2500"
+            self.sendHardware(pos)
+
+            pos = "G00 X" + str(self.valueX)  +" Y" + str(self.valueY) + " F2500"
+            self.sendHardware(pos)
+
+            pos = "G00 Z" +  str(self.valueZ) + " F1000"
+            self.sendHardware(pos)
+            
+            self.limits = self.limitM4
+
+            self.coordCurrent()
+
+
+    def coordCurrent(self):
+        self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
+        self.ui.coordX.setText("{:.3f}".format(self.valueX))
+        self.ui.coordY.setText("{:.3f}".format(self.valueY))
+
+    def openTray(self): 
+        
+        if self.stateOpen:
+            #Envia los valores de la posicion 
+            self.valueZ = 5
+  
+            #Sube bandeja
+            codeMov = "G00 Z" + str(self.valueZ) + " F1500"
+            self.sendHardware(codeMov)
+
+            # ACtualizacion de la posicion 
+            self.coordCurrent()
+            self.stateOpen = not self.stateOpen
+
+        else: 
+            # Bajar las bandejas 
+            self.valueZ = 30
+            codeMov = "G00 Z" + str(self.valueZ) + " F2000"
+            self.sendHardware(codeMov)
+
+            #Cambia estado y actualiza coordenada.
+            self.stateOpen = not self.stateOpen
+            self.coordCurrent()
+
+        
+    def sliderBrillo(self,value):
+        self.brilloColor = str(value).zfill(3)
+
+        if self.ui.RB_white.isChecked():
+            text = ("W000000000" + str(self.brilloColor))
+            
+        elif self.ui.RB_manual.isChecked():
+            text = ("M" + str(self.ui.value) +  "000000" + str(self.brilloColor))
+
+        elif self.ui.RB_auto.isChecked():            
+            text = ("A" + str(self.datoAuto) + str(self.brilloColor))
+
+        self.sendHardware(text)
 
     def show_message_box(self, title , message, icon=QMessageBox.Information, buttons=QMessageBox.Ok):
 
@@ -361,169 +558,137 @@ class MyApp(QtWidgets.QMainWindow):
             self.ui.tablero.pincelColor(color_hex)
 
     def aumentoImg(self):
-        size = (4,10,40,100)
+        size = (4,10,40)
         ind= self.ui.aumentoGroup.currentIndex()
         self.rbuttonAug = size[ind]
-        self.sendMotor("G")
+
+        if size[ind] == 4:
+
+            pos = "%G00 Z20 F2500%"
+            text = "%2%"
+            if self.client.send_receive(pos) == "OK":
+                pos = "%G28 Z %"
+                self.client.send_receive(text)
+               
+                
+
+        elif size[ind] == 10:
+            text = "%1%"
+            pos = "%G00 Z20 F2500%"
+            if self.client.send_receive(pos) == "OK":
+                pos = "%G28 Z %"
+                self.client.send_receive(text)
+                
+                
+
+        elif size[ind] == 40:
+            text = "%R%"
+            pos = "%G00 Z20 F2500%"
+            if self.client.send_receive(pos) == "OK":
+                pos = "%G28 Z %"
+                self.client.send_receive(text)
+                
+
+        
+
+    def velocXY(self):
+        size = (1,10,100,500,2500)
+        ind= self.ui.velXY.currentIndex()        
+        self.velXY = size[ind]
+
+    def velocZ(self):
+        size = (1,10,100,500,2500)
+        ind= self.ui.velZ.currentIndex()        
+        self.velZ = size[ind]
+
 
     def aumentarX(self):
         self.valueX = self.valueX  + self.movAumento
+
+        if self.valueX >= self.limits[0]:
+            self.valueX = self.limits[0]
+
+        self.valueX = round(self.valueX,3)
         # self.valueX= self.limitValue(self.valueX)
         self.ui.coordX.setText("{:.3f}".format(self.valueX))
 
-        pos = "%G00 X" + str(self.valueX) + "%"
+        pos = "%G00 X" + str(self.valueX) + " F"+ str(self.velXY) + "%"
         if self.client.send_receive(pos) != "OK":
             print("Error")
 
     def disminuirX(self):
         self.valueX = self.valueX - self.movAumento
+
+        if self.valueX <= self.limits[2]:
+            self.valueX = self.limits[2]
+
+        self.valueX = round(self.valueX,3)
         # self.valueX = self.limitValue(self.valueX)
         self.ui.coordX.setText("{:.3f}".format(self.valueX)) # Muestra siempre con tres cifras decimales
         
-        pos = "%G00 X" + str(self.valueX) + "%"
+        pos = "%G00 X" + str(self.valueX) + " F"+ str(self.velXY) + "%"
         if self.client.send_receive(pos) != "OK":
             print("Error")
 
     def aumentarY(self):
         self.valueY = self.valueY  + self.movAumento
+
+        if self.valueY >= self.limits[3]:
+            self.valueY = self.limits[3]
+
+
+        self.valueY = round(self.valueY,3)
         # self.valueY= self.limitValue(self.valueY)
         self.ui.coordY.setText("{:.3f}".format(self.valueY))
 
-        pos = "%G00 Y" + str(self.valueY) + "%"
+        pos = "%G00 Y" + str(self.valueY) + " F"+ str(self.velXY) + "%"
         if self.client.send_receive(pos) != "OK":
             print("Error")
 
     def disminuirY(self):
         self.valueY -= self.movAumento
+
+        if self.valueY <= self.limits[1]:
+            self.valueY = self.limits[1]
+
+        if self.valueY<=0: 
+            self.valueY = 0
+
+        self.valueY = round(self.valueY,3)
         # self.valueY= self.limitValue(self.valueY)
         self.ui.coordY.setText("{:.3f}".format(self.valueY))
 
-        pos = "%G00 Y" + str(self.valueY) + "%"
+        pos = "%G00 Y" + str(self.valueY) + " F"+ str(self.velXY) + "%"
         if self.client.send_receive(pos) != "OK":
             print("Error")
 
     def aumentarZ(self):
         self.valueZ = self.valueZ  +  self.movAumento
+        self.valueZ = round(self.valueZ,3)
         # self.valueZ= self.limitValue(self.valueZ)
         self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
-        pos = "%G00 Z" + str(self.valueZ) + "%"
+        pos = "%G00 Z" + str(self.valueZ) + " F"+ str(self.velZ) + "%"
         if self.client.send_receive(pos) != "OK":
             print("Error")
 
     def disminuirZ(self):
         self.valueZ -=  self.movAumento
+
+        if self.valueZ<=0: 
+            self.valueZ = 0
+
+        self.valueZ = round(self.valueZ,3)
         # self.valueZ= self.limitValue(self.valueZ)
         self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
-        pos = "%G00 Z" + str(self.valueZ) + "%"
+        pos = "%G00 Z" + str(self.valueZ) + " F"+ str(self.velZ) + "%"
         if self.client.send_receive(pos) != "OK":
             print("Error")
     
-    def valueMx(self):
-        try: 
-            value = float(self.ui.coordX.text())
-            print("valor X: ", value)
-            if value>=0 and value <= 1:
-                self.valueX = value
-                self.ui.coordX.setText("{:.3f}".format(self.valueX))
-                self.sendMotor("X")
-            else: 
-                value = self.valueX
-                self.ui.coordX.setText("{:.3f}".format(self.valueX))
-
-        except ValueError:
-            value = self.valueX
-            self.ui.coordX.setTqext("{:.3f}".format(self.valueX))
-
-
-    def valueMy(self):
-        
-        try:
-            value = float(self.ui.coordY.text())
-            print("valor Y: ", value)
-            if value>=0 and value <= 1:
-                self.valueY = value
-                self.ui.coordY.setText("{:.3f}".format(self.valueY))
-                self.sendMotor("Y")
-
-            else: 
-                value = self.valueY
-                self.ui.coordY.setText("{:.3f}".format(self.valueY))
-      
-        except ValueError:
-            value = self.valueY
-            self.ui.coordY.setText("{:.3f}".format(self.valueY))
-
-    def valueMz(self):
-        try:
-            value = float(self.ui.coordZ.text())
-            print("valor Z: ", value)
-
-            if value>=0 and value <= 1:
-                self.valueZ = value
-                self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
-                self.sendMotor("Z")
-
-            else: 
-                value = self.valueZ
-                self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
-                
-        except ValueError:
-            value = self.valueZ
-            self.ui.coordZ.setText("{:.3f}".format(self.valueZ))
-
-
-    def aumentoRev(self,indice):
-        
-        valueSpinbox = [0.1, 0.05, 0.01, 0.005]
+    
+    def aumentoRev(self,indice):  
+        valueSpinbox = [5,2,1, 0.5, 0.1,0.01,0.005, 0.001]
         self.movAumento = valueSpinbox[indice]
-        
-    
-    def sendMotor(self,motor):
-        if motor == "R":       # Derecha
 
-            
-            self.valueMotor = str(int(self.valueX*1000)).zfill(9)
-
-        if motor == "L":       # Izquierda
-            self.valueMotor = str(int(self.valueX*1000)).zfill(9)
-
-        elif motor == "S":
-            self.valueMotor = str(int(self.valueY*1000)).zfill(9) 
-
-        elif motor == "T":
-            self.valueMotor = str(int(self.valueZ*1000)).zfill(9)
-
-        elif motor == "O":
-            self.valueMotor = str(int(self.valueY*1000)).zfill(9) 
-
-        elif motor == "P":
-            self.valueMotor = str(int(self.valueZ*1000)).zfill(9)
-
-        elif motor == "G":
-            # self.valueMotor  = "00000000" + str(self.rbuttonAug)
-
-            self.valueMotor = str(self.rbuttonAug).zfill(9)
-
-        self.valueMotor = motor+self.valueMotor
-
-        self.sendHardware(self.valueMotor)
-
-        # self.send_data.send(self.valueMotor)  
-
-     
-
-    # def limitValue(self, value):
-        
-    #     if value <100:
-    #         return 0
-        
-    #     elif value > 1:
-    #         return 1
-        
-    #     else: 
-    #         return value
-
-    
     def instruccionesZOE(self):
         ZOEinstruccion = instrucciones()
         ZOEinstruccion.exec_()
@@ -679,13 +844,12 @@ class MyApp(QtWidgets.QMainWindow):
             # Al presionar dos veces se comprueba el color complementario 
             self.R_,self.G_,self.B_ = self.ui.procesador_camara.colorComplementary()
 
-
             self.datoAuto  = str(self.R_).zfill(3)  +  str(self.G_).zfill(3)  +  str(self.B_).zfill(3)
             
             if self.datoAuto != None:
-                    self.sendHardware("A"+self.datoAuto)
+                    self.sendHardware("A"+self.datoAuto + self.brilloColor)
                     
-                    print("A"+self.datoAuto)
+                    print("A"+self.datoAuto + self.brilloColor)
                    
 
     def actualizar_interfaz(self, frame):
@@ -698,7 +862,6 @@ class MyApp(QtWidgets.QMainWindow):
         
         else: 
             #Coloca una imagen sino no actualiza
-
             self.ui.cameraSpace.setPixmap(self.img_pixmap)
 
     
@@ -794,22 +957,26 @@ class MyApp(QtWidgets.QMainWindow):
                 wavelength.setEnabled(True)    
 
                 # Envio en modo manual
-                self.sendHardware("M" + str(self.ui.value) +  "000000" )
+
+                text = ("M" + str(self.ui.value) +  "000000" + str(self.brilloColor))
+                self.sendHardware(text )
                 
             if radio_button.text() == 'A':
            
                 if self.datoAuto != None:
-                    
+                    text = ("A"+self.datoAuto + str(self.brilloColor))
 
-                    self.sendHardware("A"+self.datoAuto )
+                    self.sendHardware(text )
                     
-                    print("A"+self.datoAuto)
+                    print(text)
 
 
             if radio_button.text() == 'W':
                 # Se limitan y paran todas las acciones 
+
+                text = "W000000000" + str(self.brilloColor) 
                  
-                self.sendHardware("W000000000")
+                self.sendHardware(text)
                 self.ui.wavelength.setEnabled(False)
                 self.ui.VisibleEsp.setEnabled(False)
                 
@@ -825,7 +992,8 @@ class MyApp(QtWidgets.QMainWindow):
             
             # Envio en modo manual
             
-            self.sendHardware("M" + str(value) +  "000000")
+            text = ("M" + str(value) +  "000000" + str(self.brilloColor) )
+            self.sendHardware(text )
             
         else:
             # Se deshabilita cualquier accion diferente
@@ -849,42 +1017,53 @@ class MyApp(QtWidgets.QMainWindow):
     def connectESP(self):
         if not self.stateConexion:
 
+            self.stateConexion = True
+
+            # Cambia color del boton 
+            self.ui.pbConnect.setText('C')
+            self.ui.pbConnect.setStyleSheet(""" background-color: rgb(50, 255, 50); """ )
+            self.ui.txtConnect.setText("Conexión establecida")
+
+            # Encendemos los botonoes 
+            self.manejoButton(True)
+
+            self.ui.procesador_camara.iniciar_camara()
+            self.ui.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)
+            self.visCamera = True
+
             #Se encienden todos los botones 
             self.client.connect() 
-            self.client.send_receive("%Hola ESP32%")
-
-            self.valueX, self.valueY, self.valueZ = (10,10,0)
-            pos = "%G00 " + str(self.valueX)  +" " + str(self.valueY) + " "+ str(self.valueZ) + "%"
-
-
-            response = self.client.send_receive("%G00 X10 Y10 Z0%")
-
-            if response == "OK":
-                self.stateConexion = True
-
-                self.ui.pbConnect.setText('C')
-                self.ui.pbConnect.setStyleSheet(""" background-color: rgb(50, 255, 50); """ )
-                
-                self.ui.txtConnect.setText("Conexión establecida")
+        
+            #Enciende la luz blanca 
             
-                # Encendemos los botonoes 
-                self.manejoButton(True)
-              
-                self.ui.procesador_camara.iniciar_camara()
-                self.ui.procesador_camara.senal_actualizacion.connect(self.actualizar_interfaz)
-                
-                #Variable que activa la camara en pantalla
-                self.visCamera = True
-                
+            self.client.send_receive("%W000000000255%")
+
+            # Va a home el revolver             
+            self.client.send_receive("%2%")
+
+            #Envia Home 
+            self.client.send_receive("%G28 X Y Z%")
+
+            #Estable siempre el enable de los motores 
+            self.client.send_receive("%M17%")
+            self.client.send_receive("%M84 S36000%")
+            self.coordCurrent()
         else:
+            #Apaga la luz
+            self.client.send_receive("%W000000000000%")
+            
+            # Desahabilita los motores
+            self.client.send_receive("%M84%")
+
+            time.sleep(1)
+
             #Se apagan todos los botones 
             self.client.disconnect()
             self.stateConexion = False
-
             self.manejoButton(False)
             self.visCamera = False
             self.ui.pbConnect.setStyleSheet(self.original_style)
-
+            
 
     def guardar_variable(self,variable,archivo):
         with open(archivo, 'w') as archivo:
@@ -893,6 +1072,8 @@ class MyApp(QtWidgets.QMainWindow):
     def sendHardware(self, dato):
         print(dato)
         dato = "%"+dato+"%"
+
+        print(dato)
         self.client.send_receive(dato)
 
         if self.respuestaCon == "error": 
